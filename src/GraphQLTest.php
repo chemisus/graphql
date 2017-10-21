@@ -18,6 +18,10 @@ class GraphQLTest extends TestCase
                 'mother' => 'gwen',
                 'father' => 'rob',
             ],
+            'rob' => [
+                'name' => 'rob',
+                'mother' => 'carol',
+            ],
             'jessica' => [
                 'name' => 'jessica',
                 'father' => 'mark',
@@ -78,18 +82,28 @@ class GraphQLTest extends TestCase
             echo $node->path() . ': ' . json_encode(array_column($node->parent()->items(), 'name')) . PHP_EOL;
         };
 
+        $personType->fields['children']->fetcher = function (Node $node) use ($people) {
+            echo $node->path() . ': ' . json_encode(array_column($node->parent()->items(), 'name')) . PHP_EOL;
+            return array_filter(array_merge([], ...array_map(function ($person) use ($people) {
+                return array_values(array_filter($people, function ($child) use ($person) {
+                    return array_key_exists('father', $child) && $child['father'] === $person['name'] ||
+                        array_key_exists('mother', $child) && $child['mother'] === $person['name'];
+                }));
+            }, $node->parent()->items())));
+        };
+
         $personType->fields['father']->fetcher = function (Node $node) use ($people) {
             echo $node->path() . ': ' . json_encode(array_column($node->parent()->items(), 'name')) . PHP_EOL;
-            return array_filter(array_map(function ($person) use ($people) {
+            return array_values(array_filter(array_map(function ($person) use ($people) {
                 return array_key_exists($person['father'], $people) ? $people[$person['father']] : null;
-            }, $node->parent()->items()));
+            }, $node->parent()->items())));
         };
 
         $personType->fields['mother']->fetcher = function (Node $node) use ($people) {
             echo $node->path() . ': ' . json_encode(array_column($node->parent()->items(), 'name')) . PHP_EOL;
-            return array_filter(array_map(function ($person) use ($people) {
+            return array_values(array_filter(array_map(function ($person) use ($people) {
                 return array_key_exists($person['mother'], $people) ? $people[$person['mother']] : null;
-            }, $node->parent()->items()));
+            }, $node->parent()->items())));
         };
 
         $xml = <<< _XML
@@ -101,24 +115,15 @@ class GraphQLTest extends TestCase
         </father>
         <mother>
             <name/>
-            <father>
-                <name/>
-                <father>
-                    <name/>
-                    <father>
-                        <name/>
-                    </father>
-                    <mother>
-                        <name/>
-                    </mother>
-                </father>
-                <mother>
-                    <name/>
-                </mother>
-            </father>
             <mother>
                 <name/>
             </mother>
+            <children>
+                <name/>
+                <father>
+                    <name/>
+                </father>
+            </children>
         </mother>
     </person>
 </query>
@@ -127,6 +132,7 @@ _XML;
         $queryBuilder = new XMLQueryReader();
         $query = $queryBuilder->read($xml);
 
+        $nodes = [];
         $queue = [new Node($schemaType->field($query->name()), $query)];
 
         while (count($queue)) {
@@ -134,8 +140,15 @@ _XML;
             $children = $node->fetch();
             if (count($children)) {
                 array_push($queue, ...$children);
+                array_push($nodes, ...$children);
             }
         }
+
+        echo json_encode(array_map(function (Node $node) {
+            return $node->items() === null ? null : array_map(function ($person) {
+                return $person['name'];
+            }, $node->items());
+        }, $nodes));
 
         $this->assertTrue(true);
     }

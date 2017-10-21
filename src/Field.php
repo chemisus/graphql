@@ -25,7 +25,7 @@ class Field
     private $name;
 
     /**
-     * @var ObjectType
+     * @var Type
      */
     private $returnType;
 
@@ -62,7 +62,7 @@ class Field
         return $this->ownerType;
     }
 
-    public function returnType(): ObjectType
+    public function returnType(): Type
     {
         return $this->returnType;
     }
