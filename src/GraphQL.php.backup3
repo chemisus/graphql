@@ -1,0 +1,390 @@
+<?php
+
+interface EdgeInfo
+{
+}
+
+interface Node
+{
+    public function name(): string;
+
+    public function fullName(): string;
+
+    public function baseType(): Node;
+
+    public function wrappedType(): Node;
+
+    public function isList(): bool;
+
+    public function isNonNull(): bool;
+}
+
+interface Edge
+{
+    public function name(): string;
+
+    public function parentType(): Node;
+
+    public function returnType(): Node;
+
+    public function resolve(EdgeInfo $info);
+}
+
+class ObjectNode implements Node
+{
+    private $name;
+
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function fullName(): string
+    {
+        return $this->name;
+    }
+
+    public function baseType(): Node
+    {
+        return $this;
+    }
+
+    public function wrappedType(): Node
+    {
+        return $this;
+    }
+
+    public function isList(): bool
+    {
+        return false;
+    }
+
+    public function isNonNull(): bool
+    {
+        return false;
+    }
+}
+
+interface Schema
+{
+    public function node(string $name): Node;
+
+    public function edge(string $nodeName, string $edgeName): Edge;
+
+    public function addNode(Node $node);
+
+    public function addEdge(Edge $edge);
+}
+
+class ReferenceNode implements Node
+{
+    /**
+     * @var Schema
+     */
+    private $schema;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    public function __construct(Schema $schema, string $name)
+    {
+        $this->schema = $schema;
+        $this->name = $name;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function fullName(): string
+    {
+        return $this->name;
+    }
+
+    public function baseType(): Node
+    {
+        return $this;
+    }
+
+    public function wrappedType(): Node
+    {
+        return $this;
+    }
+
+    public function isList(): bool
+    {
+        return $this->schema->node($this->name)->isList();
+    }
+
+    public function isNonNull(): bool
+    {
+        return $this->schema->node($this->name)->isNonNull();
+    }
+}
+
+class CallbackEdge implements Edge
+{
+    /**
+     * @var Node
+     */
+    private $parentType;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var Node
+     */
+    private $returnType;
+
+    /**
+     * @var callable
+     */
+    private $callback;
+
+    public function __construct(Node $parentType, string $name, Node $returnType, callable $callback)
+    {
+        $this->parentType = $parentType;
+        $this->name = $name;
+        $this->returnType = $returnType;
+        $this->callback = $callback;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function parentType(): Node
+    {
+        return $this->parentType;
+    }
+
+    public function returnType(): Node
+    {
+        return $this->returnType;
+    }
+
+    public function resolve(EdgeInfo $info)
+    {
+        call_user_func($this->callback, $info);
+    }
+}
+
+class NodeBuilder
+{
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var EdgeBuilder[]
+     */
+    private $edges = [];
+
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
+
+    public function edge(string $edgeName): EdgeBuilder
+    {
+        if (!array_key_exists($edgeName, $this->edges)) {
+            $this->edges[$edgeName] = new EdgeBuilder($this, $edgeName);
+        }
+
+        return $this->edges[$edgeName];
+    }
+
+    /**
+     * @return EdgeBuilder[]
+     */
+    public function edges()
+    {
+        return $this->edges;
+    }
+}
+
+class EdgeBuilder
+{
+    /**
+     * @var NodeBuilder
+     */
+    private $node;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var NodeBuilder
+     */
+    private $returnType;
+
+    /**
+     * @var callable
+     */
+    private $resolver;
+
+    /**
+     * @var NodeBuilder[]
+     */
+    private $arguments;
+
+    public function __construct(NodeBuilder $node, string $name)
+    {
+        $this->node = $node;
+        $this->name = $name;
+    }
+
+    /**
+     * @return NodeBuilder
+     */
+    public function getNode(): NodeBuilder
+    {
+        return $this->node;
+    }
+
+    /**
+     * @param NodeBuilder $node
+     * @return EdgeBuilder
+     */
+    public function setNode(NodeBuilder $node): EdgeBuilder
+    {
+        $this->node = $node;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return EdgeBuilder
+     */
+    public function setName(string $name): EdgeBuilder
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return NodeBuilder
+     */
+    public function getReturnType(): NodeBuilder
+    {
+        return $this->returnType;
+    }
+
+    /**
+     * @param NodeBuilder $returnType
+     * @return EdgeBuilder
+     */
+    public function setReturnType(NodeBuilder $returnType): EdgeBuilder
+    {
+        $this->returnType = $returnType;
+        return $this;
+    }
+
+    /**
+     * @return callable
+     */
+    public function getResolver(): callable
+    {
+        return $this->resolver;
+    }
+
+    /**
+     * @param callable $resolver
+     * @return EdgeBuilder
+     */
+    public function setResolver(callable $resolver): EdgeBuilder
+    {
+        $this->resolver = $resolver;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getArguments()
+    {
+        return $this->arguments;
+    }
+
+    /**
+     * @param string $name
+     * @param NodeBuilder $node
+     * @return $this
+     */
+    public function addArgument(string $name, NodeBuilder $node)
+    {
+        $this->arguments[$name] = $node;
+        return $this;
+    }
+}
+
+class SchemaBuilder
+{
+    /**
+     * @var Node[]
+     */
+    private $nodes;
+
+    /**
+     * @param Node[] $nodes
+     */
+    public function __construct($nodes = [])
+    {
+        $this->nodes = $nodes;
+    }
+
+    public function node(string $name): NodeBuilder
+    {
+        if (!array_key_exists($name, $this->nodes)) {
+            $this->nodes[$name] = new NodeBuilder($name);
+        }
+
+        return $this->nodes[$name];
+    }
+
+    public function edge(string $nodeName, string $edgeName): EdgeBuilder
+    {
+        return $this->node($nodeName)->edge($edgeName);
+    }
+}
+
+call_user_func_array(function (...$args) {
+    $schema = new SchemaBuilder();
+
+    $schema->edge('Query', 'entity')
+        ->setReturnType($schema->node('Entity'))
+        ->setResolver(function () {
+        });
+
+    $schema->edge('Entity', 'id')->setReturnType($schema->node('String'));
+    $schema->edge('Entity', 'parentId')->setReturnType($schema->node('String'));
+
+    $schema->edge('Query', 'entities')
+        ->setReturnType($schema->node('Entity'))
+        ->setResolver(function () {
+        });
+
+}, array_slice($argv, 1));

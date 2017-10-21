@@ -1,0 +1,332 @@
+<?php
+
+namespace GraphQL;
+
+interface FieldType
+{
+    /**
+     * @return string
+     */
+    public function baseType(): string;
+
+    /**
+     * @return string
+     */
+    public function fullType(): string;
+
+    /**
+     * @return FieldType
+     */
+    public function wrappedType(): FieldType;
+
+    /**
+     * @return bool
+     */
+    public function isList(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isNonNull(): bool;
+}
+
+class ReferenceFieldType implements FieldType
+{
+    /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @param string $type
+     */
+    public function __construct(string $type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function baseType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function fullType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return FieldType
+     */
+    public function wrappedType(): FieldType
+    {
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isList(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNonNull(): bool
+    {
+        return false;
+    }
+}
+
+class ListFieldType implements FieldType
+{
+    /**
+     * @var FieldType
+     */
+    private $type;
+
+    /**
+     * @param FieldType $type
+     */
+    public function __construct(FieldType $type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function baseType(): string
+    {
+        return $this->type->baseType();
+    }
+
+    /**
+     * @return string
+     */
+    public function fullType(): string
+    {
+        return sprintf('[%s]', $this->type->fullType());
+    }
+
+    /**
+     * @return FieldType
+     */
+    public function wrappedType(): FieldType
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isList(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNonNull(): bool
+    {
+        return false;
+    }
+}
+
+class NonNullFieldType implements FieldType
+{
+    /**
+     * @var FieldType
+     */
+    private $type;
+
+    /**
+     * @param FieldType $type
+     */
+    public function __construct(FieldType $type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function baseType(): string
+    {
+        return $this->type->baseType();
+    }
+
+    /**
+     * @return string
+     */
+    public function fullType(): string
+    {
+        return sprintf('%s!', $this->type->fullType());
+    }
+
+    /**
+     * @return FieldType
+     */
+    public function wrappedType(): FieldType
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isList(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNonNull(): bool
+    {
+        return true;
+    }
+}
+
+interface Schema
+{
+    /**
+     * @return FieldType[]
+     */
+    public function types();
+
+    /**
+     * @param string $name
+     * @return FieldType
+     */
+    public function type(string $name): FieldType;
+}
+
+interface ResolveEdge
+{
+    /**
+     * @return ResolveEdge|null
+     */
+    public function parent();
+
+    /**
+     * @return ResolveEdge|null
+     */
+    public function parentObject();
+
+    /**
+     * @return ResolveEdge[]|null
+     */
+    public function children();
+
+    /**
+     * @return string
+     */
+    public function name(): string;
+
+    /**
+     * @return string
+     */
+    public function alias(): string;
+
+    /**
+     * @return FieldType
+     */
+    public function type(): FieldType;
+}
+
+interface FieldResolver
+{
+    public function resolve(ResolveEdge $node);
+}
+
+class ParentFieldResolver implements FieldResolver
+{
+    public function resolve(ResolveEdge $node)
+    {
+    }
+}
+
+interface Query
+{
+    public function name();
+
+    public function alias();
+
+    public function fields();
+
+    public function args();
+
+    public function fragments();
+
+    public function directives();
+}
+
+class Edge implements ResolveEdge
+{
+    public function __construct()
+    {
+    }
+
+    public function parent()
+    {
+        // TODO: Implement parent() method.
+    }
+
+    public function children()
+    {
+        // TODO: Implement children() method.
+    }
+
+    public function type(): FieldType
+    {
+        // TODO: Implement type() method.
+    }
+
+    public function value()
+    {
+        // TODO: Implement value() method.
+    }
+
+    public function set($value)
+    {
+        // TODO: Implement set() method.
+    }
+}
+
+call_user_func_array(function (...$args) {
+    $parentFieldResolver = new ParentFieldResolver();
+
+    $person = (object) [
+        'name' => 'Person',
+        'fields' => (object) [
+            'id' => (object) [
+                'type' => new NonNullFieldType(new ReferenceFieldType('ID')),
+                'resolver' => $parentFieldResolver,
+            ],
+            'name' => (object) [
+                'type' => new NonNullFieldType(new ReferenceFieldType('String')),
+                'resolver' => $parentFieldResolver,
+            ],
+            'colors' => (object) [
+                'type' => new NonNullFieldType(new ListFieldType(new NonNullFieldType(new ReferenceFieldType('Color')))),
+                'resolver' => $parentFieldResolver,
+            ],
+        ],
+    ];
+
+    echo $person->fields->id->type->fullType() . PHP_EOL;
+    echo $person->fields->name->type->fullType() . PHP_EOL;
+    echo $person->fields->colors->type->fullType() . PHP_EOL;
+
+}, array_slice($argv, 1));

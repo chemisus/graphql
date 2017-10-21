@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "GraphQL\\": "src/"
+    }
+  },
+  "require": {
+    "phpunit/phpunit": "^6.4"
+  }
+}

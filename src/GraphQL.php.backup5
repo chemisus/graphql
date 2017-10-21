@@ -1,0 +1,306 @@
+<?php
+
+class Selection
+{
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $alias;
+
+    /**
+     * @var string
+     */
+    private $on;
+
+    /**
+     * @var array
+     */
+    private $arguments;
+
+    /**
+     * @var Selection[]
+     */
+    private $members;
+
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return Selection
+     */
+    public function setName(string $name): Selection
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAlias(): string
+    {
+        return $this->alias;
+    }
+
+    /**
+     * @param string $alias
+     * @return Selection
+     */
+    public function setAlias(string $alias): Selection
+    {
+        $this->alias = $alias;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOn(): string
+    {
+        return $this->on;
+    }
+
+    /**
+     * @param string $on
+     * @return Selection
+     */
+    public function setOn(string $on): Selection
+    {
+        $this->on = $on;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArguments(): array
+    {
+        return $this->arguments;
+    }
+
+    /**
+     * @param array $arguments
+     * @return Selection
+     */
+    public function setArguments(array $arguments): Selection
+    {
+        $this->arguments = $arguments;
+        return $this;
+    }
+
+    /**
+     * @return Selection[]
+     */
+    public function getMembers(): array
+    {
+        return $this->members;
+    }
+
+    /**
+     * @param Selection[] $members
+     * @return Selection
+     */
+    public function setMembers(array $members): Selection
+    {
+        $this->members = $members;
+        return $this;
+    }
+}
+
+interface Type
+{
+}
+
+interface ReturnType
+{
+}
+
+class Field
+{
+    /**
+     * @var Type
+     */
+    private $parentType;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var ReturnType
+     */
+    private $returnType;
+
+    public function __construct(Type $parentType, string $name, ReturnType $returnType)
+    {
+        $this->parentType = $parentType;
+        $this->name = $name;
+        $this->returnType = $returnType;
+    }
+
+    public function resolve(Node $node)
+    {
+    }
+}
+
+class Node
+{
+    /**
+     * @var Field
+     */
+    private $field;
+
+    /**
+     * @var Selection
+     */
+    private $selection;
+
+    /**
+     * @var Node
+     */
+    private $parent;
+
+    /**
+     * @var Node[]
+     */
+    private $children;
+
+    /**
+     * @var Schema
+     */
+    private $schema;
+
+    public function __construct(Schema $schema, Field $field, Selection $selection)
+    {
+        $this->field = $field;
+        $this->selection = $selection;
+        $this->schema = $schema;
+    }
+
+    /**
+     * @return Schema
+     */
+    public function getSchema(): Schema
+    {
+        return $this->schema;
+    }
+
+    /**
+     * @param Schema $schema
+     * @return Node
+     */
+    public function setSchema(Schema $schema): Node
+    {
+        $this->schema = $schema;
+        return $this;
+    }
+
+    /**
+     * @return Field
+     */
+    public function getField(): Field
+    {
+        return $this->field;
+    }
+
+    /**
+     * @param Field $field
+     * @return Node
+     */
+    public function setField(Field $field): Node
+    {
+        $this->field = $field;
+        return $this;
+    }
+
+    /**
+     * @return Selection
+     */
+    public function getSelection(): Selection
+    {
+        return $this->selection;
+    }
+
+    /**
+     * @param Selection $selection
+     * @return Node
+     */
+    public function setSelection(Selection $selection): Node
+    {
+        $this->selection = $selection;
+        return $this;
+    }
+
+    /**
+     * @return Node
+     */
+    public function getParent(): Node
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param Node $parent
+     * @return Node
+     */
+    public function setParent(Node $parent): Node
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    /**
+     * @return Node[]
+     */
+    public function getChildren(): array
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param Node[] $children
+     * @return Node
+     */
+    public function setChildren(array $children): Node
+    {
+        $this->children = $children;
+        return $this;
+    }
+}
+
+interface ObjectType extends Type
+{
+}
+
+interface Schema
+{
+    /**
+     * @return ObjectType
+     */
+    public function query();
+}
+
+function createNodeTree(Schema $schema)
+{
+}
+
+call_user_func_array(function (...$args) {
+
+}, array_slice($argv, 1));

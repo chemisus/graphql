@@ -1,0 +1,133 @@
+<?php
+
+namespace GraphQL\Schema {
+
+    use GraphQL\Execute\ExecutionNode;
+
+    interface SchemaNode
+    {
+        /**
+         * @return string
+         */
+        public function name(): string;
+
+        /**
+         * @return string
+         */
+        public function fullName(): string;
+
+        /**
+         * @return SchemaNode
+         */
+        public function wrappedNode(): SchemaNode;
+
+        /**
+         * @param SchemaEdge $name
+         * @return SchemaEdge
+         */
+        public function edge(SchemaEdge $name): SchemaEdge;
+
+        /**
+         * @return SchemaEdge[]
+         */
+        public function edges();
+
+        /**
+         * @param ExecutionNode $node
+         * @return bool
+         */
+        public function validate(ExecutionNode $node): bool;
+
+        /**
+         * @return bool
+         */
+        public function isList(): bool;
+
+        /**
+         * @return bool
+         */
+        public function isNonNull(): bool;
+    }
+
+    interface SchemaEdge
+    {
+        /**
+         * @return string
+         */
+        public function name(): string;
+
+        /**
+         * @return SchemaNode
+         */
+        public function node(): SchemaNode;
+
+        /**
+         * @param ExecutionNode $node
+         * @return mixed
+         */
+        public function resolve(ExecutionNode $node);
+
+        /**
+         * @param ExecutionNode $node
+         * @return bool
+         */
+        public function validate(ExecutionNode $node): bool;
+    }
+}
+
+namespace GraphQL\Query {
+    interface QueryNode
+    {
+        public function on(): string;
+
+        public function name(): string;
+
+        public function alias(): string;
+
+        public function arguments();
+
+        public function selection();
+    }
+}
+
+namespace GraphQL\Execute {
+
+    use GraphQL\Query\QueryNode;
+    use GraphQL\Schema\SchemaEdge;
+    use GraphQL\Schema\SchemaNode;
+
+    interface ExecutionNode
+    {
+        /**
+         * @return ExecutionNode
+         */
+        public function parent();
+
+        /**
+         * @return ExecutionNode
+         */
+        public function realParent();
+
+        /**
+         * @return QueryNode
+         */
+        public function query(): QueryNode;
+
+        /**
+         * @return SchemaNode
+         */
+        public function type(): SchemaNode;
+
+        /**
+         * @return SchemaEdge
+         */
+        public function edge(): SchemaEdge;
+    }
+}
+
+namespace Main {
+
+
+    call_user_func_array(function (...$args) {
+    }, array_slice($argv, 1));
+}

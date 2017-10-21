@@ -1,0 +1,85 @@
+<?xml version="1.0"
+        encoding="UTF-8"?>
+<project xmlns:unless="ant:unless" xmlns:if="ant:if">
+    <property name="contained" value=""/>
+
+    <macrodef name="container">
+        <attribute name="target"/>
+        <element name="task" implicit="true"/>
+        <sequential>
+            <exec executable="docker-compose" if:blank="${contained}">
+                <env key="TARGET" value="@{target}"/>
+                <arg value="up"/>
+                <arg value="ant"/>
+            </exec>
+            <sequential unless:blank="${contained}">
+                <task/>
+            </sequential>
+        </sequential>
+    </macrodef>
+
+    <target name="test">
+        <container target="test">
+            <exec executable="php">
+                <arg file="src/GraphQL.php"/>
+            </exec>
+        </container>
+    </target>
+
+    <target name="composer.phar:available">
+        <condition property="composer.phar:available">
+            <available file="composer.phar"/>
+        </condition>
+    </target>
+
+    <target name="vendor:available">
+        <condition property="vendor:available">
+            <available file="vendor"/>
+        </condition>
+    </target>
+
+    <target name="phpunit:available">
+        <condition property="phpunit:available">
+            <available file="vendor/bin/phpunit"/>
+        </condition>
+    </target>
+
+    <target name="composer.phar" depends="composer.phar:available" unless="composer.phar:available">
+        <get src="https://getcomposer.org/composer.phar" dest="composer.phar"/>
+    </target>
+
+    <target name="composer:install" depends="composer.phar,vendor:available" unless="vendor:available">
+        <container target="composer:install">
+            <exec executable="php">
+                <arg value="composer.phar"/>
+                <arg value="install"/>
+            </exec>
+        </container>
+    </target>
+
+    <target name="composer:du" depends="composer.phar">
+        <container target="composer:du">
+            <exec executable="php">
+                <arg value="composer.phar"/>
+                <arg value="du"/>
+            </exec>
+        </container>
+    </target>
+
+    <target name="phpunit:installed" depends="phpunit:available,composer.phar" unless="phpunit:available">
+        <container target="phpunit:installed">
+            <exec executable="php">
+                <arg value="composer.phar"/>
+                <arg value="require"/>
+                <arg value="phpunit/phpunit"/>
+            </exec>
+        </container>
+    </target>
+
+    <target name="phpunit" depends="phpunit:installed">
+        <container target="phpunit">
+            <exec executable="vendor/bin/phpunit">
+            </exec>
+        </container>
+    </target>
+</project>

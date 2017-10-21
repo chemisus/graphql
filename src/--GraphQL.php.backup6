@@ -1,0 +1,591 @@
+<?php
+
+error_reporting(E_ALL);
+
+class Selection
+{
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $alias;
+
+    /**
+     * @var SelectionList
+     */
+    public $selections;
+
+    public $arguments = [];
+
+    /**
+     * @param string $name
+     * @param SelectionList $selections
+     */
+    public function __construct($name, SelectionList $selections = null)
+    {
+        $this->name = $name;
+        $this->selections = $selections ?? new SelectionList();
+    }
+
+    public function alias()
+    {
+        return $this->alias ?? $this->name;
+    }
+
+    public function addSelection(Selection $selection)
+    {
+        $this->selections->selections[] = $selection;
+        return $this;
+    }
+
+    public function putArgument(string $name, $value)
+    {
+        $this->arguments[$name] = $value;
+        return $this;
+    }
+
+    public function hasArgument(string $name)
+    {
+        return array_key_exists($name, $this->arguments);
+    }
+
+    public function getArgument(string $name, $default = null)
+    {
+        return $this->hasArgument($name) ? $this->arguments[$name] : $default;
+    }
+}
+
+class Schema implements Type
+{
+    /**
+     * @var Field
+     */
+    public $query;
+
+    /**
+     * @var ObjectType[]
+     */
+    public $types;
+
+    public function __construct(Type... $types)
+    {
+        array_map([$this, 'putType'], $types);
+    }
+
+    public function name(): string
+    {
+        return 'Schema';
+    }
+
+    public function putType(Type $type)
+    {
+        $this->types[$type->name()] = $type;
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return Type
+     */
+    public function type(string $name): Type
+    {
+        return $this->types[$name];
+    }
+}
+
+interface Type
+{
+    /**
+     * @return string
+     */
+    public function name(): string;
+}
+
+class ScalarType implements Type
+{
+    /**
+     * @var string
+     */
+    private $name;
+
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function name(): string
+    {
+        return $this->name;
+    }
+}
+
+class ObjectType implements Type
+{
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var Field[]
+     */
+    public $fields = [];
+
+    /**
+     * @param string $name
+     * @param Field[] ...$fields
+     */
+    public function __construct(string $name, Field... $fields)
+    {
+        $this->name = $name;
+        array_map([$this, 'putField'], $fields);
+    }
+
+    /**
+     * @return string
+     */
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function putField(Field $field)
+    {
+        $this->fields[$field->name] = $field;
+    }
+}
+
+class Field
+{
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var ReturnType
+     */
+    public $returnType;
+
+    /**
+     * @var callable[]
+     */
+    public $onEnter = [];
+
+    /**
+     * @var callable[]
+     */
+    public $onExit = [];
+
+    /**
+     * @var callable[]
+     */
+    public $onCreate = [];
+
+    public function __construct(string $name, ReturnType $returnType)
+    {
+        $this->name = $name;
+        $this->returnType = $returnType;
+    }
+
+    public function addOnEnter(callable $callback)
+    {
+        $this->onEnter[] = $callback;
+        return $this;
+    }
+
+    public function addOnExit(callable $callback)
+    {
+        $this->onExit[] = $callback;
+        return $this;
+    }
+
+    public function addOnCreate(callable $callback)
+    {
+        $this->onCreate[] = $callback;
+        return $this;
+    }
+}
+
+class ReturnValue
+{
+    public $offsets;
+
+    public $value;
+
+    public function __construct($value, $offsets = [])
+    {
+        $this->value = $value;
+        $this->offsets = $offsets;
+    }
+}
+
+interface ReturnType
+{
+    public function baseType(): Type;
+
+    public function baseName(): string;
+
+    public function fullName(): string;
+
+    public function isList(): bool;
+
+    public function isNonNull(): bool;
+}
+
+class ReferenceReturnType implements ReturnType
+{
+    /**
+     * @var Schema
+     */
+    private $schema;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    public function __construct(Schema $schema, string $name)
+    {
+        $this->schema = $schema;
+        $this->name = $name;
+    }
+
+    public function baseName(): string
+    {
+        return $this->name;
+    }
+
+    public function fullName(): string
+    {
+        return $this->name;
+    }
+
+    public function baseType(): Type
+    {
+        return $this->schema->type($this->name);
+    }
+
+    public function isList(): bool
+    {
+        return false;
+    }
+
+    public function isNonNull(): bool
+    {
+        return false;
+    }
+}
+
+class ListReturnType implements ReturnType
+{
+    /**
+     * @var ReturnType
+     */
+    private $returnType;
+
+    public function __construct(ReturnType $returnType)
+    {
+        $this->returnType = $returnType;
+    }
+
+    public function baseType(): Type
+    {
+        return $this->returnType->baseType();
+    }
+
+    public function baseName(): string
+    {
+        return $this->returnType->baseName();
+    }
+
+    public function fullName(): string
+    {
+        return sprintf('[%s]', $this->returnType->fullName());
+    }
+
+    public function isList(): bool
+    {
+        return true;
+    }
+
+    public function isNonNull(): bool
+    {
+        return $this->returnType->isNonNull();
+    }
+}
+
+class NonNullReturnType implements ReturnType
+{
+    /**
+     * @var ReturnType
+     */
+    private $returnType;
+
+    public function __construct(ReturnType $returnType)
+    {
+        $this->returnType = $returnType;
+    }
+
+    public function baseType(): Type
+    {
+        return $this->returnType->baseType();
+    }
+
+    public function baseName(): string
+    {
+        return $this->returnType->baseName();
+    }
+
+    public function fullName(): string
+    {
+        return sprintf('%s!', $this->returnType->fullName());
+    }
+
+    public function resolve(Node $node, $value)
+    {
+        return $value;
+    }
+
+    public function isList(): bool
+    {
+        return $this->returnType->isList();
+    }
+
+    public function isNonNull(): bool
+    {
+        return true;
+    }
+}
+
+class SelectionList
+{
+    /**
+     * @var Selection[]
+     */
+    public $selections;
+
+    public function __construct(Selection... $selections)
+    {
+        $this->selections = $selections;
+    }
+}
+
+class Node
+{
+    /**
+     * @var Node
+     */
+    public $parent;
+
+    /**
+     * @var mixed
+     */
+    public $value;
+
+    /**
+     * @var Schema
+     */
+    public $schema;
+
+    /**
+     * @var Field
+     */
+    public $field;
+
+    /**
+     * @var SelectionList
+     */
+    public $selections;
+
+    /**
+     * @var Type
+     */
+    public $type;
+
+    public function __construct(Schema $schema, SelectionList $selections, Type $type = null, Field $field = null, Node $parent = null)
+    {
+        $this->schema = $schema;
+        $this->field = $field;
+        $this->selections = $selections;
+        $this->parent = $parent;
+        $this->type = $type;
+    }
+
+    public function path()
+    {
+        return ($this->parent ? $this->parent->path() . '.' : '') . $this->field->name;
+    }
+
+    public function createNode()
+    {
+        foreach ($this->field->onCreate as $event) {
+            call_user_func($event, $this);
+        }
+    }
+
+    public function enterNode()
+    {
+        printf("==================================\n%s\n", $this->path());
+
+        foreach ($this->field->onEnter as $event) {
+            call_user_func($event, $this);
+        }
+
+//        var_dump($this->value);
+    }
+
+    public function exitNode()
+    {
+        foreach ($this->field->onExit as $event) {
+            call_user_func($event, $this);
+        }
+    }
+}
+
+function execute(Schema $schema, SelectionList $query)
+{
+    $root = new Node($schema, $query, $schema->type($schema->query->returnType->baseName()), $schema->query);
+
+    /**
+     * @var Node[] $queue
+     */
+    $queue = [$root];
+    $nodes = [$root];
+
+    while (!empty($queue)) {
+        $node = array_shift($queue);
+        $node->enterNode();
+
+        foreach ($node->selections->selections as $selection) {
+            $field = $node->type->fields[$selection->name];
+            $type = $field->returnType->baseType();
+            $child = new Node($schema, $selection->selections, $type, $field, $node);
+            $queue[] = $child;
+            $nodes[] = $child;
+            $child->createNode();
+        }
+
+        $node->exitNode();
+    }
+
+    return;
+}
+
+function resolveNode($data, callable $callback)
+{
+    if (is_null($data)) {
+        return null;
+    }
+
+    if (is_array($data)) {
+        return array_map('resolveNode', $data, array_fill(0, count($data), $callback));
+    }
+
+    return call_user_func($callback, $data);
+}
+
+call_user_func_array(function (...$args) {
+
+    $schema = new Schema();
+
+    $schema->query = new Field('query', new ReferenceReturnType($schema, 'Query'));
+
+    $schema->putType(new ScalarType('ID'));
+    $schema->putType(new ScalarType('String'));
+    $schema->putType(new ScalarType('Int'));
+    $schema->putType(new ScalarType('Boolean'));
+
+    $entities = [
+        1 => (object) [
+            'id' => 1,
+            'parent_id' => 4,
+            'name' => 'one',
+        ],
+        2 => (object) [
+            'id' => 2,
+            'parent_id' => 4,
+            'name' => 'two',
+        ],
+        3 => (object) [
+            'id' => 3,
+            'parent_id' => 4,
+            'name' => 'three',
+        ],
+        4 => (object) [
+            'id' => 4,
+            'parent_id' => null,
+            'name' => 'four',
+        ],
+    ];
+
+    $schema->putType(new ObjectType(
+        'Query',
+        (new Field('entity', new ReferenceReturnType($schema, 'Entity')))
+            ->addOnEnter(function (Node $node) use ($entities) {
+                $node->value = $entities[1];
+            }),
+        (new Field('entities', new ListReturnType(new ReferenceReturnType($schema, 'Entity'))))
+            ->addOnEnter(function (Node $node) use ($entities) {
+                $node->value = [
+                    $entities[2],
+                    $entities[3],
+                    $entities[4],
+                ];
+            })
+    ));
+
+    $schema->putType(new ObjectType(
+        'Entity',
+        (new Field('id', new ReferenceReturnType($schema, 'ID')))
+            ->addOnEnter(function (Node $node) {
+                $node->value = resolveNode($node->parent->value, function ($data) {
+                    return $data->id;
+                });
+            }),
+        (new Field('parent', new ReferenceReturnType($schema, 'Entity')))
+            ->addOnEnter(function (Node $node) use ($entities) {
+                $node->value = resolveNode($node->parent->value, function ($data) use ($entities) {
+                    $data->parent = array_key_exists($data->parent_id, $entities) ? $entities[$data->parent_id] : null;
+                    return $data->parent;
+                });
+            }),
+        (new Field('children', new ListReturnType(new ReferenceReturnType($schema, 'Entity'))))
+            ->addOnEnter(function (Node $node) use ($entities) {
+                $node->value = resolveNode($node->parent->value, function ($data) use ($entities) {
+                    $data->children = array_filter($entities, function ($child) use ($data) {
+                        $parent_id = $child->parent_id;
+                        return $data->id === $parent_id;
+                    });
+
+                    return $data->children;
+                });
+            })
+    ));
+
+    $selections = new SelectionList(
+        (new Selection('entities'))
+            ->addSelection((new Selection('children'))
+                ->addSelection(new Selection('id'))
+                ->addSelection((new Selection('children'))
+                    ->addSelection(new Selection('id'))
+                )
+            )
+            ->addSelection((new Selection('parent'))
+                ->addSelection(new Selection('id'))
+                ->addSelection((new Selection('children'))
+                    ->addSelection(new Selection('id'))
+                )
+            )
+    );
+
+    var_dump(execute($schema, $selections));
+
+}, array_slice($argv, 1));

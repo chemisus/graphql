@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+#  php:
+#    build: .
+#    hostname: php
+#    working_dir: /usr/src/app
+#    volumes:
+#      - .:/usr/src/app:z
+#    command: [ "php", "/usr/src/app/src/GraphQL.php" ]
+
+  ant:
+    build: .
+    hostname: php
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app:z
+    command: [ "ant", "${TARGET}", "-Dcontained=1" ]
