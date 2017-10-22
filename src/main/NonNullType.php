@@ -14,6 +14,11 @@ class NonNullType implements Type
         $this->type = $type;
     }
 
+    public function name(): string
+    {
+        return $this->type->name();
+    }
+
     /**
      * @param string $name
      * @return Field

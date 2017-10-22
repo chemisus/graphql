@@ -6,6 +6,11 @@ use PHPUnit\Framework\TestCase;
 
 class GraphQLTest extends TestCase
 {
+    public function makeSchema()
+    {
+
+    }
+
     public function testThis()
     {
         $people = [
@@ -56,10 +61,15 @@ class GraphQLTest extends TestCase
 
         $graph = [];
 
-        $schemaType = new ObjectType('Schema');
-        $queryType = new ObjectType('Query');
-        $stringType = new ScalarType('String');
-        $personType = new ObjectType('Person');
+        $schemaType = new Schema('Schema');
+        $schemaType->putType(new ScalarType('String'));
+        $schemaType->putType(new ObjectType('Query'));
+        $schemaType->putType(new ObjectType('Person'));
+
+
+        $queryType = $schemaType->getType('Query');
+        $stringType = $schemaType->getType('String');
+        $personType = $schemaType->getType('Person');
 
         $schemaType->addField(new Field($schemaType, 'query', $queryType));
         $queryType->addField(new Field($queryType, 'greeting', $stringType));

@@ -5,6 +5,11 @@ namespace GraphQL;
 interface Type
 {
     /**
+     * @return string
+     */
+    public function name(): string;
+
+    /**
      * @param string $name
      * @return Field
      * @throws KindDoesNotSupportFieldsException

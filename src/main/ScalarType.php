@@ -14,6 +14,11 @@ class ScalarType implements Type
         $this->name = $name;
     }
 
+    public function name(): string
+    {
+        return $this->name;
+    }
+
     /**
      * @param string $name
      * @return Field

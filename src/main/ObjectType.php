@@ -19,6 +19,11 @@ class ObjectType implements Type
         $this->name = $name;
     }
 
+    public function name(): string
+    {
+        return $this->name;
+    }
+
     public function addField(Field $field)
     {
         $this->fields[$field->name()] = $field;
