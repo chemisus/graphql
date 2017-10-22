@@ -67,8 +67,8 @@ class GraphQLTest extends TestCase
         $queryType->fields['person'] = new Field($queryType, 'person', $personType);
 
         $personType->fields['name'] = new Field($personType, 'name', $stringType);
-        $personType->fields['father'] = new Field($personType, 'father', $personType);
-        $personType->fields['mother'] = new Field($personType, 'mother', $personType);
+        $personType->fields['father'] = new Field($personType, 'father', new NonNullType($personType));
+        $personType->fields['mother'] = new Field($personType, 'mother', new NonNullType($personType));
         $personType->fields['children'] = new Field($personType, 'children', new ListType($personType));
 
         $queryType->fields['greeting']->resolver = new CallbackResolver(function (Node $node) {
@@ -135,9 +135,6 @@ class GraphQLTest extends TestCase
     </person>
     <person gql:alias="terrence" name="terrence">
         <name/>
-        <father gql:alias="dad">
-            <name/>
-        </father>
         <mother gql:alias="mom">
             <name/>
             <children>
