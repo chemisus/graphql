@@ -61,15 +61,13 @@ class GraphQLTest extends TestCase
         $stringType = new ScalarType('String');
         $personType = new ObjectType('Person');
 
-        $schemaType->fields['query'] = new Field($schemaType, 'query', $queryType);
-
-        $queryType->fields['greeting'] = new Field($queryType, 'greeting', $stringType);
-        $queryType->fields['person'] = new Field($queryType, 'person', $personType);
-
-        $personType->fields['name'] = new Field($personType, 'name', $stringType);
-        $personType->fields['father'] = new Field($personType, 'father', new NonNullType($personType));
-        $personType->fields['mother'] = new Field($personType, 'mother', new NonNullType($personType));
-        $personType->fields['children'] = new Field($personType, 'children', new ListType($personType));
+        $schemaType->addField(new Field($schemaType, 'query', $queryType));
+        $queryType->addField(new Field($queryType, 'greeting', $stringType));
+        $queryType->addField(new Field($queryType, 'person', $personType));
+        $personType->addField(new Field($personType, 'name', $stringType));
+        $personType->addField(new Field($personType, 'father', new NonNullType($personType)));
+        $personType->addField(new Field($personType, 'mother', new NonNullType($personType)));
+        $personType->addField(new Field($personType, 'children', new ListType($personType)));
 
         $queryType->fields['greeting']->resolver = new CallbackResolver(function (Node $node) {
             return sprintf("Hello, %s!\n", $node->arg('name', 'World'));
