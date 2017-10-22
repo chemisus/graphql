@@ -30,7 +30,7 @@ class ObjectType implements Type
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        $value = is_callable($resolver) ? call_user_func($resolver, $node, $parent, $value) : $value;
+        $value = $resolver ? $resolver->resolve($node, $parent, $value) : $value;
 
         if ($value === null) {
             return null;

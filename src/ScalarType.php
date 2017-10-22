@@ -26,6 +26,6 @@ class ScalarType implements Type
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        return is_callable($resolver) ? call_user_func($resolver, $node, $parent, $value, null) : $value;
+        return $resolver ? $resolver->resolve($node, $parent, $value) : $value;
     }
 }
