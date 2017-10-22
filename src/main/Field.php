@@ -42,6 +42,16 @@ class Field
         $this->returnType = $returnType;
     }
 
+    public function setFetcher(Fetcher $fetcher)
+    {
+        $this->fetcher = $fetcher;
+    }
+
+    public function setResolver(Resolver $resolver)
+    {
+        $this->resolver = $resolver;
+    }
+
     public function fetch(Node $node)
     {
         return $this->fetcher ? $this->fetcher->fetch($node) : [];
