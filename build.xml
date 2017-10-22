@@ -18,13 +18,7 @@
         </sequential>
     </macrodef>
 
-    <target name="test">
-        <container target="test">
-            <exec executable="php">
-                <arg file="src/GraphQL.php"/>
-            </exec>
-        </container>
-    </target>
+    <target name="test" depends="phpunit"/>
 
     <target name="composer.phar:available">
         <condition property="composer.phar:available">
