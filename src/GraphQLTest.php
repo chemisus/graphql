@@ -9,58 +9,61 @@ class GraphQLTest extends TestCase
     public function testThis()
     {
         $people = [
-            'terrence' => [
+            'terrence' => (object) [
                 'name' => 'terrence',
                 'mother' => 'gwen',
             ],
-            'nick' => [
+            'nick' => (object) [
                 'name' => 'nick',
                 'mother' => 'gwen',
                 'father' => 'rob',
             ],
-            'rob' => [
+            'rob' => (object) [
                 'name' => 'rob',
                 'mother' => 'carol',
             ],
-            'jessica' => [
+            'jessica' => (object) [
                 'name' => 'jessica',
                 'father' => 'mark',
                 'mother' => 'sandra',
             ],
-            'tom' => [
+            'tom' => (object) [
                 'name' => 'tom',
-                'father' => 'opa',
-                'mother' => 'oma',
+                'father' => 'carlton',
+                'mother' => 'eileen',
             ],
-            'gail' => [
+            'gail' => (object) [
                 'name' => 'gail',
                 'father' => 'murial',
                 'mother' => 'gilbert',
             ],
-            'gwen' => [
+            'gwen' => (object) [
                 'name' => 'gwen',
                 'father' => 'tom',
                 'mother' => 'gail',
             ],
-            'courtney' => [
+            'courtney' => (object) [
                 'name' => 'courtney',
                 'father' => 'tom',
                 'mother' => 'gail',
             ],
-            'wade' => [
+            'wade' => (object) [
                 'name' => 'wade',
                 'father' => 'tom',
                 'mother' => 'gail',
             ],
         ];
 
+        $graph = [];
+
         $schemaType = new ObjectType('Schema');
         $queryType = new ObjectType('Query');
-        $stringType = new ObjectType('String');
+        $stringType = new ScalarType('String');
         $personType = new ObjectType('Person');
 
         $schemaType->fields['query'] = new Field($schemaType, 'query', $queryType);
 
+        $queryType->fields['greeting'] = new Field($queryType, 'greeting', $stringType);
         $queryType->fields['person'] = new Field($queryType, 'person', $personType);
 
         $personType->fields['name'] = new Field($personType, 'name', $stringType);
@@ -68,87 +71,116 @@ class GraphQLTest extends TestCase
         $personType->fields['mother'] = new Field($personType, 'mother', $personType);
         $personType->fields['children'] = new Field($personType, 'children', new ListType($personType));
 
+        $queryType->fields['greeting']->resolver = function (Node $node) {
+            return sprintf("Hello, %s!\n", $node->arg('name', 'World'));
+        };
+
         $schemaType->fields['query']->fetcher = function (Node $node) {
-            echo $node->path() . PHP_EOL;
             return [true];
         };
 
+        $schemaType->fields['query']->resolver = function (Node $node, $owner) {
+            return $owner;
+        };
+
         $queryType->fields['person']->fetcher = function (Node $node) use ($people) {
-            echo $node->path() . PHP_EOL;
             return array_key_exists($node->arg('name'), $people) ? [$people[$node->arg('name')]] : null;
         };
 
-        $personType->fields['name']->fetcher = function (Node $node) {
-            echo $node->path() . ': ' . json_encode(array_column($node->parent()->items(), 'name')) . PHP_EOL;
+        $queryType->fields['person']->resolver = function (Node $node) use ($people) {
+            return $node->items()[0];
         };
 
         $personType->fields['children']->fetcher = function (Node $node) use ($people) {
-            echo $node->path() . ': ' . json_encode(array_column($node->parent()->items(), 'name')) . PHP_EOL;
             return array_filter(array_merge([], ...array_map(function ($person) use ($people) {
                 return array_values(array_filter($people, function ($child) use ($person) {
-                    return array_key_exists('father', $child) && $child['father'] === $person['name'] ||
-                        array_key_exists('mother', $child) && $child['mother'] === $person['name'];
+                    return array_key_exists('father', $child) && $child->father === $person->name ||
+                        array_key_exists('mother', $child) && $child->mother === $person->name;
                 }));
             }, $node->parent()->items())));
         };
 
         $personType->fields['father']->fetcher = function (Node $node) use ($people) {
-            echo $node->path() . ': ' . json_encode(array_column($node->parent()->items(), 'name')) . PHP_EOL;
             return array_values(array_filter(array_map(function ($person) use ($people) {
-                return array_key_exists($person['father'], $people) ? $people[$person['father']] : null;
+                return array_key_exists($person->father, $people) ? $people[$person->father] : null;
             }, $node->parent()->items())));
+        };
+
+        $personType->fields['father']->resolver = function (Node $node, $value) use ($graph, $people) {
+            return $people[$value];
         };
 
         $personType->fields['mother']->fetcher = function (Node $node) use ($people) {
-            echo $node->path() . ': ' . json_encode(array_column($node->parent()->items(), 'name')) . PHP_EOL;
             return array_values(array_filter(array_map(function ($person) use ($people) {
-                return array_key_exists($person['mother'], $people) ? $people[$person['mother']] : null;
+                return array_key_exists($person->mother, $people) ? $people[$person->mother] : null;
             }, $node->parent()->items())));
         };
 
+        $personType->fields['mother']->resolver = function (Node $node, $value) use ($graph, $people) {
+            return $people[$value];
+        };
+
         $xml = <<< _XML
-<query>
-    <person name="terrence">
+<query xmlns:gql="graphql">
+    <greeting name="Terrence"/>
+    <person gql:alias="gwen" name="gwen">
         <name/>
-        <father>
+    </person>
+    <person gql:alias="terrence" name="terrence">
+        <name/>
+        <mother gql:alias="mom">
             <name/>
-        </father>
-        <mother>
-            <name/>
-            <mother>
+            <mother gql:alias="mom">
                 <name/>
-            </mother>
-            <children>
-                <name/>
-                <father>
+                <mother gql:alias="mom">
                     <name/>
-                </father>
-            </children>
+                    <mother gql:alias="mom">
+                        <name/>
+                    </mother>
+                </mother>
+            </mother>
         </mother>
     </person>
+    <!--<person gql:alias="terrence" name="terrence">-->
+        <!--<name/>-->
+        <!--<father>-->
+            <!--<name/>-->
+        <!--</father>-->
+        <!--<mother>-->
+            <!--<name/>-->
+            <!--<mother>-->
+                <!--<name/>-->
+            <!--</mother>-->
+            <!--<children>-->
+                <!--<name/>-->
+                <!--<father>-->
+                    <!--<name/>-->
+                <!--</father>-->
+            <!--</children>-->
+        <!--</mother>-->
+    <!--</person>-->
 </query>
 _XML;
 
         $queryBuilder = new XMLQueryReader();
         $query = $queryBuilder->read($xml);
 
+        $root = new Node($schemaType->field($query->name()), $query);
         $nodes = [];
-        $queue = [new Node($schemaType->field($query->name()), $query)];
+        $queue = [$root];
 
         while (count($queue)) {
             $node = array_shift($queue);
+            array_push($nodes, $node);
             $children = $node->fetch();
             if (count($children)) {
                 array_push($queue, ...$children);
-                array_push($nodes, ...$children);
             }
         }
 
-        echo json_encode(array_map(function (Node $node) {
-            return $node->items() === null ? null : array_map(function ($person) {
-                return $person['name'];
-            }, $node->items());
-        }, $nodes));
+        $value = $root->resolve((object) []);
+
+        error_log(json_encode($value));
 
         $this->assertTrue(true);
     }

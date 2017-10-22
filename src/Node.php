@@ -14,7 +14,7 @@ class Node
      */
     private $query;
 
-    /**
+    /**, $value = null
      * @var mixed[]
      */
     public $items;
@@ -43,6 +43,24 @@ class Node
         $this->children = array_map(function (Query $query) {
             return new Node($this->field->returnType()->field($query->name()), $query, $this);
         }, $query->queries());
+    }
+
+    public function name()
+    {
+        return $this->query->name();
+    }
+
+    public function alias()
+    {
+        return $this->query->alias();
+    }
+
+    /**
+     * @return Node[]
+     */
+    public function children()
+    {
+        return $this->children;
     }
 
     public function items()
@@ -80,12 +98,8 @@ class Node
         }) : [];
     }
 
-    public function resolve()
+    public function resolve($value = null, $parent = null)
     {
-        $this->field->resolve($this);
-
-        return count($this->items) ? array_filter($this->children, function (Node $node) {
-            return is_callable($node->field->resolver);
-        }) : [];
+        return $this->field->resolve($this, $value);
     }
 }

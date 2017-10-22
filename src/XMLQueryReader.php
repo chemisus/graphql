@@ -26,7 +26,20 @@ class XMLQueryReader
             $attributes[$attribute->getName()] = (string) $attribute;
         }
 
+        $alias = null;
+        $on = null;
+        foreach ($node->attributes('graphql') as $attribute) {
+            if ($attribute->getName() === 'alias') {
+                $alias = (string) $attribute;
+            }
+            if ($attribute->getName() === 'on') {
+                $on = (string) $attribute;
+            }
+        }
+
         $query = new Query($node->getName(), ...array_map([$this, 'build'], $children));
+        $query->alias = $alias;
+        $query->on = $on;
         $query->args = $attributes;
         return $query;
     }

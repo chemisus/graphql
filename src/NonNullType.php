@@ -22,4 +22,8 @@ class NonNullType implements Type
     {
         return $this->type->field($name);
     }
+
+    public function resolve(Node $node, $value, callable $resolver = null)
+    {
+    }
 }
