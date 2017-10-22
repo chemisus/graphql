@@ -186,6 +186,7 @@ _XML;
         $value = $root->resolve(null, (object) []);
 
         error_log(json_encode($value, JSON_PRETTY_PRINT));
+        error_log(json_encode($graph, JSON_PRETTY_PRINT));
 
         $this->assertTrue(true);
     }
