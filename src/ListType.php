@@ -25,5 +25,18 @@ class ListType implements Type
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
+        $value = $resolver ? $resolver->resolve($node, $parent, $value) : $value;
+
+        if ($value === null) {
+            return null;
+        }
+
+        $array = [];
+
+        foreach ($value as $item) {
+            $array[] = $this->type->resolve($node, $parent, $item);
+        }
+
+        return $array;
     }
 }

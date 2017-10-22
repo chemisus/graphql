@@ -100,6 +100,13 @@ class GraphQLTest extends TestCase
             }, $node->parent()->items())));
         });
 
+        $personType->fields['children']->resolver = new CallbackResolver(function (Node $node, $person) use ($people) {
+            return array_values(array_filter($people, function ($child) use ($person) {
+                return array_key_exists('father', $child) && $child->father === $person->name ||
+                    array_key_exists('mother', $child) && $child->mother === $person->name;
+            }));
+        });
+
         $personType->fields['father']->fetcher = new CallbackFetcher(function (Node $node) use ($people) {
             return array_values(array_filter(array_map(function ($person) use ($people) {
                 return array_key_exists($person->father, $people) ? $people[$person->father] : null;
