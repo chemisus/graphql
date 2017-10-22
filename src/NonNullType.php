@@ -25,7 +25,7 @@ class NonNullType implements Type
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        $value = $resolver ? $resolver->resolve($node, $parent, $value) : $value;
+        $value = $this->type->resolve($node, $parent, $value, $resolver);
 
         if ($value === null) {
             throw new \Exception();
