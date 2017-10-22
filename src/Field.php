@@ -19,7 +19,7 @@ class Field
      */
     private $ownerType;
 
-    /**
+    /**mixed
      * @var string
      */
     private $name;

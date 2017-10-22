@@ -71,25 +71,25 @@ class GraphQLTest extends TestCase
         $personType->fields['mother'] = new Field($personType, 'mother', $personType);
         $personType->fields['children'] = new Field($personType, 'children', new ListType($personType));
 
-        $queryType->fields['greeting']->resolver = function (Node $node) {
+        $queryType->fields['greeting']->resolver = new CallbackResolver(function (Node $node) {
             return sprintf("Hello, %s!\n", $node->arg('name', 'World'));
-        };
+        });
 
         $schemaType->fields['query']->fetcher = function (Node $node) {
             return [true];
         };
 
-        $schemaType->fields['query']->resolver = function (Node $node, $owner) {
+        $schemaType->fields['query']->resolver = new CallbackResolver(function (Node $node, $owner) {
             return $owner;
-        };
+        });
 
         $queryType->fields['person']->fetcher = function (Node $node) use ($people) {
             return array_key_exists($node->arg('name'), $people) ? [$people[$node->arg('name')]] : null;
         };
 
-        $queryType->fields['person']->resolver = function (Node $node) use ($people) {
+        $queryType->fields['person']->resolver = new CallbackResolver(function (Node $node) use ($people) {
             return $node->items()[0];
-        };
+        });
 
         $personType->fields['children']->fetcher = function (Node $node) use ($people) {
             return array_filter(array_merge([], ...array_map(function ($person) use ($people) {
@@ -106,9 +106,9 @@ class GraphQLTest extends TestCase
             }, $node->parent()->items())));
         };
 
-        $personType->fields['father']->resolver = function (Node $node, $value) use ($graph, $people) {
+        $personType->fields['father']->resolver = new CallbackResolver(function (Node $node, $value) use ($graph, $people) {
             return $people[$value];
-        };
+        });
 
         $personType->fields['mother']->fetcher = function (Node $node) use ($people) {
             return array_values(array_filter(array_map(function ($person) use ($people) {
@@ -116,9 +116,9 @@ class GraphQLTest extends TestCase
             }, $node->parent()->items())));
         };
 
-        $personType->fields['mother']->resolver = function (Node $node, $value) use ($graph, $people) {
+        $personType->fields['mother']->resolver = new CallbackResolver(function (Node $node, $value) use ($graph, $people) {
             return $people[$value];
-        };
+        });
 
         $xml = <<< _XML
 <query xmlns:gql="graphql">
@@ -141,24 +141,6 @@ class GraphQLTest extends TestCase
             </mother>
         </mother>
     </person>
-    <!--<person gql:alias="terrence" name="terrence">-->
-        <!--<name/>-->
-        <!--<father>-->
-            <!--<name/>-->
-        <!--</father>-->
-        <!--<mother>-->
-            <!--<name/>-->
-            <!--<mother>-->
-                <!--<name/>-->
-            <!--</mother>-->
-            <!--<children>-->
-                <!--<name/>-->
-                <!--<father>-->
-                    <!--<name/>-->
-                <!--</father>-->
-            <!--</children>-->
-        <!--</mother>-->
-    <!--</person>-->
 </query>
 _XML;
 
