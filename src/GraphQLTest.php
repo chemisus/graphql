@@ -79,15 +79,15 @@ class GraphQLTest extends TestCase
             return [true];
         };
 
-        $schemaType->fields['query']->resolver = new CallbackResolver(function (Node $node, $owner) {
-            return $owner;
+        $schemaType->fields['query']->resolver = new CallbackResolver(function (Node $node, $parent, $value) {
+            return $value;
         });
 
         $queryType->fields['person']->fetcher = function (Node $node) use ($people) {
             return array_key_exists($node->arg('name'), $people) ? [$people[$node->arg('name')]] : null;
         };
 
-        $queryType->fields['person']->resolver = new CallbackResolver(function (Node $node) use ($people) {
+        $queryType->fields['person']->resolver = new CallbackResolver(function (Node $node, $parent, $value) use ($people) {
             return $node->items()[0];
         });
 
@@ -106,8 +106,8 @@ class GraphQLTest extends TestCase
             }, $node->parent()->items())));
         };
 
-        $personType->fields['father']->resolver = new CallbackResolver(function (Node $node, $value) use ($graph, $people) {
-            return $people[$value];
+        $personType->fields['father']->resolver = new CallbackResolver(function (Node $node, $parent, $value) use ($graph, $people) {
+            return $people[$parent->father];
         });
 
         $personType->fields['mother']->fetcher = function (Node $node) use ($people) {
@@ -116,8 +116,8 @@ class GraphQLTest extends TestCase
             }, $node->parent()->items())));
         };
 
-        $personType->fields['mother']->resolver = new CallbackResolver(function (Node $node, $value) use ($graph, $people) {
-            return $people[$value];
+        $personType->fields['mother']->resolver = new CallbackResolver(function (Node $node, $parent, $value) use ($graph, $people) {
+            return $people[$parent->mother];
         });
 
         $xml = <<< _XML
@@ -128,17 +128,14 @@ class GraphQLTest extends TestCase
     </person>
     <person gql:alias="terrence" name="terrence">
         <name/>
+        <father gql:alias="dad">
+            <name/>
+        </father>
         <mother gql:alias="mom">
             <name/>
-            <mother gql:alias="mom">
+            <children>
                 <name/>
-                <mother gql:alias="mom">
-                    <name/>
-                    <mother gql:alias="mom">
-                        <name/>
-                    </mother>
-                </mother>
-            </mother>
+            </children>
         </mother>
     </person>
 </query>
@@ -160,7 +157,7 @@ _XML;
             }
         }
 
-        $value = $root->resolve((object) []);
+        $value = $root->resolve(null, (object) []);
 
         error_log(json_encode($value));
 

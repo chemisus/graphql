@@ -28,9 +28,9 @@ class ObjectType implements Type
         return $this->fields[$name];
     }
 
-    public function resolve(Node $node, $value, callable $resolver = null)
+    public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        $value = is_callable($resolver) ? call_user_func($resolver, $node, $value) : $value;
+        $value = is_callable($resolver) ? call_user_func($resolver, $node, $parent, $value) : $value;
 
         if ($value === null) {
             return null;
@@ -40,7 +40,7 @@ class ObjectType implements Type
 
         foreach ($node->children() as $child) {
             $name = $child->name();
-            $object->{$child->alias()} = $child->resolve(property_exists($value, $name) ? $value->{$name} : null);
+            $object->{$child->alias()} = $child->resolve($value, property_exists($value, $name) ? $value->{$name} : null);
         }
 
         return $object;

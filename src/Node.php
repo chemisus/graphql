@@ -98,8 +98,8 @@ class Node
         }) : [];
     }
 
-    public function resolve($value = null, $parent = null)
+    public function resolve($parent = null, $value = null)
     {
-        return $this->field->resolve($this, $value);
+        return $this->field->resolve($this, $parent, $value);
     }
 }

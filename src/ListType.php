@@ -23,7 +23,7 @@ class ListType implements Type
         return $this->type->field($name);
     }
 
-    public function resolve(Node $node, $value, callable $resolver = null)
+    public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
     }
 }

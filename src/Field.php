@@ -10,7 +10,7 @@ class Field
     public $fetcher;
 
     /**
-     * @var callable
+     * @var Resolver
      */
     public $resolver;
 
@@ -47,9 +47,9 @@ class Field
         return is_callable($this->fetcher) ? call_user_func($this->fetcher, $node) : null;
     }
 
-    public function resolve(Node $node, $value)
+    public function resolve(Node $node, $parent, $value)
     {
-        return $this->returnType->resolve($node, $value, $this->resolver);
+        return $this->returnType->resolve($node, $parent, $value, $this->resolver);
     }
 
     public function name(): string
