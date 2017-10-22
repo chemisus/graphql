@@ -167,21 +167,8 @@ _XML;
 
         $queryBuilder = new XMLQueryReader();
         $query = $queryBuilder->read($xml);
-
-        $root = new Node($schemaType->field($query->name()), $query);
-        $nodes = [];
-        $queue = [$root];
-
-        while (count($queue)) {
-            $node = array_shift($queue);
-            array_push($nodes, $node);
-            $children = $node->fetch();
-            if (count($children)) {
-                array_push($queue, ...$children);
-            }
-        }
-
-        $value = $root->resolve(null, (object) []);
+        $executor = new BFSExecutor();
+        $value = $executor->execute($schemaType, $query);
 
         error_log(json_encode($value, JSON_PRETTY_PRINT));
         error_log(json_encode($graph, JSON_PRETTY_PRINT));

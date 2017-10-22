@@ -42,6 +42,11 @@ class Field
         $this->returnType = $returnType;
     }
 
+    public function hasFetcher()
+    {
+        return $this->fetcher !== null;
+    }
+
     public function setFetcher(Fetcher $fetcher)
     {
         $this->fetcher = $fetcher;
