@@ -75,46 +75,46 @@ class GraphQLTest extends TestCase
             return sprintf("Hello, %s!\n", $node->arg('name', 'World'));
         });
 
-        $schemaType->fields['query']->fetcher = function (Node $node) {
+        $schemaType->fields['query']->fetcher = new CallbackFetcher(function (Node $node) {
             return [true];
-        };
+        });
 
         $schemaType->fields['query']->resolver = new CallbackResolver(function (Node $node, $parent, $value) {
             return $value;
         });
 
-        $queryType->fields['person']->fetcher = function (Node $node) use ($people) {
+        $queryType->fields['person']->fetcher = new CallbackFetcher(function (Node $node) use ($people) {
             return array_key_exists($node->arg('name'), $people) ? [$people[$node->arg('name')]] : null;
-        };
+        });
 
         $queryType->fields['person']->resolver = new CallbackResolver(function (Node $node, $parent, $value) use ($people) {
             return $node->items()[0];
         });
 
-        $personType->fields['children']->fetcher = function (Node $node) use ($people) {
+        $personType->fields['children']->fetcher = new CallbackFetcher(function (Node $node) use ($people) {
             return array_filter(array_merge([], ...array_map(function ($person) use ($people) {
                 return array_values(array_filter($people, function ($child) use ($person) {
                     return array_key_exists('father', $child) && $child->father === $person->name ||
                         array_key_exists('mother', $child) && $child->mother === $person->name;
                 }));
             }, $node->parent()->items())));
-        };
+        });
 
-        $personType->fields['father']->fetcher = function (Node $node) use ($people) {
+        $personType->fields['father']->fetcher = new CallbackFetcher(function (Node $node) use ($people) {
             return array_values(array_filter(array_map(function ($person) use ($people) {
                 return array_key_exists($person->father, $people) ? $people[$person->father] : null;
             }, $node->parent()->items())));
-        };
+        });
 
         $personType->fields['father']->resolver = new CallbackResolver(function (Node $node, $parent, $value) use ($graph, $people) {
             return $people[$parent->father];
         });
 
-        $personType->fields['mother']->fetcher = function (Node $node) use ($people) {
+        $personType->fields['mother']->fetcher = new CallbackFetcher(function (Node $node) use ($people) {
             return array_values(array_filter(array_map(function ($person) use ($people) {
                 return array_key_exists($person->mother, $people) ? $people[$person->mother] : null;
             }, $node->parent()->items())));
-        };
+        });
 
         $personType->fields['mother']->resolver = new CallbackResolver(function (Node $node, $parent, $value) use ($graph, $people) {
             return $people[$parent->mother];

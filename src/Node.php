@@ -94,7 +94,7 @@ class Node
         $this->items = $this->field->fetch($this);
 
         return count($this->items) ? array_filter($this->children, function (Node $node) {
-            return is_callable($node->field->fetcher);
+            return $node->field->fetcher !== null;
         }) : [];
     }
 

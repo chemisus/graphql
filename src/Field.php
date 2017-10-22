@@ -5,7 +5,7 @@ namespace GraphQL;
 class Field
 {
     /**
-     * @var callable
+     * @var Fetcher
      */
     public $fetcher;
 
@@ -44,7 +44,7 @@ class Field
 
     public function fetch(Node $node)
     {
-        return is_callable($this->fetcher) ? call_user_func($this->fetcher, $node) : null;
+        return $this->fetcher ? $this->fetcher->fetch($node) : [];
     }
 
     public function resolve(Node $node, $parent, $value)

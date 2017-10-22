@@ -40,7 +40,8 @@ class ObjectType implements Type
 
         foreach ($node->children() as $child) {
             $name = $child->name();
-            $object->{$child->alias()} = $child->resolve($value, property_exists($value, $name) ? $value->{$name} : null);
+            $field = property_exists($value, $name) ? $value->{$name} : null;
+            $object->{$child->alias()} = $child->resolve($value, $field);
         }
 
         return $object;

@@ -2,7 +2,7 @@
 
 namespace GraphQL;
 
-class CallbackResolver implements Resolver
+class CallbackFetcher implements Fetcher
 {
     /**
      * @var callable
@@ -17,8 +17,8 @@ class CallbackResolver implements Resolver
         $this->callback = $callback;
     }
 
-    public function resolve(Node $node, $owner, $value = null)
+    public function fetch(Node $node)
     {
-        return call_user_func($this->callback, $node, $owner, $value);
+        return call_user_func($this->callback, $node);
     }
 }
