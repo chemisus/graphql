@@ -1,0 +1,8 @@
+<query xmlns:gql="graphql">
+    <pets>
+        <name gql:on="Dog"/>
+        <name gql:on="Cat"/>
+        <guard gql:on="Dog"/>
+        <lives gql:on="Cat"/>
+    </pets>
+</query>

@@ -1,0 +1,12 @@
+{
+  "pets": [
+    {
+      "name": "gunner",
+      "guard": true
+    },
+    {
+      "name": "tubs",
+      "lives": 9
+    }
+  ]
+}

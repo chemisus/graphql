@@ -4,58 +4,6 @@ namespace GraphQL;
 
 class PeopleRepository extends Repository
 {
-    public static function Sample()
-    {
-        return new PeopleRepository([
-            'terrence' => (object) [
-                'name' => 'terrence',
-                'mother' => 'gwen',
-            ],
-            'nick' => (object) [
-                'name' => 'nick',
-                'mother' => 'gwen',
-                'father' => 'rob',
-            ],
-            'rob' => (object) [
-                'name' => 'rob',
-                'mother' => 'carol',
-            ],
-            'jessica' => (object) [
-                'name' => 'jessica',
-                'father' => 'mark',
-                'mother' => 'sandra',
-            ],
-            'tom' => (object) [
-                'name' => 'tom',
-                'father' => 'carlton',
-                'mother' => 'eileen',
-            ],
-            'gail' => (object) [
-                'name' => 'gail',
-                'father' => 'murial',
-                'mother' => 'gilbert',
-            ],
-            'gwen' => (object) [
-                'name' => 'gwen',
-                'father' => 'tom',
-                'mother' => 'gail',
-            ],
-            'courtney' => (object) [
-                'name' => 'courtney',
-                'father' => 'tom',
-                'mother' => 'gail',
-            ],
-            'wade' => (object) [
-                'name' => 'wade',
-                'father' => 'tom',
-                'mother' => 'gail',
-            ],
-            'martin' => (object) [
-                'name' => 'martin',
-            ],
-        ]);
-    }
-
     public function __construct(iterable $records)
     {
         parent::__construct($records);
@@ -63,7 +11,7 @@ class PeopleRepository extends Repository
 
     public function gets(...$ids)
     {
-        return new PeopleRepository(parent::gets($ids));
+        return new PeopleRepository(parent::gets(...$ids));
     }
 
     public function filter(callable $callback)

@@ -1,0 +1,20 @@
+{
+  "terrence": {
+    "name": "terrence",
+    "pets": [
+      {
+        "name": "gunner",
+        "guard": true
+      }
+    ]
+  },
+  "martin": {
+    "name": "martin",
+    "pets": [
+      {
+        "name": "tubs",
+        "lives": 9
+      }
+    ]
+  }
+}
