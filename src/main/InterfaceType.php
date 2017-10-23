@@ -46,6 +46,6 @@ class InterfaceType implements FieldedType
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        return $this->typer->type($node)->resolve($node, $parent, $value, $resolver);
+        return $this->typer->type($node, $parent, $value)->resolve($node, $parent, $value, $resolver);
     }
 }
