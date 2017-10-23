@@ -101,6 +101,12 @@ class Node
     {
         $this->items = $this->field->fetch($this);
 
+        $types = array_unique(array_map(function ($item) {
+            return $this->field->returnType()->typeOf($this, $item)->name();
+        }, $this->items()));
+
+        echo json_encode($types) . PHP_EOL;
+
         $this->children = array_map(function (Query $query) {
             return new Node($this->schema, $this->field->returnType()->field($query->name()), $query, $this);
         }, $this->query->queries());

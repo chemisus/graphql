@@ -44,4 +44,9 @@ class ListType implements Type
 
         return $array;
     }
+
+    public function typeOf(Node $node, $value): Type
+    {
+        return $this->type->typeOf($node, $value);
+    }
 }

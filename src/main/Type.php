@@ -24,4 +24,11 @@ interface Type
      * @return
      */
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null);
+
+    /**
+     * @param Node $node
+     * @param $value
+     * @return Type
+     */
+    public function typeOf(Node $node, $value): Type;
 }

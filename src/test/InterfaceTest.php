@@ -78,7 +78,7 @@ class InterfaceTest extends TestCase
         $animal = $schema->getType('Animal');
         $animal->addField(new Field($animal, 'name', $schema->getType('String')));
 
-        $animal->typer = new CallbackTyper(function (Node $node, $parent, $value) {
+        $animal->typer = new CallbackTyper(function (Node $node, $value) {
             return $node->schema()->getType($value->type);
         });
     }

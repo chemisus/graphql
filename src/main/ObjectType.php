@@ -57,4 +57,9 @@ class ObjectType implements FieldedType
 
         return $object;
     }
+
+    public function typeOf(Node $node, $value): Type
+    {
+        return $this;
+    }
 }

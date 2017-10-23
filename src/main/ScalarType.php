@@ -33,4 +33,9 @@ class ScalarType implements Type
     {
         return $resolver ? $resolver->resolve($node, $parent, $value) : $value;
     }
+
+    public function typeOf(Node $node, $value): Type
+    {
+        return $this;
+    }
 }
