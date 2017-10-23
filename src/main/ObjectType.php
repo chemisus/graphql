@@ -49,7 +49,7 @@ class ObjectType implements FieldedType
 
         $object = (object) [];
 
-        foreach ($node->children() as $child) {
+        foreach ($node->children($this->name) as $child) {
             $name = $child->name();
             $field = property_exists($value, $name) ? $value->{$name} : null;
             $object->{$child->alias()} = $child->resolve($value, $field);

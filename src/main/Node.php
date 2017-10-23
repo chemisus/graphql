@@ -69,9 +69,10 @@ class Node
     }
 
     /**
+     * @param string $on
      * @return Node[]
      */
-    public function children()
+    public function children(string $on)
     {
         return $this->children;
     }
@@ -106,15 +107,13 @@ class Node
     {
         $this->items = $this->field->fetch($this);
 
-        $types = array_map(function ($name) {
-            return $this->schema->getType($name);
-        }, array_unique(array_map(function ($item) {
+        $types = array_unique(array_map(function ($item) {
             return $this->field->returnType()->typeOf($this, $item)->name();
-        }, $this->items())));
+        }, $this->items()));
 
-        $this->children = array_merge([], ...array_map(function (Type $type) {
+        $this->children = array_merge([], ...array_map(function (string $type) {
             return array_map(function (Query $query) use ($type) {
-                return new Node($this->schema, $type->field($query->name()), $query, $this);
+                return new Node($this->schema, $this->schema()->getType($type)->field($query->name()), $query, $this);
             }, $this->query->queries($type));
         }, $types));
 

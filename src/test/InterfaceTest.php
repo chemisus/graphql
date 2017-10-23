@@ -167,14 +167,16 @@ class InterfaceTest extends TestCase
         <name/>
         <pets>
             <name/>
-            <guard/>
+            <guard gql:on="Dog"/>
+            <lives gql:on="Cat"/>
         </pets>
     </person>
     <person gql:alias="martin" name="martin">
         <name/>
         <pets>
             <name/>
-            <lives/>
+            <guard gql:on="Dog"/>
+            <lives gql:on="Cat"/>
         </pets>
     </person>
 </query>

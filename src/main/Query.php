@@ -65,10 +65,13 @@ class Query
     }
 
     /**
+     * @param string $on
      * @return Query[]
      */
-    public function queries($on)
+    public function queries(string $on)
     {
-        return $this->fields;
+        return array_filter($this->fields, function (Query $query) use ($on) {
+            return $query->on === null || $query->on === $on;
+        });
     }
 }
