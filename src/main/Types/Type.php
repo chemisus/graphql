@@ -36,4 +36,11 @@ interface Type
      * @return Type
      */
     public function typeOf(Node $node, $value): Type;
+
+    /**
+     * @param Node $node
+     * @param mixed[] $values
+     * @return string[]
+     */
+    public function types(Node $node, $values);
 }

@@ -16,7 +16,7 @@ class Node
      */
     private $query;
 
-    /**, $value = null
+    /**
      * @var mixed[]
      */
     public $items;
@@ -111,9 +111,7 @@ class Node
     {
         $this->items = $this->field->fetch($this);
 
-        $types = array_unique(array_map(function ($item) {
-            return $this->field->returnType()->typeOf($this, $item)->name();
-        }, $this->items()));
+        $types = array_unique($this->field->returnType()->types($this, $this->items()));
 
         $this->children = array_merge([], ...array_map(function (string $type) {
             return array_map(function (Query $query) use ($type) {

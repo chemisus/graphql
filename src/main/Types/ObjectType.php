@@ -66,4 +66,9 @@ class ObjectType implements FieldedType
     {
         return $this;
     }
+
+    public function types(Node $node, $values)
+    {
+        return [$this->name];
+    }
 }

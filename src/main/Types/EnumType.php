@@ -55,4 +55,9 @@ class EnumType implements Type
     {
         return $this;
     }
+
+    public function types(Node $node, $values)
+    {
+        return [$this->name];
+    }
 }

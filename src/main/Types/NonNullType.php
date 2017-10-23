@@ -47,4 +47,9 @@ class NonNullType implements Type
     {
         return $this->type->typeOf($node, $value);
     }
+
+    public function types(Node $node, $values)
+    {
+        return $this->type->types($node, $values);
+    }
 }

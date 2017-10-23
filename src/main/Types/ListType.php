@@ -53,4 +53,11 @@ class ListType implements Type
     {
         return $this->type->typeOf($node, $value);
     }
+
+    public function types(Node $node, $values)
+    {
+        return array_map(function ($value) use ($node) {
+            return $this->typeOf($node, $value)->name();
+        }, $values);
+    }
 }

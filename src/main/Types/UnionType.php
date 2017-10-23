@@ -43,4 +43,11 @@ class UnionType implements FieldedType
     {
         return $this->typer->typeOf($node, $value);
     }
+
+    public function types(Node $node, $values)
+    {
+        return array_map(function ($value) use ($node) {
+            return $this->typeOf($node, $value)->name();
+        }, $values);
+    }
 }

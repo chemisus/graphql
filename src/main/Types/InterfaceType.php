@@ -58,4 +58,11 @@ class InterfaceType implements FieldedType
     {
         return $this->typer->typeOf($node, $value);
     }
+
+    public function types(Node $node, $values)
+    {
+        return array_merge([], ...array_map(function ($value) use ($node) {
+            return $this->typeOf($node, $value);
+        }, $values));
+    }
 }
