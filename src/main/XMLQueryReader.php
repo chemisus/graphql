@@ -13,19 +13,6 @@ class XMLQueryReader
 
     public function build(SimpleXMLElement $node): Query
     {
-        /**
-         * @var SimpleXMLElement[] $children
-         */
-        $children = [];
-        foreach ($node->children() as $child) {
-            $children[] = $child;
-        }
-
-        $attributes = [];
-        foreach ($node->attributes() as $attribute) {
-            $attributes[$attribute->getName()] = (string) $attribute;
-        }
-
         $alias = null;
         $on = null;
         foreach ($node->attributes('graphql') as $attribute) {
@@ -37,10 +24,33 @@ class XMLQueryReader
             }
         }
 
-        $query = new Query($node->getName(), ...array_map([$this, 'build'], $children));
+        $query = new Query($node->getName(), ...$this->buildChildren($node));
         $query->alias = $alias;
         $query->on = $on;
-        $query->args = $attributes;
+        $query->args = $this->buildAttributes($node);
         return $query;
+    }
+
+    public function buildAttributes(SimpleXMLElement $node)
+    {
+        $attributes = [];
+        foreach ($node->attributes() as $attribute) {
+            $attributes[$attribute->getName()] = (string) $attribute;
+        }
+
+        return $attributes;
+    }
+
+    public function buildChildren(SimpleXMLElement $node)
+    {
+        /**
+         * @var SimpleXMLElement[] $children
+         */
+        $children = [];
+        foreach ($node->children() as $child) {
+            $children[] = $child;
+        }
+
+        return array_map([$this, 'build'], $children);
     }
 }

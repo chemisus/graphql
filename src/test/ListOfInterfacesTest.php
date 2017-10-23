@@ -4,7 +4,7 @@ namespace GraphQL;
 
 use PHPUnit\Framework\TestCase;
 
-class InterfaceTest extends TestCase
+class ListOfInterfacesTest extends TestCase
 {
     /**
      * @var Schema
@@ -27,17 +27,23 @@ class InterfaceTest extends TestCase
     public function setupQuery(Schema $schema, &$graph, $people, $dogs, $cats)
     {
         $query = $schema->getType('Query');
-        $query->addField(new Field($query, 'person', $schema->getType('Person')));
+        $query->addField(new Field($query, 'people', new ListType($schema->getType('Person'))));
 
-        $query->field('person')->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
-            $name = $node->arg('name');
-            $fetched = array_key_exists($name, $people) ? $people[$name] : null;
-            $graph[$name] = $fetched;
-            return [$fetched];
+        $query->field('people')->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
+            $names = explode(',', $node->arg('names'));
+            $fetched = array_map(function ($name) use (&$people) {
+                return array_key_exists($name, $people) ? $people[$name] : null;
+            }, $names);
+
+            foreach ($fetched as $item) {
+                $graph[$item->name] = $item;
+            }
+
+            return $fetched;
         }));
 
-        $query->field('person')->setResolver(new CallbackResolver(function (Node $node, $parent, $value) {
-            return $node->items()[0];
+        $query->field('people')->setResolver(new CallbackResolver(function (Node $node, $parent, $value) {
+            return $node->items();
         }));
     }
 
@@ -163,42 +169,36 @@ class InterfaceTest extends TestCase
     {
         $xml = <<< _XML
 <query xmlns:gql="graphql">
-    <person gql:alias="terrence" name="terrence">
+    <people names="terrence,martin">
         <name/>
         <pets>
             <name/>
             <guard gql:on="Dog"/>
             <lives gql:on="Cat"/>
         </pets>
-    </person>
-    <person gql:alias="martin" name="martin">
-        <name/>
-        <pets>
-            <name/>
-            <guard gql:on="Dog"/>
-            <lives gql:on="Cat"/>
-        </pets>
-    </person>
+    </people>
 </query>
 _XML;
         $actual = $this->queryXML($xml);
         $expect = (object) [
-            'terrence' => (object) [
-                'name' => 'terrence',
-                'pets' => [
-                    (object) [
-                        'name' => 'gunner',
-                        'guard' => true,
-                    ]
+            'people' => [
+                (object) [
+                    'name' => 'terrence',
+                    'pets' => [
+                        (object) [
+                            'name' => 'gunner',
+                            'guard' => true,
+                        ]
+                    ],
                 ],
-            ],
-            'martin' => (object) [
-                'name' => 'martin',
-                'pets' => [
-                    (object) [
-                        'name' => 'tubs',
-                        'lives' => 9,
-                    ]
+                (object) [
+                    'name' => 'martin',
+                    'pets' => [
+                        (object) [
+                            'name' => 'tubs',
+                            'lives' => 9,
+                        ]
+                    ],
                 ],
             ],
         ];

@@ -74,7 +74,9 @@ class Node
      */
     public function children(string $on)
     {
-        return $this->children;
+        return array_filter($this->children, function (Node $child) use ($on) {
+            return $child->field->ownerType()->name() === $on;
+        });
     }
 
     public function items()
