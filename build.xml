@@ -2,6 +2,7 @@
         encoding="UTF-8"?>
 <project xmlns:unless="ant:unless" xmlns:if="ant:if">
     <property name="contained" value=""/>
+    <property name="phpunit.debug" value="${env.phpunit.debug}"/>
 
     <macrodef name="container">
         <attribute name="target"/>
@@ -9,6 +10,7 @@
         <sequential>
             <exec executable="docker-compose" if:blank="${contained}">
                 <env key="TARGET" value="@{target}"/>
+                <env key="phpunit.debug" value="${phpunit.debug}"/>
                 <arg value="up"/>
                 <arg value="ant"/>
             </exec>
@@ -73,6 +75,8 @@
     <target name="phpunit" depends="phpunit:installed">
         <container target="phpunit">
             <exec executable="vendor/bin/phpunit">
+                <!--<arg value="&#45;&#45;debug" if:true="${phpunit.debug}"/>-->
+                <arg value="--debug"/>
             </exec>
         </container>
     </target>

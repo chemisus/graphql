@@ -1,0 +1,20 @@
+{
+  "greeting": "Hello, Terrence!",
+  "gwen": {
+    "name": "gwen"
+  },
+  "terrence": {
+    "name": "terrence",
+    "mom": {
+      "name": "gwen",
+      "children": [
+        {
+          "name": "terrence"
+        },
+        {
+          "name": "nick"
+        }
+      ]
+    }
+  }
+}

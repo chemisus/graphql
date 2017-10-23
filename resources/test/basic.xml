@@ -1,0 +1,15 @@
+<query xmlns:gql="graphql">
+    <greeting name="Terrence"/>
+    <person gql:alias="gwen" name="gwen">
+        <name/>
+    </person>
+    <person gql:alias="terrence" name="terrence">
+        <name/>
+        <mother gql:alias="mom">
+            <name/>
+            <children>
+                <name/>
+            </children>
+        </mother>
+    </person>
+</query>
