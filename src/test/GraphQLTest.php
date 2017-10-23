@@ -64,13 +64,14 @@ class GraphQLTest extends TestCase
         $graph = [];
 
         $schema = new Schema('Schema');
-        $schema->putType(new ScalarType('String'));
-        $schema->putType(new ObjectType('Query'));
-        $schema->putType(new ObjectType('Person'));
 
-        $query = $schema->getType('Query');
-        $string = $schema->getType('String');
-        $person = $schema->getType('Person');
+        $string = new ScalarType('String');
+        $query = new ObjectType('Query');
+        $person = new ObjectType('Person');
+
+        $schema->putType($query);
+        $schema->putType($string);
+        $schema->putType($person);
 
         $schema->addField(new Field($schema, 'query', $query));
         $query->addField(new Field($query, 'greeting', $string));

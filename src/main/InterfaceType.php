@@ -2,7 +2,7 @@
 
 namespace GraphQL;
 
-class InterfaceType implements Type
+class InterfaceType implements FieldedType
 {
     /**
      * @var string

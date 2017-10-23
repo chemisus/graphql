@@ -2,7 +2,7 @@
 
 namespace GraphQL;
 
-class ObjectType implements Type
+class ObjectType implements FieldedType
 {
     /**
      * @var string

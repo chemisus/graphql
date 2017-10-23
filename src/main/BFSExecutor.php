@@ -12,6 +12,7 @@ class BFSExecutor
 
         while (count($queue)) {
             $node = array_shift($queue);
+
             array_push($nodes, $node);
             $children = $node->fetch();
             if (count($children)) {

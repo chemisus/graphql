@@ -31,11 +31,11 @@ class Field
 
     /**
      * Field constructor.
-     * @param ObjectType $ownerType
+     * @param FieldedType $ownerType
      * @param string $name
      * @param Type $returnType
      */
-    public function __construct(ObjectType $ownerType, string $name, Type $returnType)
+    public function __construct(FieldedType $ownerType, string $name, Type $returnType)
     {
         $this->ownerType = $ownerType;
         $this->name = $name;
