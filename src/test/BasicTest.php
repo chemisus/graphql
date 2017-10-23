@@ -16,7 +16,17 @@ class BasicTest extends TestCase
      */
     private $people;
 
-    public function setupSchema(Schema $schema, &$graph, $people)
+    /**
+     * @var Repository
+     */
+    private $cats;
+
+    /**
+     * @var Repository
+     */
+    private $dogs;
+
+    public function setupSchema(Schema $schema, &$graph)
     {
         $schema->addField(new Field($schema, 'query', $schema->getType('Query')));
 
@@ -29,7 +39,7 @@ class BasicTest extends TestCase
         }));
     }
 
-    public function setupQuery(Schema $schema, &$graph, $people)
+    public function setupQuery(Schema $schema, &$graph)
     {
         $query = $schema->getType('Query');
         $query->addField(new Field($query, 'greeting', $schema->getType('String')));
@@ -41,7 +51,7 @@ class BasicTest extends TestCase
         }));
 
         $query->field('person')
-            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
+            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph) {
                 $name = $node->arg('name');
                 $fetched = $this->people[$name];
                 $graph[$name] = $fetched;
@@ -52,11 +62,9 @@ class BasicTest extends TestCase
             }));
 
         $query->field('people')
-            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
+            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph) {
                 $names = explode(',', $node->arg('names'));
-                $fetched = array_map(function ($name) use (&$people) {
-                    return array_key_exists($name, $people) ? $people[$name] : null;
-                }, $names);
+                $fetched = $this->people->gets(...$names);
 
                 foreach ($fetched as $item) {
                     $graph[$item->name] = $item;
@@ -69,7 +77,7 @@ class BasicTest extends TestCase
             }));
     }
 
-    public function setupPerson(Schema $schema, &$graph, &$people)
+    public function setupPerson(Schema $schema, &$graph)
     {
         $person = $schema->getType('Person');
         $person->addField(new Field($person, 'name', $schema->getType('String')));
@@ -78,7 +86,7 @@ class BasicTest extends TestCase
         $person->addField(new Field($person, 'children', new ListType($person)));
 
         $person->field('father')
-            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
+            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph) {
                 $fetched = $this->people->fathersOf($node->parent()->items());
 
                 foreach ($fetched as $person) {
@@ -92,7 +100,7 @@ class BasicTest extends TestCase
             }));
 
         $person->field('mother')
-            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
+            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph) {
                 $fetched = $this->people->mothersOf($node->parent()->items());
 
                 foreach ($fetched as $person) {
@@ -106,7 +114,7 @@ class BasicTest extends TestCase
             }));
 
         $person->field('children')
-            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
+            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph) {
                 $fetched = $this->people->childrenOf($node->parent()->items());
 
                 foreach ($fetched as $person) {
@@ -139,9 +147,9 @@ class BasicTest extends TestCase
         $schema->putType($string);
         $schema->putType($person);
 
-        $this->setupSchema($schema, $graph, $people);
-        $this->setupQuery($schema, $graph, $people);
-        $this->setupPerson($schema, $graph, $people);
+        $this->setupSchema($schema, $graph);
+        $this->setupQuery($schema, $graph);
+        $this->setupPerson($schema, $graph);
 
         $this->schema = $schema;
     }
