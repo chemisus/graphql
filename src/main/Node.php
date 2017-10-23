@@ -2,8 +2,6 @@
 
 namespace GraphQL;
 
-use GraphQL\Types\Type;
-
 class Node
 {
     /**
@@ -35,11 +33,6 @@ class Node
      * @var Schema
      */
     private $schema;
-
-    /**
-     * @var Type[]
-     */
-    private $types;
 
     /**
      * @param Schema $schema
