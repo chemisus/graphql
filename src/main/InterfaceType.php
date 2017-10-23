@@ -51,6 +51,6 @@ class InterfaceType implements FieldedType
 
     public function typeOf(Node $node, $value): Type
     {
-        return $this->typer->type($node, $value);
+        return $this->typer->typeOf($node, $value);
     }
 }

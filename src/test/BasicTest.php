@@ -53,7 +53,7 @@ class BasicTest extends TestCase
 
     public function caseProvider()
     {
-        $xmls = glob(dirname(dirname(__DIR__)) . '/resources/test/*.xml');
+        $files = glob(dirname(dirname(__DIR__)) . '/resources/test/*.xml');
         return array_merge([], ...array_map(function ($xml) {
             return [
                 basename($xml) => [
@@ -61,7 +61,7 @@ class BasicTest extends TestCase
                     json_decode(file_get_contents(str_replace('.xml', '.json', $xml))),
                 ]
             ];
-        }, $xmls));
+        }, $files));
     }
 
     public function queryXML(string $xml)

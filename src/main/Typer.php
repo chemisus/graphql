@@ -9,5 +9,5 @@ interface Typer
      * @param $value
      * @return Type
      */
-    public function type(Node $node, $value);
+    public function typeOf(Node $node, $value);
 }
