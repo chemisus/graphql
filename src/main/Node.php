@@ -35,6 +35,11 @@ class Node
     private $schema;
 
     /**
+     * @var
+     */
+    private $types;
+
+    /**
      * @param Schema $schema
      * @param Field $field
      * @param Query $query
@@ -104,7 +109,9 @@ class Node
     {
         $this->items = $this->field->fetch($this);
 
-        $types = array_unique($this->field->returnType()->types($this, $this->items()));
+        $this->types = $this->field->returnType()->types($this, $this->items());
+
+        $types = array_unique($this->types);
 
         $this->children = array_merge([], ...array_map(function (string $type) {
             return array_map(function (Query $query) use ($type) {
