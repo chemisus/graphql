@@ -11,6 +11,11 @@ class BasicTest extends TestCase
      */
     private $schema;
 
+    /**
+     * @var PeopleRepository
+     */
+    private $people;
+
     public function setupSchema(Schema $schema, &$graph, $people)
     {
         $schema->addField(new Field($schema, 'query', $schema->getType('Query')));
@@ -30,21 +35,20 @@ class BasicTest extends TestCase
         $query->addField(new Field($query, 'greeting', $schema->getType('String')));
         $query->addField(new Field($query, 'person', $schema->getType('Person')));
 
-
         $query->field('greeting')->setResolver(new CallbackResolver(function (Node $node) {
             return sprintf("Hello, %s!", $node->arg('name', 'World'));
         }));
 
-        $query->field('person')->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
-            $name = $node->arg('name');
-            $fetched = array_key_exists($name, $people) ? $people[$name] : null;
-            $graph[$name] = $fetched;
-            return [$fetched];
-        }));
-
-        $query->field('person')->setResolver(new CallbackResolver(function (Node $node, $parent, $value) {
-            return $node->items()[0];
-        }));
+        $query->field('person')
+            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
+                $name = $node->arg('name');
+                $fetched = $this->people[$name];
+                $graph[$name] = $fetched;
+                return [$fetched];
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, $parent, $value) {
+                return $node->items()[0];
+            }));
     }
 
     public function setupPerson(Schema $schema, &$graph, &$people)
@@ -55,111 +59,55 @@ class BasicTest extends TestCase
         $person->addField(new Field($person, 'mother', new NonNullType($person)));
         $person->addField(new Field($person, 'children', new ListType($person)));
 
-        $person->field('children')->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
-            $fetched = array_filter(array_merge([], ...array_map(function ($person) use ($people) {
-                return array_values(array_filter($people, function ($child) use ($person) {
-                    return array_key_exists('father', $child) && $child->father === $person->name ||
-                        array_key_exists('mother', $child) && $child->mother === $person->name;
-                }));
-            }, $node->parent()->items())));
+        $person->field('father')
+            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
+                $fetched = $this->people->fathersOf($node->parent()->items());
 
-            foreach ($fetched as $person) {
-                $graph[$person->name] = $person;
-            }
+                foreach ($fetched as $person) {
+                    $graph[$person->name] = $person;
+                }
 
-            return $fetched;
-        }));
-
-        $person->field('father')->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
-            $fetched = array_values(array_filter(array_map(function ($person) use ($people) {
-                return array_key_exists($person->father, $people) ? $people[$person->father] : null;
-            }, $node->parent()->items())));
-
-            foreach ($fetched as $person) {
-                $graph[$person->name] = $person;
-            }
-
-            return $fetched;
-        }));
-
-        $person->field('mother')->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
-            $fetched = array_values(array_filter(array_map(function ($person) use ($people) {
-                return array_key_exists($person->mother, $people) ? $people[$person->mother] : null;
-            }, $node->parent()->items())));
-
-            foreach ($fetched as $person) {
-                $graph[$person->name] = $person;
-            }
-
-            return $fetched;
-        }));
-
-
-        $person->field('children')->setResolver(new CallbackResolver(function (Node $node, $person) use (&$graph) {
-            return array_values(array_filter($graph, function ($child) use ($person) {
-                return array_key_exists('father', $child) && $child->father === $person->name ||
-                    array_key_exists('mother', $child) && $child->mother === $person->name;
+                return $fetched;
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, $parent, $value) use (&$graph) {
+                return $graph[$parent->father];
             }));
-        }));
 
-        $person->field('father')->setResolver(new CallbackResolver(function (Node $node, $parent, $value) use (&$graph) {
-            return $graph[$parent->father];
-        }));
+        $person->field('mother')
+            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
+                $fetched = $this->people->mothersOf($node->parent()->items());
 
-        $person->field('mother')->setResolver(new CallbackResolver(function (Node $node, $parent, $value) use (&$graph) {
-            return $graph[$parent->mother];
-        }));
+                foreach ($fetched as $person) {
+                    $graph[$person->name] = $person;
+                }
+
+                return $fetched;
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, $parent, $value) use (&$graph) {
+                return $graph[$parent->mother];
+            }));
+
+        $person->field('children')
+            ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph, $people) {
+                $fetched = $this->people->childrenOf($node->parent()->items());
+
+                foreach ($fetched as $person) {
+                    $graph[$person->name] = $person;
+                }
+
+                return $fetched;
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, $person) use (&$graph) {
+                return $this->people->childrenOf([$person]);
+            }));
     }
 
     public function setUp()
     {
         parent::setUp(); // TODO: Change the autogenerated stub
 
-        $people = [
-            'terrence' => (object) [
-                'name' => 'terrence',
-                'mother' => 'gwen',
-            ],
-            'nick' => (object) [
-                'name' => 'nick',
-                'mother' => 'gwen',
-                'father' => 'rob',
-            ],
-            'rob' => (object) [
-                'name' => 'rob',
-                'mother' => 'carol',
-            ],
-            'jessica' => (object) [
-                'name' => 'jessica',
-                'father' => 'mark',
-                'mother' => 'sandra',
-            ],
-            'tom' => (object) [
-                'name' => 'tom',
-                'father' => 'carlton',
-                'mother' => 'eileen',
-            ],
-            'gail' => (object) [
-                'name' => 'gail',
-                'father' => 'murial',
-                'mother' => 'gilbert',
-            ],
-            'gwen' => (object) [
-                'name' => 'gwen',
-                'father' => 'tom',
-                'mother' => 'gail',
-            ],
-            'courtney' => (object) [
-                'name' => 'courtney',
-                'father' => 'tom',
-                'mother' => 'gail',
-            ],
-            'wade' => (object) [
-                'name' => 'wade',
-                'father' => 'tom',
-                'mother' => 'gail',
-            ],
-        ];
+        $this->people = PeopleRepository::Sample();
+        $people = $this->people->toArray();
 
         $graph = [];
 

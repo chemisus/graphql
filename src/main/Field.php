@@ -47,14 +47,16 @@ class Field
         return $this->fetcher !== null;
     }
 
-    public function setFetcher(Fetcher $fetcher)
+    public function setFetcher(Fetcher $fetcher): self
     {
         $this->fetcher = $fetcher;
+        return $this;
     }
 
-    public function setResolver(Resolver $resolver)
+    public function setResolver(Resolver $resolver): self
     {
         $this->resolver = $resolver;
+        return $this;
     }
 
     public function fetch(Node $node)
