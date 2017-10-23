@@ -46,10 +46,6 @@ class Node
         $this->query = $query;
         $this->parent = $parent;
         $this->schema = $schema;
-
-        $this->children = array_map(function (Query $query) {
-            return new Node($this->schema, $this->field->returnType()->field($query->name()), $query, $this);
-        }, $query->queries());
     }
 
     public function schema()
@@ -104,6 +100,10 @@ class Node
     public function fetch()
     {
         $this->items = $this->field->fetch($this);
+
+        $this->children = array_map(function (Query $query) {
+            return new Node($this->schema, $this->field->returnType()->field($query->name()), $query, $this);
+        }, $this->query->queries());
 
         return count($this->items) ? array_filter($this->children, function (Node $node) {
             return $node->field->hasFetcher();
