@@ -35,6 +35,11 @@ class Node
     private $schema;
 
     /**
+     * @var Type[]
+     */
+    private $types;
+
+    /**
      * @param Schema $schema
      * @param Field $field
      * @param Query $query
@@ -101,15 +106,17 @@ class Node
     {
         $this->items = $this->field->fetch($this);
 
-        $types = array_unique(array_map(function ($item) {
+        $types = array_map(function ($name) {
+            return $this->schema->getType($name);
+        }, array_unique(array_map(function ($item) {
             return $this->field->returnType()->typeOf($this, $item)->name();
-        }, $this->items()));
+        }, $this->items())));
 
-        echo json_encode($types) . PHP_EOL;
-
-        $this->children = array_map(function (Query $query) {
-            return new Node($this->schema, $this->field->returnType()->field($query->name()), $query, $this);
-        }, $this->query->queries());
+        $this->children = array_merge([], ...array_map(function (Type $type) {
+            return array_map(function (Query $query) use ($type) {
+                return new Node($this->schema, $type->field($query->name()), $query, $this);
+            }, $this->query->queries($type));
+        }, $types));
 
         return count($this->items) ? array_filter($this->children, function (Node $node) {
             return $node->field->hasFetcher();

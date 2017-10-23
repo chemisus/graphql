@@ -167,14 +167,14 @@ class InterfaceTest extends TestCase
         <name/>
         <pets>
             <name/>
-            <!--<guard/>-->
+            <guard/>
         </pets>
     </person>
     <person gql:alias="martin" name="martin">
         <name/>
         <pets>
             <name/>
-            <!--<lives/>-->
+            <lives/>
         </pets>
     </person>
 </query>
@@ -186,7 +186,7 @@ _XML;
                 'pets' => [
                     (object) [
                         'name' => 'gunner',
-//                        'guard' => true,
+                        'guard' => true,
                     ]
                 ],
             ],
@@ -195,7 +195,7 @@ _XML;
                 'pets' => [
                     (object) [
                         'name' => 'tubs',
-//                        'lives' => 9,
+                        'lives' => 9,
                     ]
                 ],
             ],

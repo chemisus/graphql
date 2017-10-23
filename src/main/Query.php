@@ -67,7 +67,7 @@ class Query
     /**
      * @return Query[]
      */
-    public function queries()
+    public function queries($on)
     {
         return $this->fields;
     }
