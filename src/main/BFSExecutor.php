@@ -4,9 +4,9 @@ namespace GraphQL;
 
 class BFSExecutor
 {
-    public function execute(ObjectType $schemaType, Query $query)
+    public function execute(Schema $schema, Query $query)
     {
-        $root = new Node($schemaType->field($query->name()), $query);
+        $root = new Node($schema, $schema->field($query->name()), $query);
         $nodes = [];
         $queue = [$root];
 

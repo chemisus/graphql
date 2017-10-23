@@ -30,19 +30,31 @@ class Node
     private $children;
 
     /**
+     * @var Schema
+     */
+    private $schema;
+
+    /**
+     * @param Schema $schema
      * @param Field $field
      * @param Query $query
      * @param Node|null $parent
      */
-    public function __construct(Field $field, Query $query, Node $parent = null)
+    public function __construct(Schema $schema, Field $field, Query $query, Node $parent = null)
     {
         $this->field = $field;
         $this->query = $query;
         $this->parent = $parent;
+        $this->schema = $schema;
 
         $this->children = array_map(function (Query $query) {
-            return new Node($this->field->returnType()->field($query->name()), $query, $this);
+            return new Node($this->schema, $this->field->returnType()->field($query->name()), $query, $this);
         }, $query->queries());
+    }
+
+    public function schema()
+    {
+        return $this->schema;
     }
 
     public function name()
