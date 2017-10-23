@@ -1,6 +1,11 @@
 <?php
 
-namespace GraphQL;
+namespace GraphQL\Types;
+
+use GraphQL\Field;
+use GraphQL\KindDoesNotSupportFieldsException;
+use GraphQL\Node;
+use GraphQL\Resolver;
 
 interface Type
 {

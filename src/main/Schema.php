@@ -2,6 +2,9 @@
 
 namespace GraphQL;
 
+use GraphQL\Types\ObjectType;
+use GraphQL\Types\Type;
+
 class Schema extends ObjectType
 {
     /**

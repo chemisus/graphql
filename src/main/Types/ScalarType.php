@@ -1,18 +1,18 @@
 <?php
 
-namespace GraphQL;
+namespace GraphQL\Types;
 
-class UnionType implements FieldedType
+use GraphQL\Field;
+use GraphQL\KindDoesNotSupportFieldsException;
+use GraphQL\Node;
+use GraphQL\Resolver;
+
+class ScalarType implements Type
 {
     /**
      * @var string
      */
     private $name;
-
-    /**
-     * @var Typer
-     */
-    public $typer;
 
     public function __construct(string $name)
     {
@@ -24,6 +24,11 @@ class UnionType implements FieldedType
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return Field
+     * @throws KindDoesNotSupportFieldsException
+     */
     public function field(string $name)
     {
         throw new KindDoesNotSupportFieldsException();
@@ -31,11 +36,11 @@ class UnionType implements FieldedType
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        return $this->typeOf($node, $value)->resolve($node, $parent, $value, $resolver);
+        return $resolver ? $resolver->resolve($node, $parent, $value) : $value;
     }
 
     public function typeOf(Node $node, $value): Type
     {
-        return $this->typer->typeOf($node, $value);
+        return $this;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace GraphQL\Types;
 
 
 interface FieldedType extends Type

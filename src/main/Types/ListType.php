@@ -1,8 +1,12 @@
 <?php
 
-namespace GraphQL;
+namespace GraphQL\Types;
 
-class NonNullType implements Type
+use GraphQL\Field;
+use GraphQL\Node;
+use GraphQL\Resolver;
+
+class ListType implements Type
 {
     /**
      * @var Type
@@ -30,13 +34,19 @@ class NonNullType implements Type
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        $value = $this->type->resolve($node, $parent, $value, $resolver);
+        $value = $resolver ? $resolver->resolve($node, $parent, $value) : $value;
 
         if ($value === null) {
-            throw new \Exception();
+            return null;
         }
 
-        return $value;
+        $array = [];
+
+        foreach ($value as $item) {
+            $array[] = $this->type->resolve($node, $parent, $item);
+        }
+
+        return $array;
     }
 
     public function typeOf(Node $node, $value): Type

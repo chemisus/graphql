@@ -1,7 +1,8 @@
 <?php
 
-namespace GraphQL;
+namespace GraphQL\Readers;
 
+use GraphQL\Query;
 use SimpleXMLElement;
 
 class XMLQueryReader

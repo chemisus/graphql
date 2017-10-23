@@ -2,6 +2,8 @@
 
 namespace GraphQL;
 
+use GraphQL\Types\Type;
+
 interface Typer
 {
     /**

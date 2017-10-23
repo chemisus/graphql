@@ -1,6 +1,9 @@
 <?php
 
-namespace GraphQL;
+namespace GraphQL\Utils;
+
+use GraphQL\Node;
+use GraphQL\Typer;
 
 class CallbackTyper implements Typer
 {

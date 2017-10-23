@@ -2,10 +2,10 @@
 
 namespace GraphQL\Setup;
 
-use GraphQL\CallbackTyper;
 use GraphQL\Field;
 use GraphQL\Node;
 use GraphQL\Schema;
+use GraphQL\Utils\CallbackTyper;
 
 class AnimalSetup
 {

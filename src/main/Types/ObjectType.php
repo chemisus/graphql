@@ -1,8 +1,12 @@
 <?php
 
-namespace GraphQL;
+namespace GraphQL\Types;
 
-class InterfaceType implements FieldedType
+use GraphQL\Field;
+use GraphQL\Node;
+use GraphQL\Resolver;
+
+class ObjectType implements FieldedType
 {
     /**
      * @var string
@@ -13,11 +17,6 @@ class InterfaceType implements FieldedType
      * @var Field[]
      */
     public $fields = [];
-
-    /**
-     * @var Typer
-     */
-    public $typer;
 
     public function __construct(string $name)
     {
@@ -46,11 +45,25 @@ class InterfaceType implements FieldedType
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        return $this->typeOf($node, $value)->resolve($node, $parent, $value, $resolver);
+        $value = $resolver ? $resolver->resolve($node, $parent, $value) : $value;
+
+        if ($value === null) {
+            return null;
+        }
+
+        $object = (object) [];
+
+        foreach ($node->children($this->name) as $child) {
+            $name = $child->name();
+            $field = property_exists($value, $name) ? $value->{$name} : null;
+            $object->{$child->alias()} = $child->resolve($value, $field);
+        }
+
+        return $object;
     }
 
     public function typeOf(Node $node, $value): Type
     {
-        return $this->typer->typeOf($node, $value);
+        return $this;
     }
 }

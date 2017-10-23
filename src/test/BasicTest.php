@@ -2,6 +2,8 @@
 
 namespace GraphQL;
 
+use GraphQL\Executors\BFSExecutor;
+use GraphQL\Readers\XMLQueryReader;
 use GraphQL\Setup\AnimalSetup;
 use GraphQL\Setup\CatSetup;
 use GraphQL\Setup\DogSetup;
@@ -9,6 +11,10 @@ use GraphQL\Setup\PersonSetup;
 use GraphQL\Setup\PetSetup;
 use GraphQL\Setup\QuerySetup;
 use GraphQL\Setup\SchemaSetup;
+use GraphQL\Types\InterfaceType;
+use GraphQL\Types\ObjectType;
+use GraphQL\Types\ScalarType;
+use GraphQL\Types\UnionType;
 use PHPUnit\Framework\TestCase;
 
 class BasicTest extends TestCase
