@@ -1,0 +1,6 @@
+<query xmlns:gql="graphql">
+    <people names="terrence,jessica">
+        <name/>
+        <gender/>
+    </people>
+</query>

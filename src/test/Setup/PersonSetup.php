@@ -17,6 +17,7 @@ class PersonSetup
     {
         $person = $schema->getType('Person');
         $person->addField(new Field($person, 'name', $schema->getType('String')));
+        $person->addField(new Field($person, 'gender', $schema->getType('Gender')));
         $person->addField(new Field($person, 'father', new NonNullType($person)));
         $person->addField(new Field($person, 'mother', new NonNullType($person)));
         $person->addField(new Field($person, 'children', new ListType($person)));

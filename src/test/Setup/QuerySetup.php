@@ -37,9 +37,12 @@ class QuerySetup
 
         $query->field('people')
             ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph) {
-                $names = explode(',', $node->arg('names'));
+                $fetched = Repositories::people();
 
-                $fetched = Repositories::people()->gets(...$names);
+                $names = explode(',', $node->arg('names'));
+                if (count($names)) {
+                    $fetched = $fetched->gets(...$names);
+                }
 
                 foreach ($fetched as $item) {
                     $graph[$item->name] = $item;

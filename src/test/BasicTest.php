@@ -7,10 +7,12 @@ use GraphQL\Readers\XMLQueryReader;
 use GraphQL\Setup\AnimalSetup;
 use GraphQL\Setup\CatSetup;
 use GraphQL\Setup\DogSetup;
+use GraphQL\Setup\GenderSetup;
 use GraphQL\Setup\PersonSetup;
 use GraphQL\Setup\PetSetup;
 use GraphQL\Setup\QuerySetup;
 use GraphQL\Setup\SchemaSetup;
+use GraphQL\Types\EnumType;
 use GraphQL\Types\InterfaceType;
 use GraphQL\Types\ObjectType;
 use GraphQL\Types\ScalarType;
@@ -37,6 +39,7 @@ class BasicTest extends TestCase
         $this->schema->putType(new ScalarType('Boolean'));
         $this->schema->putType(new ObjectType('Query'));
         $this->schema->putType(new ObjectType('Person'));
+        $this->schema->putType(new EnumType('Gender'));
         $this->schema->putType(new UnionType('Pet'));
         $this->schema->putType(new InterfaceType('Animal'));
         $this->schema->putType(new ObjectType('Dog'));
@@ -46,6 +49,7 @@ class BasicTest extends TestCase
             new SchemaSetup(),
             new QuerySetup(),
             new PersonSetup(),
+            new GenderSetup(),
             new AnimalSetup(),
             new PetSetup(),
             new DogSetup(),
