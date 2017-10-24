@@ -34,10 +34,6 @@ class BasicTest extends TestCase
 
         $this->schema = new Schema('Schema');
 
-        $this->schema->putType(new ScalarType('String'));
-        $this->schema->putType(new ScalarType('Integer'));
-        $this->schema->putType(new ScalarType('Boolean'));
-        $this->schema->putType(new ObjectType('Query'));
         $this->schema->putType(new ObjectType('Person'));
         $this->schema->putType(new EnumType('Gender'));
         $this->schema->putType(new UnionType('Pet'));
