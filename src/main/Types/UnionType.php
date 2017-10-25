@@ -34,6 +34,11 @@ class UnionType implements FieldedType
         throw new KindDoesNotSupportFieldsException();
     }
 
+    public function fields()
+    {
+        return null;
+    }
+
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
         return $this->typeOf($node, $value)->resolve($node, $parent, $value, $resolver);

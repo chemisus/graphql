@@ -74,7 +74,7 @@ class Node
      */
     public function children(string $on)
     {
-        return array_filter($this->children, function (Node $child) use ($on) {
+        return array_filter((array) $this->children, function (Node $child) use ($on) {
             return $child->field->ownerType()->name() === $on;
         });
     }
@@ -119,9 +119,7 @@ class Node
             }, $this->query->queries($type));
         }, $types));
 
-        return count($this->items) ? array_filter($this->children, function (Node $node) {
-            return $node->field->hasFetcher();
-        }) : [];
+        return $this->children;
     }
 
     public function resolve($parent = null, $value = null)

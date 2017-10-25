@@ -34,6 +34,11 @@ class ScalarType implements Type
         throw new KindDoesNotSupportFieldsException();
     }
 
+    public function fields()
+    {
+        return null;
+    }
+
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
         return $resolver ? $resolver->resolve($node, $parent, $value) : $value;

@@ -22,6 +22,11 @@ interface Type
     public function field(string $name);
 
     /**
+     * @return Field[]|null
+     */
+    public function fields();
+
+    /**
      * @param Node $node
      * @param object $parent
      * @param mixed $value

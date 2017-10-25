@@ -30,6 +30,11 @@ class EnumType implements Type
         return $this->name;
     }
 
+    public function fields()
+    {
+        return null;
+    }
+
     public function addValue(EnumValue $value)
     {
         $this->values[$value->name()] = $value;

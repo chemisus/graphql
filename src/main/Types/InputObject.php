@@ -43,6 +43,11 @@ class InputObjectType implements FieldedType
         return $this->fields[$name];
     }
 
+    public function fields()
+    {
+        return $this->fields;
+    }
+
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
         $value = $resolver ? $resolver->resolve($node, $parent, $value) : $value;

@@ -49,6 +49,11 @@ class InterfaceType implements FieldedType
         return $this->fields[$name];
     }
 
+    public function fields()
+    {
+        return $this->fields;
+    }
+
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
         return $this->typeOf($node, $value)->resolve($node, $parent, $value, $resolver);
