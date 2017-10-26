@@ -32,6 +32,7 @@ class Schema extends ObjectType
         $string = new ScalarType('String');
         $boolean = new ScalarType('Boolean');
         $integer = new ScalarType('Integer');
+        $float = new ScalarType('Float');
 
         $this->putType($schema);
         $this->putType($type);
@@ -112,6 +113,22 @@ class Schema extends ObjectType
             ->setResolver(new CallbackResolver(function (Node $node) {
                 return $this->getType($node->arg('name'));
             }));
+
+        $string->setCoercer(new CallbackCoercer(function (Node $node, $value) {
+            return (string) $value;
+        }));
+
+        $boolean->setCoercer(new CallbackCoercer(function (Node $node, $value) {
+            return (bool) $value;
+        }));
+
+        $integer->setCoercer(new CallbackCoercer(function (Node $node, $value) {
+            return (int) $value;
+        }));
+
+        $float->setCoercer(new CallbackCoercer(function (Node $node, $value) {
+            return (float) $value;
+        }));
 
         $schema->setCoercer(new CallbackCoercer(function (Node $node, Schema $value) {
             return (object) [

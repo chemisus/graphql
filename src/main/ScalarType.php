@@ -64,7 +64,8 @@ class ScalarType implements Type
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        return $resolver ? $resolver->resolve($node, $parent, $value) : $value;
+        $value = $resolver ? $resolver->resolve($node, $parent, $value) : $value;
+        return $this->coercer ? $this->coercer->coerce($node, $value) : $value;
     }
 
     public function typeOf(Node $node, $value): Type

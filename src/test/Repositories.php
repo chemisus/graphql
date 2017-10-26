@@ -85,7 +85,7 @@ class Repositories
                 'type' => 'Cat',
                 'name' => 'tubs',
                 'owner' => 'martin',
-                'lives' => 9,
+                'lives' => "9",
             ],
         ]);
     }
