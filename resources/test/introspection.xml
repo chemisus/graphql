@@ -3,6 +3,15 @@
         <name/>
         <fields>
             <name/>
+            <type>
+                <name/>
+                <fields>
+                    <name/>
+                    <type>
+                        <name/>
+                    </type>
+                </fields>
+            </type>
         </fields>
     </__type>
 </query>

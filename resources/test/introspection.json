@@ -3,22 +3,200 @@
     "name": "Query",
     "fields": [
       {
-        "name": "__schema"
+        "name": "__schema",
+        "type": {
+          "name": "__Schema!",
+          "fields": [
+            {
+              "name": "types",
+              "type": {
+                "name": "[__Type!]!"
+              }
+            },
+            {
+              "name": "queryType",
+              "type": {
+                "name": "__Type!"
+              }
+            },
+            {
+              "name": "mutationType",
+              "type": {
+                "name": "__Type"
+              }
+            },
+            {
+              "name": "directives",
+              "type": {
+                "name": "[__Directive!]!"
+              }
+            }
+          ]
+        }
       },
       {
-        "name": "__type"
+        "name": "__type",
+        "type": {
+          "name": "__Type!",
+          "fields": [
+            {
+              "name": "kind",
+              "type": {
+                "name": "__TypeKind!"
+              }
+            },
+            {
+              "name": "name",
+              "type": {
+                "name": "String"
+              }
+            },
+            {
+              "name": "description",
+              "type": {
+                "name": "String"
+              }
+            },
+            {
+              "name": "fields",
+              "type": {
+                "name": "[__Field!]"
+              }
+            },
+            {
+              "name": "interfaces",
+              "type": {
+                "name": "[__Type!]"
+              }
+            },
+            {
+              "name": "possibleTypes",
+              "type": {
+                "name": "[__Type!]"
+              }
+            },
+            {
+              "name": "enumValues",
+              "type": {
+                "name": "[__EnumValue!]"
+              }
+            },
+            {
+              "name": "inputFields",
+              "type": {
+                "name": "[__InputValue!]"
+              }
+            },
+            {
+              "name": "ofType",
+              "type": {
+                "name": "__Type"
+              }
+            }
+          ]
+        }
       },
       {
-        "name": "greeting"
+        "name": "greeting",
+        "type": {
+          "name": "String",
+          "fields": null
+        }
       },
       {
-        "name": "person"
+        "name": "person",
+        "type": {
+          "name": "Person",
+          "fields": [
+            {
+              "name": "name",
+              "type": {
+                "name": "String"
+              }
+            },
+            {
+              "name": "gender",
+              "type": {
+                "name": "Gender"
+              }
+            },
+            {
+              "name": "father",
+              "type": {
+                "name": "Person!"
+              }
+            },
+            {
+              "name": "mother",
+              "type": {
+                "name": "Person!"
+              }
+            },
+            {
+              "name": "children",
+              "type": {
+                "name": "[Person]"
+              }
+            },
+            {
+              "name": "pets",
+              "type": {
+                "name": "[Animal]"
+              }
+            }
+          ]
+        }
       },
       {
-        "name": "people"
+        "name": "people",
+        "type": {
+          "name": "[Person]",
+          "fields": [
+            {
+              "name": "name",
+              "type": {
+                "name": "String"
+              }
+            },
+            {
+              "name": "gender",
+              "type": {
+                "name": "Gender"
+              }
+            },
+            {
+              "name": "father",
+              "type": {
+                "name": "Person!"
+              }
+            },
+            {
+              "name": "mother",
+              "type": {
+                "name": "Person!"
+              }
+            },
+            {
+              "name": "children",
+              "type": {
+                "name": "[Person]"
+              }
+            },
+            {
+              "name": "pets",
+              "type": {
+                "name": "[Animal]"
+              }
+            }
+          ]
+        }
       },
       {
-        "name": "pets"
+        "name": "pets",
+        "type": {
+          "name": "[Pet]",
+          "fields": null
+        }
       }
     ]
   }

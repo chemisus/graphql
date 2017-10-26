@@ -20,7 +20,7 @@ class ListType implements Type
 
     public function name(): string
     {
-        return $this->type->name();
+        return sprintf('[%s]', $this->type->name());
     }
 
     /**

@@ -128,16 +128,26 @@ class Schema extends ObjectType
         $type->field('fields')
             ->setFetcher(new CallbackFetcher(function (Node $node) {
                 return array_merge([], ...array_map(function (Type $type) {
-                    return array_values($type->fields());
+                    return array_values((array) $type->fields());
                 }, $node->parent()->items()));
             }))
-            ->setResolver(new CallbackResolver(function (Node $node, $parent, $value) {
+            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
                 return $parent->fields();
             }));
 
         $field->field('name')
-            ->setResolver(new CallbackResolver(function (Node $node, $parent, $value) {
+            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
                 return $parent->name();
+            }));
+
+        $field->field('type')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return array_map(function (Field $field) {
+                    return $field->returnType();
+                }, $node->parent()->items());
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
+                return $parent->returnType();
             }));
     }
 
