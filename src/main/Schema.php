@@ -47,6 +47,8 @@ class Schema extends ObjectType
         $this->putType($boolean);
         $this->putType($integer);
 
+        $this->addField(new Field($this, 'query', $this->queryType()));
+
         $schema->addField(new Field($schema, 'types', new NonNullType(new ListType(new NonNullType($type)))));
         $schema->addField(new Field($schema, 'queryType', new NonNullType($type)));
         $schema->addField(new Field($schema, 'mutationType', $type));

@@ -12,6 +12,5 @@ class SchemaSetup
 {
     public function setup(Schema $schema, &$graph)
     {
-        $schema->addField(new Field($schema, 'query', $schema->getType('Query')));
     }
 }
