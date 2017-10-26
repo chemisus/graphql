@@ -12,6 +12,9 @@ class PetSetup
     {
         $pet = $schema->getType('Pet');
 
+        $pet->addType($schema->getType('Dog'));
+        $pet->addType($schema->getType('Cat'));
+
         $pet->typer = new CallbackTyper(function (Node $node, $value) {
             return $node->schema()->getType($value->type);
         });

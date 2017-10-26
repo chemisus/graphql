@@ -109,7 +109,10 @@ class Node
     {
         $this->items = $this->field->fetch($this);
 
-        $this->types = $this->field->returnType()->types($this, $this->items());
+//        $this->types = $this->field->returnType()->types($this, $this->items());
+        $this->types = array_map(function (Type $type) {
+            return $type->name();
+        }, $this->field->returnType()->possibleTypes());
 
         $types = array_unique($this->types);
 

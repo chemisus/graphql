@@ -89,7 +89,7 @@ class ScalarType implements Type
 
     public function possibleTypes()
     {
-        return null;
+        return [$this];
     }
 
     public function inputFields()

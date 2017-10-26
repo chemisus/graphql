@@ -7,6 +7,10 @@ class BFSExecutor
     public function execute(Schema $schema, Query $query)
     {
         $root = new Node($schema, $schema->field($query->name()), $query);
+
+        /**
+         * @var Node[] $queue
+         */
         $queue = [$root];
 
         while (count($queue)) {

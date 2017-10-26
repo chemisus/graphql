@@ -12,6 +12,10 @@ class AnimalSetup
     public function setup(Schema $schema, &$graph)
     {
         $animal = $schema->getType('Animal');
+
+        $animal->addType($schema->getType('Dog'));
+        $animal->addType($schema->getType('Cat'));
+
         $animal->addField(new Field($animal, 'name', $schema->getType('String')));
 
         $animal->typer = new CallbackTyper(function (Node $node, $value) {

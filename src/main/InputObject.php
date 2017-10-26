@@ -100,7 +100,7 @@ class InputObjectType implements FieldedType
 
     public function possibleTypes()
     {
-        return null;
+        return [$this];
     }
 
     public function inputFields()

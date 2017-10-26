@@ -84,7 +84,7 @@ class ListType implements Type
 
     public function possibleTypes()
     {
-        return null;
+        return $this->type->possibleTypes();
     }
 
     public function inputFields()

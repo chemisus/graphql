@@ -19,9 +19,19 @@ class UnionType implements FieldedType
      */
     private $description;
 
+    /**
+     * @var Type[]
+     */
+    private $possibleTypes = [];
+
     public function __construct(string $name)
     {
         $this->name = $name;
+    }
+
+    public function addType(Type $type)
+    {
+        $this->possibleTypes[$type->name()] = $type;
     }
 
     public function kind()
@@ -78,7 +88,7 @@ class UnionType implements FieldedType
 
     public function possibleTypes()
     {
-        return null;
+        return array_values($this->possibleTypes);
     }
 
     public function inputFields()
