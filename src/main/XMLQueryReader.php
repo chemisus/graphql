@@ -6,12 +6,12 @@ use SimpleXMLElement;
 
 class XMLQueryReader
 {
-    public function read($xml): Query
+    public function read(Schema $schema, $xml): Query
     {
-        return $this->build(simplexml_load_string($xml));
+        return $this->build($schema, simplexml_load_string($xml));
     }
 
-    public function build(SimpleXMLElement $node): Query
+    public function build(Schema $schema, SimpleXMLElement $node): Query
     {
         $alias = null;
         $on = null;
@@ -24,14 +24,14 @@ class XMLQueryReader
             }
         }
 
-        $query = new Query($node->getName(), ...$this->buildChildren($node));
+        $query = new Query($node->getName(), ...$this->buildChildren($schema, $node));
         $query->alias = $alias;
         $query->on = $on;
-        $query->args = $this->buildAttributes($node);
+        $query->args = $this->buildAttributes($schema, $node);
         return $query;
     }
 
-    public function buildAttributes(SimpleXMLElement $node)
+    public function buildAttributes(Schema $schema, SimpleXMLElement $node)
     {
         $attributes = [];
         foreach ($node->attributes() as $attribute) {
@@ -41,7 +41,7 @@ class XMLQueryReader
         return $attributes;
     }
 
-    public function buildChildren(SimpleXMLElement $node)
+    public function buildChildren(Schema $schema, SimpleXMLElement $node)
     {
         /**
          * @var SimpleXMLElement[] $children
@@ -51,6 +51,8 @@ class XMLQueryReader
             $children[] = $child;
         }
 
-        return array_map([$this, 'build'], $children);
+        return array_map(function (SimpleXMLElement $node) use ($schema) {
+            return $this->build($schema, $node);
+        }, $children);
     }
 }

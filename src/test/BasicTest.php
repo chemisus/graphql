@@ -66,7 +66,7 @@ class BasicTest extends TestCase
     public function queryXML(string $xml)
     {
         $queryBuilder = new XMLQueryReader();
-        $query = $queryBuilder->read($xml);
+        $query = $queryBuilder->read($this->schema, $xml);
         $executor = new BFSExecutor();
         return $executor->execute($this->schema, $query);
     }
