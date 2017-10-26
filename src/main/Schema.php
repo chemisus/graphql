@@ -8,6 +8,7 @@ use GraphQL\Types\NonNullType;
 use GraphQL\Types\ObjectType;
 use GraphQL\Types\ScalarType;
 use GraphQL\Types\Type;
+use GraphQL\Utils\CallbackFetcher;
 use GraphQL\Utils\CallbackResolver;
 
 class Schema extends ObjectType
@@ -112,6 +113,9 @@ class Schema extends ObjectType
         $query->addField(new Field($query, '__type', new NonNullType($type)));
 
         $query->field('__type')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return [$this->getType($node->arg('name'))];
+            }))
             ->setResolver(new CallbackResolver(function (Node $node) {
                 return $this->getType($node->arg('name'));
             }));
@@ -122,6 +126,11 @@ class Schema extends ObjectType
             }));
 
         $type->field('fields')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return array_merge([], ...array_map(function (Type $type) {
+                    return array_values($type->fields());
+                }, $node->parent()->items()));
+            }))
             ->setResolver(new CallbackResolver(function (Node $node, $parent, $value) {
                 return $parent->fields();
             }));

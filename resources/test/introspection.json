@@ -1,5 +1,25 @@
 {
   "__type": {
-    "name": "Query"
+    "name": "Query",
+    "fields": [
+      {
+        "name": "__schema"
+      },
+      {
+        "name": "__type"
+      },
+      {
+        "name": "greeting"
+      },
+      {
+        "name": "person"
+      },
+      {
+        "name": "people"
+      },
+      {
+        "name": "pets"
+      }
+    ]
   }
 }
