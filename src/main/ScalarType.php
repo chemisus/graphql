@@ -14,9 +14,22 @@ class ScalarType implements Type
      */
     private $description;
 
+    /**
+     * @var Coercer
+     */
+    private $coercer;
+
     public function __construct(string $name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @param Coercer $coercer
+     */
+    public function setCoercer(Coercer $coercer)
+    {
+        $this->coercer = $coercer;
     }
 
     public function kind()

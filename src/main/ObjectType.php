@@ -12,16 +12,29 @@ class ObjectType implements FieldedType
     /**
      * @var Field[]
      */
-    public $fields = [];
+    private $fields = [];
 
     /**
      * @var string
      */
     private $description;
 
+    /**
+     * @var Coercer
+     */
+    private $coercer;
+
     public function __construct(string $name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @param Coercer $coercer
+     */
+    public function setCoercer(Coercer $coercer)
+    {
+        $this->coercer = $coercer;
     }
 
     public function kind()
@@ -67,11 +80,12 @@ class ObjectType implements FieldedType
             return null;
         }
 
+        $coerced = $this->coercer ? $this->coercer->coerce($node, $parent, $value) : (object) [];
         $object = (object) [];
 
         foreach ($node->children($this->name) as $child) {
             $name = $child->name();
-            $field = isset($value->{$name}) ? $value->{$name} : null;
+            $field = isset($coerced->{$name}) ? $coerced->{$name} : (isset($value->{$name}) ? $value->{$name} : null);
             $object->{$child->alias()} = $child->resolve($value, $field);
         }
 

@@ -6,7 +6,10 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "GraphQL\\": "src/test/"
+      "GraphQL\\": [
+        "src/test/",
+        "src/demo/"
+      ]
     }
   },
   "require": {

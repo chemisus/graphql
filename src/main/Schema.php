@@ -143,29 +143,25 @@ class Schema extends ObjectType
                 return [];
             }));
 
-        $type->field('kind')
-            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
-                return $parent->kind();
-            }));
-
-        $type->field('name')
-            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
-                return $parent->name();
-            }));
-
-        $type->field('description')
-            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
-                return $parent->description();
-            }));
+        $type->setCoercer(new CallbackCoercer(function (Node $node, $parent, Type $type) {
+            return (object) [
+                'kind' => $type->kind(),
+                'name' => $type->name(),
+                'description' => $type->description(),
+                'fields' => $type->fields(),
+                'interfaces' => $type->interfaces(),
+                'possibleTypes' => $type->possibleTypes(),
+                'enumValues' => $type->enumValues(),
+                'inputFields' => $type->inputFields(),
+                'ofType' => $type->ofType(),
+            ];
+        }));
 
         $type->field('fields')
             ->setFetcher(new CallbackFetcher(function (Node $node) {
                 return array_merge([], ...array_map(function (Type $type) {
                     return array_values((array) $type->fields());
                 }, $node->parent()->items()));
-            }))
-            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
-                return $parent->fields();
             }));
 
         $type->field('interfaces')
@@ -173,9 +169,6 @@ class Schema extends ObjectType
                 return array_merge([], ...array_map(function (Type $type) {
                     return array_values((array) $type->interfaces());
                 }, $node->parent()->items()));
-            }))
-            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
-                return $parent->interfaces();
             }));
 
         $type->field('possibleTypes')
@@ -183,9 +176,6 @@ class Schema extends ObjectType
                 return array_merge([], ...array_map(function (Type $type) {
                     return array_values((array) $type->possibleTypes());
                 }, $node->parent()->items()));
-            }))
-            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
-                return $parent->possibleTypes();
             }));
 
         $type->field('enumValues')
@@ -193,9 +183,6 @@ class Schema extends ObjectType
                 return array_merge([], ...array_map(function (Type $type) {
                     return array_values((array) $type->enumValues());
                 }, $node->parent()->items()));
-            }))
-            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
-                return $parent->enumValues();
             }));
 
         $type->field('inputFields')
@@ -203,9 +190,6 @@ class Schema extends ObjectType
                 return array_merge([], ...array_map(function (Type $type) {
                     return array_values((array) $type->inputFields());
                 }, $node->parent()->items()));
-            }))
-            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
-                return $parent->inputFields();
             }));
 
         $type->field('ofType')
@@ -213,110 +197,59 @@ class Schema extends ObjectType
                 return array_map(function (Type $type) {
                     return $type->ofType();
                 }, $node->parent()->items());
-            }))
-            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
-                return $parent->ofType();
             }));
 
-        $field->field('name')
-            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
-                return $parent->name();
-            }));
-
-        $field->field('description')
-            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
-                return $parent->description();
-            }));
-
-        $field->field('args')
-            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
-                return $parent->args();
-            }));
+        $field->setCoercer(new CallbackCoercer(function (Node $node, $parent, Field $value) {
+            return (object) [
+                'name' => $value->name(),
+                'description' => $value->description(),
+                'args' => $value->args(),
+                'type' => $value->returnType(),
+                'isDeprecated' => $value->isDeprecated(),
+                'deprecationReason' => $value->deprecationReason(),
+            ];
+        }));
 
         $field->field('type')
             ->setFetcher(new CallbackFetcher(function (Node $node) {
                 return array_map(function (Field $field) {
                     return $field->returnType();
                 }, $node->parent()->items());
-            }))
-            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
-                return $parent->returnType();
             }));
 
-        $field->field('isDeprecated')
-            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
-                return $parent->isDeprecated();
-            }));
-
-        $field->field('deprecationReason')
-            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
-                return $parent->deprecationReason();
-            }));
-
-        $inputValue->field('name')
-            ->setResolver(new CallbackResolver(function (Node $node, InputValue $parent, $value) {
-                return $parent->name();
-            }));
-
-        $inputValue->field('description')
-            ->setResolver(new CallbackResolver(function (Node $node, InputValue $parent, $value) {
-                return $parent->description();
-            }));
+        $inputValue->setCoercer(new CallbackCoercer(function (Node $node, $parent, InputValue $value) {
+            return (object) [
+                'name' => $value->name(),
+                'description' => $value->description(),
+                'type' => $value->type(),
+                'defaultValue' => $value->defaultValue(),
+            ];
+        }));
 
         $inputValue->field('type')
             ->setFetcher(new CallbackFetcher(function (Node $node) {
                 return array_map(function (Field $field) {
                     return $field->returnType();
                 }, $node->parent()->items());
-            }))
-            ->setResolver(new CallbackResolver(function (Node $node, InputValue $parent, $value) {
-                return $parent->type();
             }));
 
-        $inputValue->field('defaultValue')
-            ->setResolver(new CallbackResolver(function (Node $node, InputValue $parent, $value) {
-                return $parent->defaultValue();
-            }));
+        $enumValue->setCoercer(new CallbackCoercer(function (Node $node, $parent, EnumValue $value) {
+            return (object) [
+                'name' => $value->name(),
+                'description' => $value->description(),
+                'isDeprecated' => $value->isDeprecated(),
+                'deprecationReason' => $value->deprecationReason(),
+            ];
+        }));
 
-        $enumValue->field('name')
-            ->setResolver(new CallbackResolver(function (Node $node, EnumValue $parent, $value) {
-                return $parent->name();
-            }));
-
-        $enumValue->field('description')
-            ->setResolver(new CallbackResolver(function (Node $node, EnumValue $parent, $value) {
-                return $parent->description();
-            }));
-
-        $enumValue->field('isDeprecated')
-            ->setResolver(new CallbackResolver(function (Node $node, EnumValue $parent, $value) {
-                return $parent->isDeprecated();
-            }));
-
-        $enumValue->field('deprecationReason')
-            ->setResolver(new CallbackResolver(function (Node $node, EnumValue $parent, $value) {
-                return $parent->deprecationReason();
-            }));
-
-        $directive->field('name')
-            ->setResolver(new CallbackResolver(function (Node $node, Directive $parent, $value) {
-                return $parent->name();
-            }));
-
-        $directive->field('description')
-            ->setResolver(new CallbackResolver(function (Node $node, Directive $parent, $value) {
-                return $parent->description();
-            }));
-
-        $directive->field('locations')
-            ->setResolver(new CallbackResolver(function (Node $node, Directive $parent, $value) {
-                return $parent->description();
-            }));
-
-        $directive->field('args')
-            ->setResolver(new CallbackResolver(function (Node $node, Directive $parent, $value) {
-                return $parent->args();
-            }));
+        $directive->setCoercer(new CallbackCoercer(function (Node $node, $parent, Directive $value) {
+            return (object) [
+                'name' => $value->name(),
+                'description' => $value->description(),
+                'locations' => $value->locations(),
+                'args' => $value->args(),
+            ];
+        }));
     }
 
     public function queryType()
