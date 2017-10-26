@@ -121,7 +121,7 @@ class Schema extends ObjectType
             }));
 
         $type->field('name')
-            ->setResolver(new CallbackResolver(function (Node $node, $parent, $value) {
+            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
                 return $parent->name();
             }));
 
