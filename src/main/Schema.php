@@ -285,7 +285,6 @@ class Schema extends ObjectType
             ->setResolver(new CallbackResolver(function (Node $node, Directive $parent, $value) {
                 return $parent->args();
             }));
-
     }
 
     public function putType(Type $type)
