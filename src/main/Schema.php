@@ -109,9 +109,6 @@ class Schema extends ObjectType
             }));
 
         $query->field('__type')
-            ->setFetcher(new CallbackFetcher(function (Node $node) {
-                return [$this->getType($node->arg('name'))];
-            }))
             ->setResolver(new CallbackResolver(function (Node $node) {
                 return $this->getType($node->arg('name'));
             }));
@@ -139,48 +136,6 @@ class Schema extends ObjectType
             ];
         }));
 
-        $type->field('fields')
-            ->setFetcher(new CallbackFetcher(function (Node $node) {
-                return array_merge([], ...array_map(function (Type $type) {
-                    return array_values((array) $type->fields());
-                }, $node->parent()->items()));
-            }));
-
-        $type->field('interfaces')
-            ->setFetcher(new CallbackFetcher(function (Node $node) {
-                return array_merge([], ...array_map(function (Type $type) {
-                    return array_values((array) $type->interfaces());
-                }, $node->parent()->items()));
-            }));
-
-        $type->field('possibleTypes')
-            ->setFetcher(new CallbackFetcher(function (Node $node) {
-                return array_merge([], ...array_map(function (Type $type) {
-                    return array_values((array) $type->possibleTypes());
-                }, $node->parent()->items()));
-            }));
-
-        $type->field('enumValues')
-            ->setFetcher(new CallbackFetcher(function (Node $node) {
-                return array_merge([], ...array_map(function (Type $type) {
-                    return array_values((array) $type->enumValues());
-                }, $node->parent()->items()));
-            }));
-
-        $type->field('inputFields')
-            ->setFetcher(new CallbackFetcher(function (Node $node) {
-                return array_merge([], ...array_map(function (Type $type) {
-                    return array_values((array) $type->inputFields());
-                }, $node->parent()->items()));
-            }));
-
-        $type->field('ofType')
-            ->setFetcher(new CallbackFetcher(function (Node $node) {
-                return array_map(function (Type $type) {
-                    return $type->ofType();
-                }, $node->parent()->items());
-            }));
-
         $field->setCoercer(new CallbackCoercer(function (Node $node, $parent, Field $value) {
             return (object) [
                 'name' => $value->name(),
@@ -192,13 +147,6 @@ class Schema extends ObjectType
             ];
         }));
 
-        $field->field('type')
-            ->setFetcher(new CallbackFetcher(function (Node $node) {
-                return array_map(function (Field $field) {
-                    return $field->returnType();
-                }, $node->parent()->items());
-            }));
-
         $inputValue->setCoercer(new CallbackCoercer(function (Node $node, $parent, InputValue $value) {
             return (object) [
                 'name' => $value->name(),
@@ -207,13 +155,6 @@ class Schema extends ObjectType
                 'defaultValue' => $value->defaultValue(),
             ];
         }));
-
-        $inputValue->field('type')
-            ->setFetcher(new CallbackFetcher(function (Node $node) {
-                return array_map(function (Field $field) {
-                    return $field->returnType();
-                }, $node->parent()->items());
-            }));
 
         $enumValue->setCoercer(new CallbackCoercer(function (Node $node, $parent, EnumValue $value) {
             return (object) [
