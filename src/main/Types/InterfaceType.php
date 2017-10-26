@@ -24,9 +24,24 @@ class InterfaceType implements FieldedType
      */
     public $typer;
 
+    /**
+     * @var string
+     */
+    private $description;
+
     public function __construct(string $name)
     {
         $this->name = $name;
+    }
+
+    public function kind()
+    {
+        return 'INTERFACE';
+    }
+
+    public function description()
+    {
+        return $this->description;
     }
 
     public function name(): string

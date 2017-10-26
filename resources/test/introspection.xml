@@ -1,13 +1,16 @@
 <query>
     <__type name="Query">
+        <kind/>
         <name/>
         <fields>
             <name/>
             <type>
+                <kind/>
                 <name/>
                 <fields>
                     <name/>
                     <type>
+                        <kind/>
                         <name/>
                     </type>
                 </fields>

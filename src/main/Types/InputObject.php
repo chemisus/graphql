@@ -14,6 +14,11 @@ class InputObjectType implements FieldedType
     private $name;
 
     /**
+     * @var string
+     */
+    private $description;
+
+    /**
      * @var Field[]
      */
     public $fields = [];
@@ -21,6 +26,16 @@ class InputObjectType implements FieldedType
     public function __construct(string $name)
     {
         $this->name = $name;
+    }
+
+    public function kind()
+    {
+        return 'INPUT_OBJECT';
+    }
+
+    public function description()
+    {
+        return $this->description;
     }
 
     public function name(): string

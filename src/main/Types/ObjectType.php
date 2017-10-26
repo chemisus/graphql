@@ -18,9 +18,24 @@ class ObjectType implements FieldedType
      */
     public $fields = [];
 
+    /**
+     * @var string
+     */
+    private $description;
+
     public function __construct(string $name)
     {
         $this->name = $name;
+    }
+
+    public function kind()
+    {
+        return 'OBJECT';
+    }
+
+    public function description()
+    {
+        return $this->description;
     }
 
     public function name(): string

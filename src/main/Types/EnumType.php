@@ -20,9 +20,24 @@ class EnumType implements Type
      */
     private $values;
 
+    /**
+     * @var string
+     */
+    private $description;
+
     public function __construct(string $name)
     {
         $this->name = $name;
+    }
+
+    public function kind()
+    {
+        return 'ENUM';
+    }
+
+    public function description()
+    {
+        return $this->description;
     }
 
     public function name(): string

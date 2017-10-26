@@ -120,9 +120,19 @@ class Schema extends ObjectType
                 return $this->getType($node->arg('name'));
             }));
 
+        $type->field('kind')
+            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
+                return $parent->kind();
+            }));
+
         $type->field('name')
             ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
                 return $parent->name();
+            }));
+
+        $type->field('description')
+            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
+                return $parent->description();
             }));
 
         $type->field('fields')

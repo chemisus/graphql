@@ -13,7 +13,17 @@ interface Type
     /**
      * @return string
      */
+    public function kind();
+
+    /**
+     * @return string
+     */
     public function name(): string;
+
+    /**
+     * @return string|null
+     */
+    public function description();
 
     /**
      * @param string $name

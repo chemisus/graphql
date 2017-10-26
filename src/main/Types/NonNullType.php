@@ -18,6 +18,16 @@ class NonNullType implements Type
         $this->type = $type;
     }
 
+    public function kind()
+    {
+        return 'NON_NULL';
+    }
+
+    public function description()
+    {
+        return null;
+    }
+
     public function name(): string
     {
         return sprintf('%s!', $this->type->name());

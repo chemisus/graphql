@@ -1,5 +1,6 @@
 {
   "__type": {
+    "kind": "ENUM",
     "name": "__TypeKind",
     "fields": null,
     "enumValues": [

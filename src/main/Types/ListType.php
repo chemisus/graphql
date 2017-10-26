@@ -18,6 +18,16 @@ class ListType implements Type
         $this->type = $type;
     }
 
+    public function kind()
+    {
+        return 'LIST';
+    }
+
+    public function description()
+    {
+        return null;
+    }
+
     public function name(): string
     {
         return sprintf('[%s]', $this->type->name());

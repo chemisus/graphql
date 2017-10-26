@@ -1,33 +1,39 @@
 {
   "__type": {
+    "kind": "OBJECT",
     "name": "Query",
     "fields": [
       {
         "name": "__schema",
         "type": {
+          "kind": "NON_NULL",
           "name": "__Schema!",
           "fields": [
             {
               "name": "types",
               "type": {
+                "kind": "NON_NULL",
                 "name": "[__Type!]!"
               }
             },
             {
               "name": "queryType",
               "type": {
+                "kind": "NON_NULL",
                 "name": "__Type!"
               }
             },
             {
               "name": "mutationType",
               "type": {
+                "kind": "OBJECT",
                 "name": "__Type"
               }
             },
             {
               "name": "directives",
               "type": {
+                "kind": "NON_NULL",
                 "name": "[__Directive!]!"
               }
             }
@@ -37,59 +43,69 @@
       {
         "name": "__type",
         "type": {
+          "kind": "NON_NULL",
           "name": "__Type!",
           "fields": [
             {
               "name": "kind",
               "type": {
+                "kind": "NON_NULL",
                 "name": "__TypeKind!"
               }
             },
             {
               "name": "name",
               "type": {
+                "kind": "SCALAR",
                 "name": "String"
               }
             },
             {
               "name": "description",
               "type": {
+                "kind": "SCALAR",
                 "name": "String"
               }
             },
             {
               "name": "fields",
               "type": {
+                "kind": "LIST",
                 "name": "[__Field!]"
               }
             },
             {
               "name": "interfaces",
               "type": {
+                "kind": "LIST",
                 "name": "[__Type!]"
               }
             },
             {
               "name": "possibleTypes",
               "type": {
+                "kind": "LIST",
                 "name": "[__Type!]"
               }
             },
             {
               "name": "enumValues",
               "type": {
+                "kind": "LIST",
                 "name": "[__EnumValue!]"
               }
             },
             {
               "name": "inputFields",
               "type": {
+                "kind": "LIST",
                 "name": "[__InputValue!]"
               }
             },
             {
               "name": "ofType",
               "type": {
+                "kind": "OBJECT",
                 "name": "__Type"
               }
             }
@@ -99,6 +115,7 @@
       {
         "name": "greeting",
         "type": {
+          "kind": "SCALAR",
           "name": "String",
           "fields": null
         }
@@ -106,41 +123,48 @@
       {
         "name": "person",
         "type": {
+          "kind": "OBJECT",
           "name": "Person",
           "fields": [
             {
               "name": "name",
               "type": {
+                "kind": "SCALAR",
                 "name": "String"
               }
             },
             {
               "name": "gender",
               "type": {
+                "kind": "ENUM",
                 "name": "Gender"
               }
             },
             {
               "name": "father",
               "type": {
+                "kind": "NON_NULL",
                 "name": "Person!"
               }
             },
             {
               "name": "mother",
               "type": {
+                "kind": "NON_NULL",
                 "name": "Person!"
               }
             },
             {
               "name": "children",
               "type": {
+                "kind": "LIST",
                 "name": "[Person]"
               }
             },
             {
               "name": "pets",
               "type": {
+                "kind": "LIST",
                 "name": "[Animal]"
               }
             }
@@ -150,41 +174,48 @@
       {
         "name": "people",
         "type": {
+          "kind": "LIST",
           "name": "[Person]",
           "fields": [
             {
               "name": "name",
               "type": {
+                "kind": "SCALAR",
                 "name": "String"
               }
             },
             {
               "name": "gender",
               "type": {
+                "kind": "ENUM",
                 "name": "Gender"
               }
             },
             {
               "name": "father",
               "type": {
+                "kind": "NON_NULL",
                 "name": "Person!"
               }
             },
             {
               "name": "mother",
               "type": {
+                "kind": "NON_NULL",
                 "name": "Person!"
               }
             },
             {
               "name": "children",
               "type": {
+                "kind": "LIST",
                 "name": "[Person]"
               }
             },
             {
               "name": "pets",
               "type": {
+                "kind": "LIST",
                 "name": "[Animal]"
               }
             }
@@ -194,6 +225,7 @@
       {
         "name": "pets",
         "type": {
+          "kind": "LIST",
           "name": "[Pet]",
           "fields": null
         }
