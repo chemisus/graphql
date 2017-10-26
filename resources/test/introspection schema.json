@@ -1,0 +1,31 @@
+{
+  "__type": {
+    "name": "__Schema",
+    "fields": [
+      {
+        "name": "types",
+        "type": {
+          "name": "[__Type!]!"
+        }
+      },
+      {
+        "name": "queryType",
+        "type": {
+          "name": "__Type!"
+        }
+      },
+      {
+        "name": "mutationType",
+        "type": {
+          "name": "__Type"
+        }
+      },
+      {
+        "name": "directives",
+        "type": {
+          "name": "[__Directive!]!"
+        }
+      }
+    ]
+  }
+}
