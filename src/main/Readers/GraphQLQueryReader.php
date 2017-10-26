@@ -11,7 +11,6 @@ class GraphQLQueryReader
         $n = strlen($gql);
 
         for ($i = 0; $i < $n; $i++) {
-
         }
 
         return new Query('query');

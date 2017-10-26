@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="phpcs">
+    <include file="container.xml" prefixSeparator=":"/>
+    <include file="composer.xml" prefixSeparator=":"/>
+
+    <target name="available">
+        <condition property="available">
+            <available file="vendor/bin/phpcs"/>
+        </condition>
+    </target>
+
+    <target name="installed" depends="available,composer:composer.phar" unless="available">
+        <container>
+            <exec executable="php">
+                <arg value="composer.phar"/>
+                <arg value="require"/>
+                <arg value="squizlabs/php_codesniffer"/>
+            </exec>
+        </container>
+    </target>
+
+    <target name="phpcs" depends="installed">
+        <container>
+            <exec executable="vendor/bin/phpcs" failonerror="true">
+                <arg value="--standard=PSR2"/>
+                <arg value="--extensions=php"/>
+                <arg value="--ignore=autoload.php"/>
+                <arg path="${basedir}/src/main"/>
+                <arg path="${basedir}/src/test"/>
+            </exec>
+        </container>
+    </target>
+
+    <target name="phpcbf" depends="installed">
+        <container>
+            <exec executable="vendor/bin/phpcbf" failonerror="true">
+                <arg value="--standard=PSR2"/>
+                <arg value="--extensions=php"/>
+                <arg value="--ignore=autoload.php"/>
+                <arg path="${basedir}/src/main"/>
+                <arg path="${basedir}/src/test"/>
+            </exec>
+        </container>
+    </target>
+
+</project>

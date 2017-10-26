@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="phpunit">
+    <include file="container.xml" prefixSeparator=":"/>
+    <include file="composer.xml" prefixSeparator=":"/>
+
+    <target name="available">
+        <condition property="available">
+            <available file="vendor/bin/phpunit"/>
+        </condition>
+    </target>
+
+    <target name="installed" depends="available,composer:composer.phar" unless="available">
+        <container>
+            <exec executable="php">
+                <arg value="composer.phar"/>
+                <arg value="require"/>
+                <arg value="phpunit/phpunit"/>
+            </exec>
+        </container>
+    </target>
+
+    <target name="phpunit" depends="installed">
+        <container>
+            <exec executable="vendor/bin/phpunit">
+            </exec>
+        </container>
+    </target>
+
+</project>

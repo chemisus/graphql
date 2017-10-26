@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="composer">
+    <include file="container.xml"/>
+
+    <target name="composer.phar:available">
+        <condition property="composer.phar:available">
+            <available file="composer.phar"/>
+        </condition>
+    </target>
+
+    <target name="vendor:available">
+        <condition property="vendor:available">
+            <available file="vendor"/>
+        </condition>
+    </target>
+
+    <target name="composer.phar" depends="composer.phar:available" unless="composer.phar:available">
+        <get src="https://getcomposer.org/composer.phar" dest="composer.phar"/>
+    </target>
+
+    <target name="clean">
+        <container>
+            <delete dir="vendor"/>
+        </container>
+    </target>
+
+    <target name="install" depends="composer.phar,vendor:available" unless="vendor:available">
+        <container>
+            <exec executable="php">
+                <arg value="composer.phar"/>
+                <arg value="install"/>
+            </exec>
+        </container>
+    </target>
+
+    <target name="du" depends="composer.phar">
+        <container>
+            <exec executable="php">
+                <arg value="composer.phar"/>
+                <arg value="du"/>
+            </exec>
+        </container>
+    </target>
+</project>
