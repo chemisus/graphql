@@ -1,14 +1,8 @@
 <?php
 
-namespace GraphQL\Types;
+namespace GraphQL;
 
-use GraphQL\EnumValue;
-use GraphQL\Field;
-use GraphQL\KindDoesNotSupportFieldsException;
-use GraphQL\Node;
-use GraphQL\Resolver;
-
-class EnumType implements Type
+class InterfaceType implements FieldedType
 {
     /**
      * @var string
@@ -16,9 +10,14 @@ class EnumType implements Type
     private $name;
 
     /**
-     * @var EnumValue[]
+     * @var Field[]
      */
-    private $values;
+    public $fields = [];
+
+    /**
+     * @var Typer
+     */
+    public $typer;
 
     /**
      * @var string
@@ -32,7 +31,7 @@ class EnumType implements Type
 
     public function kind()
     {
-        return 'ENUM';
+        return 'INTERFACE';
     }
 
     public function description()
@@ -45,45 +44,46 @@ class EnumType implements Type
         return $this->name;
     }
 
-    public function fields()
+    public function addField(Field $field)
     {
-        return null;
-    }
-
-    public function addValue(EnumValue $value)
-    {
-        $this->values[$value->name()] = $value;
+        $this->fields[$field->name()] = $field;
         return $this;
     }
 
     /**
      * @param string $name
      * @return Field
-     * @throws KindDoesNotSupportFieldsException
      */
     public function field(string $name)
     {
-        throw new KindDoesNotSupportFieldsException();
+        return $this->fields[$name];
+    }
+
+    public function fields()
+    {
+        return $this->fields;
     }
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        return $resolver ? $resolver->resolve($node, $parent, $value) : $value;
+        return $this->typeOf($node, $value)->resolve($node, $parent, $value, $resolver);
     }
 
     public function typeOf(Node $node, $value): Type
     {
-        return $this;
+        return $this->typer->typeOf($node, $value);
     }
 
     public function types(Node $node, $values)
     {
-        return [$this->name];
+        return array_merge([], ...array_map(function ($value) use ($node) {
+            return $this->typeOf($node, $value);
+        }, $values));
     }
 
     public function enumValues()
     {
-        return $this->values;
+        return null;
     }
 
     public function interfaces()

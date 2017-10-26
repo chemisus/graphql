@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL\Types;
+namespace GraphQL;
 
 class Directive
 {

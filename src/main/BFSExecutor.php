@@ -1,10 +1,6 @@
 <?php
 
-namespace GraphQL\Executors;
-
-use GraphQL\Node;
-use GraphQL\Query;
-use GraphQL\Schema;
+namespace GraphQL;
 
 class BFSExecutor
 {

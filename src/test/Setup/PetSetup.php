@@ -2,9 +2,9 @@
 
 namespace GraphQL\Setup;
 
+use GraphQL\CallbackTyper;
 use GraphQL\Node;
 use GraphQL\Schema;
-use GraphQL\Utils\CallbackTyper;
 
 class PetSetup
 {

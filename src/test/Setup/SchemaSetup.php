@@ -2,11 +2,11 @@
 
 namespace GraphQL\Setup;
 
+use GraphQL\CallbackFetcher;
+use GraphQL\CallbackResolver;
 use GraphQL\Field;
 use GraphQL\Node;
 use GraphQL\Schema;
-use GraphQL\Utils\CallbackFetcher;
-use GraphQL\Utils\CallbackResolver;
 
 class SchemaSetup
 {

@@ -1,18 +1,18 @@
 <?php
 
-namespace GraphQL\Types;
+namespace GraphQL;
 
-use GraphQL\Field;
-use GraphQL\KindDoesNotSupportFieldsException;
-use GraphQL\Node;
-use GraphQL\Resolver;
-
-class ScalarType implements Type
+class EnumType implements Type
 {
     /**
      * @var string
      */
     private $name;
+
+    /**
+     * @var EnumValue[]
+     */
+    private $values;
 
     /**
      * @var string
@@ -26,7 +26,7 @@ class ScalarType implements Type
 
     public function kind()
     {
-        return 'SCALAR';
+        return 'ENUM';
     }
 
     public function description()
@@ -39,6 +39,17 @@ class ScalarType implements Type
         return $this->name;
     }
 
+    public function fields()
+    {
+        return null;
+    }
+
+    public function addValue(EnumValue $value)
+    {
+        $this->values[$value->name()] = $value;
+        return $this;
+    }
+
     /**
      * @param string $name
      * @return Field
@@ -47,11 +58,6 @@ class ScalarType implements Type
     public function field(string $name)
     {
         throw new KindDoesNotSupportFieldsException();
-    }
-
-    public function fields()
-    {
-        return null;
     }
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
@@ -71,7 +77,7 @@ class ScalarType implements Type
 
     public function enumValues()
     {
-        return null;
+        return $this->values;
     }
 
     public function interfaces()

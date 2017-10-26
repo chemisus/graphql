@@ -2,14 +2,14 @@
 
 namespace GraphQL\Setup;
 
+use GraphQL\CallbackFetcher;
+use GraphQL\CallbackResolver;
 use GraphQL\Field;
+use GraphQL\ListType;
 use GraphQL\Node;
+use GraphQL\NonNullType;
 use GraphQL\Repositories;
 use GraphQL\Schema;
-use GraphQL\Types\ListType;
-use GraphQL\Types\NonNullType;
-use GraphQL\Utils\CallbackFetcher;
-use GraphQL\Utils\CallbackResolver;
 
 class PersonSetup
 {

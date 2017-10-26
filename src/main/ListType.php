@@ -1,67 +1,68 @@
 <?php
 
-namespace GraphQL\Types;
+namespace GraphQL;
 
-use GraphQL\KindDoesNotSupportFieldsException;
-use GraphQL\Node;
-use GraphQL\Resolver;
-use GraphQL\Typer;
-
-class UnionType implements FieldedType
+class ListType implements Type
 {
     /**
-     * @var string
+     * @var Type
      */
-    private $name;
+    private $type;
 
-    /**
-     * @var Typer
-     */
-    public $typer;
-
-    /**
-     * @var string
-     */
-    private $description;
-
-    public function __construct(string $name)
+    public function __construct(Type $type)
     {
-        $this->name = $name;
+        $this->type = $type;
     }
 
     public function kind()
     {
-        return 'UNION';
+        return 'LIST';
     }
 
     public function description()
     {
-        return $this->description;
+        return null;
     }
 
     public function name(): string
     {
-        return $this->name;
+        return sprintf('[%s]', $this->type->name());
     }
 
+    /**
+     * @param string $name
+     * @return Field
+     */
     public function field(string $name)
     {
-        throw new KindDoesNotSupportFieldsException();
+        return $this->type->field($name);
     }
 
     public function fields()
     {
-        return null;
+        return $this->type->fields();
     }
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        return $this->typeOf($node, $value)->resolve($node, $parent, $value, $resolver);
+        $value = $resolver ? $resolver->resolve($node, $parent, $value) : $value;
+
+        if ($value === null) {
+            return null;
+        }
+
+        $array = [];
+
+        foreach ($value as $item) {
+            $array[] = $this->type->resolve($node, $parent, $item);
+        }
+
+        return $array;
     }
 
     public function typeOf(Node $node, $value): Type
     {
-        return $this->typer->typeOf($node, $value);
+        return $this->type->typeOf($node, $value);
     }
 
     public function types(Node $node, $values)

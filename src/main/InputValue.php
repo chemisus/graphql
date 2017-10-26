@@ -2,8 +2,6 @@
 
 namespace GraphQL;
 
-use GraphQL\Types\Type;
-
 class InputValue
 {
     /**

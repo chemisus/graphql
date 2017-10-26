@@ -1,9 +1,6 @@
 <?php
 
-namespace GraphQL\Utils;
-
-use GraphQL\Node;
-use GraphQL\Resolver;
+namespace GraphQL;
 
 class CallbackResolver implements Resolver
 {

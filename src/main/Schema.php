@@ -2,16 +2,6 @@
 
 namespace GraphQL;
 
-use GraphQL\Types\Directive;
-use GraphQL\Types\EnumType;
-use GraphQL\Types\ListType;
-use GraphQL\Types\NonNullType;
-use GraphQL\Types\ObjectType;
-use GraphQL\Types\ScalarType;
-use GraphQL\Types\Type;
-use GraphQL\Utils\CallbackFetcher;
-use GraphQL\Utils\CallbackResolver;
-
 class Schema extends ObjectType
 {
     /**

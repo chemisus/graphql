@@ -1,36 +1,48 @@
 <?php
 
-namespace GraphQL\Types;
+namespace GraphQL;
 
-use GraphQL\Field;
-use GraphQL\Node;
-use GraphQL\Resolver;
-
-class ListType implements Type
+class InputObjectType implements FieldedType
 {
     /**
-     * @var Type
+     * @var string
      */
-    private $type;
+    private $name;
 
-    public function __construct(Type $type)
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var Field[]
+     */
+    public $fields = [];
+
+    public function __construct(string $name)
     {
-        $this->type = $type;
+        $this->name = $name;
     }
 
     public function kind()
     {
-        return 'LIST';
+        return 'INPUT_OBJECT';
     }
 
     public function description()
     {
-        return null;
+        return $this->description;
     }
 
     public function name(): string
     {
-        return sprintf('[%s]', $this->type->name());
+        return $this->name;
+    }
+
+    public function addField(Field $field)
+    {
+        $this->fields[$field->name()] = $field;
+        return $this;
     }
 
     /**
@@ -39,12 +51,12 @@ class ListType implements Type
      */
     public function field(string $name)
     {
-        return $this->type->field($name);
+        return $this->fields[$name];
     }
 
     public function fields()
     {
-        return $this->type->fields();
+        return $this->fields;
     }
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
@@ -55,25 +67,25 @@ class ListType implements Type
             return null;
         }
 
-        $array = [];
+        $object = (object) [];
 
-        foreach ($value as $item) {
-            $array[] = $this->type->resolve($node, $parent, $item);
+        foreach ($node->children($this->name) as $child) {
+            $name = $child->name();
+            $field = property_exists($value, $name) ? $value->{$name} : null;
+            $object->{$child->alias()} = $child->resolve($value, $field);
         }
 
-        return $array;
+        return $object;
     }
 
     public function typeOf(Node $node, $value): Type
     {
-        return $this->type->typeOf($node, $value);
+        return $this;
     }
 
     public function types(Node $node, $values)
     {
-        return array_map(function ($value) use ($node) {
-            return $this->typeOf($node, $value)->name();
-        }, $values);
+        return [$this->name];
     }
 
     public function enumValues()

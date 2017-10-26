@@ -1,12 +1,6 @@
 <?php
 
-namespace GraphQL\Types;
-
-use GraphQL\EnumValue;
-use GraphQL\Field;
-use GraphQL\KindDoesNotSupportFieldsException;
-use GraphQL\Node;
-use GraphQL\Resolver;
+namespace GraphQL;
 
 interface Type
 {

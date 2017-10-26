@@ -1,71 +1,67 @@
 <?php
 
-namespace GraphQL\Types;
+namespace GraphQL;
 
-use GraphQL\Field;
-use GraphQL\Node;
-use GraphQL\Resolver;
-
-class NonNullType implements Type
+class ScalarType implements Type
 {
     /**
-     * @var Type
+     * @var string
      */
-    private $type;
+    private $name;
 
-    public function __construct(Type $type)
+    /**
+     * @var string
+     */
+    private $description;
+
+    public function __construct(string $name)
     {
-        $this->type = $type;
+        $this->name = $name;
     }
 
     public function kind()
     {
-        return 'NON_NULL';
+        return 'SCALAR';
     }
 
     public function description()
     {
-        return null;
+        return $this->description;
     }
 
     public function name(): string
     {
-        return sprintf('%s!', $this->type->name());
+        return $this->name;
     }
 
     /**
      * @param string $name
      * @return Field
+     * @throws KindDoesNotSupportFieldsException
      */
     public function field(string $name)
     {
-        return $this->type->field($name);
+        throw new KindDoesNotSupportFieldsException();
     }
 
     public function fields()
     {
-        return $this->type->fields();
+        return null;
     }
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
-        $value = $this->type->resolve($node, $parent, $value, $resolver);
-
-        if ($value === null) {
-            throw new \Exception($node->path() . ' can not be null');
-        }
-
-        return $value;
+        return $resolver ? $resolver->resolve($node, $parent, $value) : $value;
     }
 
     public function typeOf(Node $node, $value): Type
     {
-        return $this->type->typeOf($node, $value);
+        return $this;
     }
 
     public function types(Node $node, $values)
     {
-        return $this->type->types($node, $values);
+        return [$this->name];
     }
 
     public function enumValues()

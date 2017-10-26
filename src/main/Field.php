@@ -2,10 +2,6 @@
 
 namespace GraphQL;
 
-use GraphQL\Types\FieldedType;
-use GraphQL\Types\ObjectType;
-use GraphQL\Types\Type;
-
 class Field
 {
     /**

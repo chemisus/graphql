@@ -1,11 +1,8 @@
 <?php
 
-namespace GraphQL\Utils;
+namespace GraphQL;
 
-use GraphQL\Node;
-use GraphQL\Typer;
-
-class CallbackTyper implements Typer
+class CallbackFetcher implements Fetcher
 {
     /**
      * @var callable
@@ -20,8 +17,8 @@ class CallbackTyper implements Typer
         $this->callback = $callback;
     }
 
-    public function typeOf(Node $node, $value)
+    public function fetch(Node $node)
     {
-        return call_user_func($this->callback, $node, $value);
+        return call_user_func($this->callback, $node);
     }
 }

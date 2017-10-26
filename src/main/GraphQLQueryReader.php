@@ -1,8 +1,6 @@
 <?php
 
-namespace GraphQL\Readers;
-
-use GraphQL\Query;
+namespace GraphQL;
 
 class GraphQLQueryReader
 {

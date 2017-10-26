@@ -1,23 +1,13 @@
 <?php
 
-namespace GraphQL\Types;
+namespace GraphQL;
 
-use GraphQL\Field;
-use GraphQL\Node;
-use GraphQL\Resolver;
-use GraphQL\Typer;
-
-class InterfaceType implements FieldedType
+class UnionType implements FieldedType
 {
     /**
      * @var string
      */
     private $name;
-
-    /**
-     * @var Field[]
-     */
-    public $fields = [];
 
     /**
      * @var Typer
@@ -36,7 +26,7 @@ class InterfaceType implements FieldedType
 
     public function kind()
     {
-        return 'INTERFACE';
+        return 'UNION';
     }
 
     public function description()
@@ -49,24 +39,14 @@ class InterfaceType implements FieldedType
         return $this->name;
     }
 
-    public function addField(Field $field)
-    {
-        $this->fields[$field->name()] = $field;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return Field
-     */
     public function field(string $name)
     {
-        return $this->fields[$name];
+        throw new KindDoesNotSupportFieldsException();
     }
 
     public function fields()
     {
-        return $this->fields;
+        return null;
     }
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
@@ -81,9 +61,9 @@ class InterfaceType implements FieldedType
 
     public function types(Node $node, $values)
     {
-        return array_merge([], ...array_map(function ($value) use ($node) {
-            return $this->typeOf($node, $value);
-        }, $values));
+        return array_map(function ($value) use ($node) {
+            return $this->typeOf($node, $value)->name();
+        }, $values);
     }
 
     public function enumValues()

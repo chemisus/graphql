@@ -2,7 +2,6 @@
 
 namespace GraphQL;
 
-use GraphQL\Readers\GraphQLQueryReader;
 use PHPUnit\Framework\TestCase;
 
 class GraphQLQueryReaderTest extends TestCase

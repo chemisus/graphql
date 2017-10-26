@@ -1,10 +1,6 @@
 <?php
 
-namespace GraphQL\Types;
-
-use GraphQL\Field;
-use GraphQL\Node;
-use GraphQL\Resolver;
+namespace GraphQL;
 
 class ObjectType implements FieldedType
 {
