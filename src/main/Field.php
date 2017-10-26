@@ -63,11 +63,6 @@ class Field
         return $this;
     }
 
-    public function types(Node $node, $items)
-    {
-
-    }
-
     public function fetch(Node $node)
     {
         return $this->fetcher ? $this->fetcher->fetch($node) : [];
