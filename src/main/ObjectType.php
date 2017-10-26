@@ -80,7 +80,7 @@ class ObjectType implements FieldedType
             return null;
         }
 
-        $coerced = $this->coercer ? $this->coercer->coerce($node, $parent, $value) : (object) [];
+        $coerced = $this->coercer ? $this->coercer->coerce($node, $value) : (object) [];
         $object = (object) [];
 
         foreach ($node->children($this->name) as $child) {

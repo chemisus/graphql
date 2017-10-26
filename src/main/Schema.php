@@ -113,7 +113,7 @@ class Schema extends ObjectType
                 return $this->getType($node->arg('name'));
             }));
 
-        $schema->setCoercer(new CallbackCoercer(function (Node $node, $parent, Schema $value) {
+        $schema->setCoercer(new CallbackCoercer(function (Node $node, Schema $value) {
             return (object) [
                 'types' => $value->types,
                 'queryType' => $value->queryType(),
@@ -122,7 +122,7 @@ class Schema extends ObjectType
             ];
         }));
 
-        $type->setCoercer(new CallbackCoercer(function (Node $node, $parent, Type $type) {
+        $type->setCoercer(new CallbackCoercer(function (Node $node, Type $type) {
             return (object) [
                 'kind' => $type->kind(),
                 'name' => $type->name(),
@@ -136,7 +136,7 @@ class Schema extends ObjectType
             ];
         }));
 
-        $field->setCoercer(new CallbackCoercer(function (Node $node, $parent, Field $value) {
+        $field->setCoercer(new CallbackCoercer(function (Node $node, Field $value) {
             return (object) [
                 'name' => $value->name(),
                 'description' => $value->description(),
@@ -147,7 +147,7 @@ class Schema extends ObjectType
             ];
         }));
 
-        $inputValue->setCoercer(new CallbackCoercer(function (Node $node, $parent, InputValue $value) {
+        $inputValue->setCoercer(new CallbackCoercer(function (Node $node, InputValue $value) {
             return (object) [
                 'name' => $value->name(),
                 'description' => $value->description(),
@@ -156,7 +156,7 @@ class Schema extends ObjectType
             ];
         }));
 
-        $enumValue->setCoercer(new CallbackCoercer(function (Node $node, $parent, EnumValue $value) {
+        $enumValue->setCoercer(new CallbackCoercer(function (Node $node, EnumValue $value) {
             return (object) [
                 'name' => $value->name(),
                 'description' => $value->description(),
@@ -165,7 +165,7 @@ class Schema extends ObjectType
             ];
         }));
 
-        $directive->setCoercer(new CallbackCoercer(function (Node $node, $parent, Directive $value) {
+        $directive->setCoercer(new CallbackCoercer(function (Node $node, Directive $value) {
             return (object) [
                 'name' => $value->name(),
                 'description' => $value->description(),
