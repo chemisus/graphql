@@ -72,4 +72,24 @@ class NonNullType implements Type
     {
         return null;
     }
+
+    public function interfaces()
+    {
+        return null;
+    }
+
+    public function possibleTypes()
+    {
+        return null;
+    }
+
+    public function inputFields()
+    {
+        return null;
+    }
+
+    public function ofType()
+    {
+        return null;
+    }
 }

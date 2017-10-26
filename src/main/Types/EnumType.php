@@ -85,4 +85,24 @@ class EnumType implements Type
     {
         return $this->values;
     }
+
+    public function interfaces()
+    {
+        return null;
+    }
+
+    public function possibleTypes()
+    {
+        return null;
+    }
+
+    public function inputFields()
+    {
+        return null;
+    }
+
+    public function ofType()
+    {
+        return null;
+    }
 }

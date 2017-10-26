@@ -64,4 +64,24 @@ interface Type
      * @return string[]
      */
     public function types(Node $node, $values);
+
+    /**
+     * @return Type[]|null
+     */
+    public function interfaces();
+
+    /**
+     * @return Type[]|null
+     */
+    public function possibleTypes();
+
+    /**
+     * @return InputValue[]|null
+     */
+    public function inputFields();
+
+    /**
+     * @return Type|null
+     */
+    public function ofType();
 }

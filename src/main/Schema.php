@@ -145,6 +145,26 @@ class Schema extends ObjectType
                 return $parent->fields();
             }));
 
+        $type->field('interfaces')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return array_merge([], ...array_map(function (Type $type) {
+                    return array_values((array) $type->interfaces());
+                }, $node->parent()->items()));
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
+                return $parent->interfaces();
+            }));
+
+        $type->field('possibleTypes')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return array_merge([], ...array_map(function (Type $type) {
+                    return array_values((array) $type->possibleTypes());
+                }, $node->parent()->items()));
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
+                return $parent->possibleTypes();
+            }));
+
         $type->field('enumValues')
             ->setFetcher(new CallbackFetcher(function (Node $node) {
                 return array_merge([], ...array_map(function (Type $type) {
@@ -160,9 +180,39 @@ class Schema extends ObjectType
                 }, $parent->enumValues());
             }));
 
+        $type->field('inputFields')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return array_merge([], ...array_map(function (Type $type) {
+                    return array_values((array) $type->inputFields());
+                }, $node->parent()->items()));
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
+                return $parent->inputFields();
+            }));
+
+        $type->field('ofType')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return array_map(function (Type $type) {
+                    return $type->ofType();
+                }, $node->parent()->items());
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
+                return $parent->ofType();
+            }));
+
         $field->field('name')
             ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
                 return $parent->name();
+            }));
+
+        $field->field('description')
+            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
+                return $parent->description();
+            }));
+
+        $field->field('args')
+            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
+                return $parent->args();
             }));
 
         $field->field('type')
@@ -173,6 +223,16 @@ class Schema extends ObjectType
             }))
             ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
                 return $parent->returnType();
+            }));
+
+        $field->field('isDeprecated')
+            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
+                return $parent->isDeprecated();
+            }));
+
+        $field->field('deprecationReason')
+            ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
+                return $parent->deprecationReason();
             }));
     }
 

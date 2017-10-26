@@ -34,6 +34,26 @@ class Field
     private $returnType;
 
     /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var InputValue[]
+     */
+    private $args;
+
+    /**
+     * @var bool
+     */
+    private $isDeprecated = false;
+
+    /**
+     * @var string
+     */
+    private $deprecationReason;
+
+    /**
      * Field constructor.
      * @param FieldedType $ownerType
      * @param string $name
@@ -86,5 +106,34 @@ class Field
     public function returnType(): Type
     {
         return $this->returnType;
+    }
+
+    public function description()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return InputValue[]
+     */
+    public function args()
+    {
+        return $this->args;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeprecated(): bool
+    {
+        return $this->isDeprecated;
+    }
+
+    /**
+     * @return string
+     */
+    public function deprecationReason()
+    {
+        return $this->deprecationReason;
     }
 }
