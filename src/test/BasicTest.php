@@ -25,7 +25,7 @@ class BasicTest extends TestCase
 
         $graph = [];
 
-        $this->schema = new Schema('Schema');
+        $this->schema = new Schema();
 
         $this->schema->putType(new ObjectType('Person'));
         $this->schema->putType(new EnumType('Gender'));

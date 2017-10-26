@@ -14,10 +14,9 @@ class Schema extends ObjectType
      */
     private $types = [];
 
-    public function __construct($name)
+    public function __construct()
     {
-        parent::__construct($name);
-        $this->name = $name;
+        parent::__construct('Schema');
 
         $schema = new ObjectType('__Schema');
         $type = new ObjectType('__Type');
