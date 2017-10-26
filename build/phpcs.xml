@@ -1,4 +1,4 @@
-<ruleset name="name-of-your-coding-standard">
+<ruleset name="graphql">
     <description>Description of your coding standard</description>
     <rule ref="Generic.PHP.DisallowShortOpenTag"/>
 </ruleset>

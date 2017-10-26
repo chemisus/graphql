@@ -1,8 +1,25 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<phpunit bootstrap="../vendor/autoload.php">
+<phpunit bootstrap="../vendor/autoload.php"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         strict="true"
+         verbose="true">
     <testsuites>
-        <testsuite>
+        <testsuite name="All">
             <directory>../src/test</directory>
         </testsuite>
     </testsuites>
+    <logging>
+        <log type="coverage-html" target="../out/coverage"/>
+        <log type="coverage-clover" target="../out/logs/clover.xml"/>
+        <log type="coverage-crap4j" target="../out/logs/crap4j.xml"/>
+        <log type="junit" target="../out/logs/junit.xml" logIncompleteSkipped="false"/>
+    </logging>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+            <exclude>
+                <dir>../vendor</dir>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>

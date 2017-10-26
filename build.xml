@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
+<project name="graphql" default="all">
     <property name="contained" value=""/>
 
     <include file="ant/composer.xml" prefixSeparator=":"/>
     <include file="ant/phpunit.xml" prefixSeparator=":"/>
     <include file="ant/phpcs.xml" prefixSeparator=":"/>
 
+    <target name="clean"/>
+    <target name="build"/>
     <target name="test" depends="phpunit:phpunit"/>
+    <target name="doc"/>
+
+    <target name="all" depends="clean,build,test,doc"/>
 </project>
