@@ -70,4 +70,9 @@ class InterfaceType implements FieldedType
             return $this->typeOf($node, $value);
         }, $values));
     }
+
+    public function enumValues()
+    {
+        return null;
+    }
 }

@@ -76,4 +76,9 @@ class InputObjectType implements FieldedType
     {
         return [$this->name];
     }
+
+    public function enumValues()
+    {
+        return null;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace GraphQL\Types;
 
+use GraphQL\EnumValue;
 use GraphQL\Field;
 use GraphQL\KindDoesNotSupportFieldsException;
 use GraphQL\Node;
@@ -25,6 +26,11 @@ interface Type
      * @return Field[]|null
      */
     public function fields();
+
+    /**
+     * @return EnumValue[]|null
+     */
+    public function enumValues();
 
     /**
      * @param Node $node

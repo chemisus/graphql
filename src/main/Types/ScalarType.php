@@ -2,6 +2,7 @@
 
 namespace GraphQL\Types;
 
+use GraphQL\EnumValue;
 use GraphQL\Field;
 use GraphQL\KindDoesNotSupportFieldsException;
 use GraphQL\Node;
@@ -52,5 +53,10 @@ class ScalarType implements Type
     public function types(Node $node, $values)
     {
         return [$this->name];
+    }
+
+    public function enumValues()
+    {
+        return null;
     }
 }

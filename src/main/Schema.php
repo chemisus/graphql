@@ -135,6 +135,21 @@ class Schema extends ObjectType
                 return $parent->fields();
             }));
 
+        $type->field('enumValues')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return array_merge([], ...array_map(function (Type $type) {
+                    return array_values((array) $type->enumValues());
+                }, $node->parent()->items()));
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
+                return array_map(function (EnumValue $value) {
+                    return (object) [
+                        'name' => $value->name(),
+                        'description' => $value->description(),
+                    ];
+                }, $parent->enumValues());
+            }));
+
         $field->field('name')
             ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
                 return $parent->name();

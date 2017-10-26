@@ -42,7 +42,7 @@ class NonNullType implements Type
         $value = $this->type->resolve($node, $parent, $value, $resolver);
 
         if ($value === null) {
-            throw new \Exception();
+            throw new \Exception($node->path() . ' can not be null');
         }
 
         return $value;
@@ -56,5 +56,10 @@ class NonNullType implements Type
     public function types(Node $node, $values)
     {
         return $this->type->types($node, $values);
+    }
+
+    public function enumValues()
+    {
+        return null;
     }
 }

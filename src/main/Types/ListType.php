@@ -65,4 +65,9 @@ class ListType implements Type
             return $this->typeOf($node, $value)->name();
         }, $values);
     }
+
+    public function enumValues()
+    {
+        return null;
+    }
 }

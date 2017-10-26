@@ -76,4 +76,9 @@ class ObjectType implements FieldedType
     {
         return [$this->name];
     }
+
+    public function enumValues()
+    {
+        return null;
+    }
 }

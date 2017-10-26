@@ -55,4 +55,9 @@ class UnionType implements FieldedType
             return $this->typeOf($node, $value)->name();
         }, $values);
     }
+
+    public function enumValues()
+    {
+        return null;
+    }
 }

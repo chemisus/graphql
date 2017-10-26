@@ -9,6 +9,11 @@ class EnumValue
      */
     private $name;
 
+    /**
+     * @var string
+     */
+    private $description;
+
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -17,5 +22,10 @@ class EnumValue
     public function name()
     {
         return $this->name;
+    }
+
+    public function description()
+    {
+        return $this->description;
     }
 }
