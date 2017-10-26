@@ -2,6 +2,7 @@
 
 namespace GraphQL;
 
+use GraphQL\Types\Directive;
 use GraphQL\Types\EnumType;
 use GraphQL\Types\ListType;
 use GraphQL\Types\NonNullType;
@@ -172,12 +173,7 @@ class Schema extends ObjectType
                 }, $node->parent()->items()));
             }))
             ->setResolver(new CallbackResolver(function (Node $node, Type $parent, $value) {
-                return array_map(function (EnumValue $value) {
-                    return (object) [
-                        'name' => $value->name(),
-                        'description' => $value->description(),
-                    ];
-                }, $parent->enumValues());
+                return $parent->enumValues();
             }));
 
         $type->field('inputFields')
@@ -234,6 +230,72 @@ class Schema extends ObjectType
             ->setResolver(new CallbackResolver(function (Node $node, Field $parent, $value) {
                 return $parent->deprecationReason();
             }));
+
+        $inputValue->field('name')
+            ->setResolver(new CallbackResolver(function (Node $node, InputValue $parent, $value) {
+                return $parent->name();
+            }));
+
+        $inputValue->field('description')
+            ->setResolver(new CallbackResolver(function (Node $node, InputValue $parent, $value) {
+                return $parent->description();
+            }));
+
+        $inputValue->field('type')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return array_map(function (Field $field) {
+                    return $field->returnType();
+                }, $node->parent()->items());
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, InputValue $parent, $value) {
+                return $parent->type();
+            }));
+
+        $inputValue->field('defaultValue')
+            ->setResolver(new CallbackResolver(function (Node $node, InputValue $parent, $value) {
+                return $parent->defaultValue();
+            }));
+
+        $enumValue->field('name')
+            ->setResolver(new CallbackResolver(function (Node $node, EnumValue $parent, $value) {
+                return $parent->name();
+            }));
+
+        $enumValue->field('description')
+            ->setResolver(new CallbackResolver(function (Node $node, EnumValue $parent, $value) {
+                return $parent->description();
+            }));
+
+        $enumValue->field('isDeprecated')
+            ->setResolver(new CallbackResolver(function (Node $node, EnumValue $parent, $value) {
+                return $parent->isDeprecated();
+            }));
+
+        $enumValue->field('deprecationReason')
+            ->setResolver(new CallbackResolver(function (Node $node, EnumValue $parent, $value) {
+                return $parent->deprecationReason();
+            }));
+
+        $directive->field('name')
+            ->setResolver(new CallbackResolver(function (Node $node, Directive $parent, $value) {
+                return $parent->name();
+            }));
+
+        $directive->field('description')
+            ->setResolver(new CallbackResolver(function (Node $node, Directive $parent, $value) {
+                return $parent->description();
+            }));
+
+        $directive->field('locations')
+            ->setResolver(new CallbackResolver(function (Node $node, Directive $parent, $value) {
+                return $parent->description();
+            }));
+
+        $directive->field('args')
+            ->setResolver(new CallbackResolver(function (Node $node, Directive $parent, $value) {
+                return $parent->args();
+            }));
+
     }
 
     public function putType(Type $type)

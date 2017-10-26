@@ -14,6 +14,10 @@ class EnumValue
      */
     private $description;
 
+    private $isDeprecated;
+
+    private $deprecationReason;
+
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -27,5 +31,15 @@ class EnumValue
     public function description()
     {
         return $this->description;
+    }
+
+    public function isDeprecated()
+    {
+        return $this->isDeprecated;
+    }
+
+    public function deprecationReason()
+    {
+        return $this->deprecationReason;
     }
 }
