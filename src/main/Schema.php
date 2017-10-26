@@ -103,12 +103,44 @@ class Schema extends ObjectType
         $query->addField(new Field($query, '__schema', new NonNullType($schema)));
         $query->addField(new Field($query, '__type', new NonNullType($type)));
 
+        $query->field('__schema')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return [$this];
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node) {
+                return $this;
+            }));
+
         $query->field('__type')
             ->setFetcher(new CallbackFetcher(function (Node $node) {
                 return [$this->getType($node->arg('name'))];
             }))
             ->setResolver(new CallbackResolver(function (Node $node) {
                 return $this->getType($node->arg('name'));
+            }));
+
+        $schema->field('queryType')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return [$this->queryType()];
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, Schema $schema) {
+                return $this->queryType();
+            }));
+
+        $schema->field('mutationType')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return [];
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, Schema $schema) {
+                return null;
+            }));
+
+        $schema->field('directives')
+            ->setFetcher(new CallbackFetcher(function (Node $node) {
+                return [];
+            }))
+            ->setResolver(new CallbackResolver(function (Node $node, Schema $schema) {
+                return [];
             }));
 
         $type->field('kind')
@@ -285,6 +317,11 @@ class Schema extends ObjectType
             ->setResolver(new CallbackResolver(function (Node $node, Directive $parent, $value) {
                 return $parent->args();
             }));
+    }
+
+    public function queryType()
+    {
+        return $this->getType('Query');
     }
 
     public function putType(Type $type)
