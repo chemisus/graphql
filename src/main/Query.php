@@ -49,7 +49,7 @@ class Query
         return $this->alias ?? $this->name;
     }
 
-    public function on(): string
+    public function on()
     {
         return $this->on;
     }
@@ -85,7 +85,7 @@ class Query
         $padding = str_repeat(' ', $level * 2);
         $string = $padding;
         if ($this->alias !== null) {
-            $string .= 'alias:';
+            $string .= $this->alias . ':';
         }
         $string .= $this->name;
 
@@ -96,9 +96,27 @@ class Query
         }
 
         if (!empty($this->fields)) {
-            $string .= ' {' . PHP_EOL . implode(PHP_EOL, array_map(function (Query $field) use ($level, $padding) {
-                    return $field->toString($level + 1);
-                }, $this->fields)) . PHP_EOL . $padding . '}';
+            $last = null;
+            $string .= " {\n";
+
+            foreach ($this->fields as $field) {
+                if ($last !== null && $field->on() !== $last) {
+                    $string .= $padding . '  }' . PHP_EOL;
+                    $last = null;
+                }
+
+                if ($last === null && $field->on() !== null) {
+                    $last = $field->on();
+                    $string .= $padding . '  ... on ' . $field->on() . ' {' . PHP_EOL;
+                    $string .= $field->toString($level + 2) . PHP_EOL;
+                } elseif ($last !== null && $field->on() === $last) {
+                    $string .= $field->toString($level + 2) . PHP_EOL;
+                } elseif ($last === null && $field->on() === $last) {
+                    $string .= $field->toString($level + 1) . PHP_EOL;
+                }
+            }
+
+            $string .= $padding . "}";
         }
 
         return $string;

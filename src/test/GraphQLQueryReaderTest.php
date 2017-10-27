@@ -144,7 +144,18 @@ _GQL
 }
 _GQL
             ],
+            [
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', '...', 'P', 'id', '}', '}', 'fragment', 'P', 'on', 'Person', '{', 'name', '}'],
+                '{person(name:"terrence") {...P id}} fragment P on Person { name }'
+            ],
         ];
+    }
+
+    public function build($tokens)
+    {
+        for ($i = 0; $i < count($tokens); $i++) {
+
+        }
     }
 
     /**
@@ -152,9 +163,22 @@ _GQL
      * @param $query
      * @dataProvider queryProvider
      */
-    public function test($expect, $query)
+    public function testLex($expect, $query)
     {
         $actual = $this->lex($query);
         $this->assertEquals($expect, $actual);
+    }
+
+    /**
+     * @param $expect
+     * @param $query
+     * @dataProvider queryProvider
+     */
+    public function testBuild($expect, $query)
+    {
+        $actual = $this->build($this->lex($query));
+
+        $this->assertTrue(true);
+//        $this->assertEquals($expect, $actual);
     }
 }
