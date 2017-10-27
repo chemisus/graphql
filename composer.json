@@ -16,6 +16,8 @@
     "phpunit/phpunit": "^6.4",
     "squizlabs/php_codesniffer": "^3.1",
     "webonyx/graphql-php": "*",
-    "react/event-loop": "*"
+    "react/event-loop": "^0.4.3",
+    "react/promise": "^2.5.1",
+    "khr/react-curl": "^2.0.1"
   }
 }

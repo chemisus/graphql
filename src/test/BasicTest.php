@@ -88,9 +88,15 @@ class BasicTest extends TestCase
         return $queryBuilder->read($this->schema, $xml);
     }
 
-    public function query(Query $query)
+    public function queryBFS(Query $query)
     {
         $executor = new BFSExecutor();
+        return $executor->execute($this->schema, $query);
+    }
+
+    public function queryReact(Query $query)
+    {
+        $executor = new ReactExecutor();
         return $executor->execute($this->schema, $query);
     }
 
@@ -99,9 +105,9 @@ class BasicTest extends TestCase
      * @param $xml
      * @param $expect
      */
-    public function testXML($xml, $expect)
+    public function testXMLwithBFS($xml, $expect)
     {
-        $actual = $this->query($this->readXML($xml));
+        $actual = $this->queryBFS($this->readXML($xml));
 
         $this->assertEquals(json_encode($expect), json_encode($actual));
     }
@@ -111,10 +117,10 @@ class BasicTest extends TestCase
      * @param $xml
      * @param $expect
      */
-    public function testGQLFromXML($xml, $expect)
+    public function testGQLFromXMLwithBFS($xml, $expect)
     {
         $gql = $this->readXML($xml)->toString();
-        $actual = $this->query($this->readGQL($gql));
+        $actual = $this->queryBFS($this->readGQL($gql));
 
         $this->assertEquals(json_encode($expect), json_encode($actual));
     }
@@ -124,9 +130,46 @@ class BasicTest extends TestCase
      * @param $gql
      * @param $expect
      */
-    public function testGQL($gql, $expect)
+    public function testGQLwithBFS($gql, $expect)
     {
-        $actual = $this->query($this->readGQL($gql));
+        $actual = $this->queryBFS($this->readGQL($gql));
+
+        $this->assertEquals(json_encode($expect), json_encode($actual));
+    }
+
+    /**
+     * @dataProvider xmlProvider
+     * @param $xml
+     * @param $expect
+     */
+    public function testXMLwithReact($xml, $expect)
+    {
+        $actual = $this->queryReact($this->readXML($xml));
+
+        $this->assertEquals(json_encode($expect), json_encode($actual));
+    }
+
+    /**
+     * @dataProvider xmlProvider
+     * @param $xml
+     * @param $expect
+     */
+    public function testGQLFromXMLwithReact($xml, $expect)
+    {
+        $gql = $this->readXML($xml)->toString();
+        $actual = $this->queryReact($this->readGQL($gql));
+
+        $this->assertEquals(json_encode($expect), json_encode($actual));
+    }
+
+    /**
+     * @dataProvider gqlProvider
+     * @param $gql
+     * @param $expect
+     */
+    public function testGQLwithReact($gql, $expect)
+    {
+        $actual = $this->queryReact($this->readGQL($gql));
 
         $this->assertEquals(json_encode($expect), json_encode($actual));
     }
