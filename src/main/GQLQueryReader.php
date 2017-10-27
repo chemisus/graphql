@@ -20,8 +20,6 @@ class GQLQueryReader
         $fields = $this->readSelections($schema, $node->selectionSet->selections);
         $query = new Query($name, ...$fields);
 
-//        echo PHP_EOL . $query;
-
         return $query;
     }
 

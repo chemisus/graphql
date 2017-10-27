@@ -18,11 +18,15 @@
         <get src="https://getcomposer.org/composer.phar" dest="composer.phar"/>
     </target>
 
-    <target name="clean">
-        <container>
-            <delete dir="vendor"/>
-        </container>
+    <target name="clean:vendor">
+        <delete dir="vendor"/>
     </target>
+
+    <target name="clean:composer.lock">
+        <delete file="composer.lock"/>
+    </target>
+
+    <target name="clean" depends="clean:vendor,clean:composer.lock"/>
 
     <target name="install" depends="composer.phar,vendor:available" unless="vendor:available">
         <container>

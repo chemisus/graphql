@@ -6,8 +6,8 @@
     <include file="ant/phpunit.xml" prefixSeparator=":"/>
     <include file="ant/phpcs.xml" prefixSeparator=":"/>
 
-    <target name="clean"/>
-    <target name="build"/>
+    <target name="clean" depends="composer:clean"/>
+    <target name="build" depends="composer:install"/>
     <target name="test" depends="phpunit:phpunit"/>
     <target name="doc"/>
 
