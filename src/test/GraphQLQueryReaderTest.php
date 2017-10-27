@@ -126,6 +126,10 @@ _GQL
                 ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', '...', 'Person', '}', '}', 'fragment', 'Person', '{', 'name', '}'],
                 '{person(name:"terrence") {...Person}} fragment Person { name }'
             ],
+            [
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', '...', 'Person', 'id', '}', '}', 'fragment', 'Person', '{', 'name', '}'],
+                '{person(name:"terrence") {...Person id}} fragment Person { name }'
+            ],
         ];
     }
 
