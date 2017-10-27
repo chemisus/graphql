@@ -123,12 +123,12 @@ _GQL
 _GQL
             ],
             [
-                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', '...', 'Person', '}', '}', 'fragment', 'Person', '{', 'name', '}'],
-                '{person(name:"terrence") {...Person}} fragment Person { name }'
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', '...', 'P', '}', '}', 'fragment', 'P', 'on', 'Person', '{', 'name', '}'],
+                '{person(name:"terrence") {...P}} fragment P on Person { name }'
             ],
             [
-                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', '...', 'Person', 'id', '}', '}', 'fragment', 'Person', '{', 'name', '}'],
-                '{person(name:"terrence") {...Person id}} fragment Person { name }'
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', '...', 'P', 'id', '}', '}', 'fragment', 'P', 'on', 'Person', '{', 'name', '}'],
+                '{person(name:"terrence") {...P id}} fragment P on Person { name }'
             ],
             [
                 ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', 'name', '#test some comment', 'a', '#another comment', 'b', '{', 'c', '}', '#another comment }', 'blah', '}', '}'],
