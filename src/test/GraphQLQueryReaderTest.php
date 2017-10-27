@@ -17,15 +17,17 @@ class GraphQLQueryReaderTest extends TestCase
         $floatValue = sprintf("%s(%s)?(%s)?", $intValue, $fractionalPart, $exponentialPart);
         $name = "[_A-Za-z][_0-9A-Za-z]*";
         $punctuator = '[\!\$\(\)\:\=\@\[\]\{\}\|]|(\.\.\.)';
+        $comment = "#.*";
         $token = sprintf(
-            "(%s)|(%s)|(%s)|(%s)|(%s)|(%s)|(%s)",
+            "(%s)|(%s)|(%s)|(%s)|(%s)|(%s)|(%s)|(%s)",
             $punctuator,
             $name,
             $intValue,
             $floatValue,
             $stringValue,
             $booleanValue,
-            $nullValue
+            $nullValue,
+            $comment
         );
 
         $matches = [];
@@ -61,7 +63,38 @@ class GraphQLQueryReaderTest extends TestCase
     }
 }
 _GQL
-            ]
+            ],
+            [
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', 'name', '}', '}'],
+                '{person(name:"terrence") {name}}'
+            ],
+            [
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', 'name', 'blah', '}', '}'],
+                '{person(name:"terrence") {name,blah}}'
+            ],
+            [
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', 'name', 'blah', '}', '}'],
+                <<< _GQL
+{
+    person(name:"terrence") {
+        name
+        blah
+    }
+}
+_GQL
+            ],
+            [
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', 'name', '#test some comment', 'blah', '}', '}'],
+                <<< _GQL
+{
+    person(name:"terrence") {
+        name
+        #test some comment
+        blah
+    }
+}
+_GQL
+            ],
         ];
     }
 
