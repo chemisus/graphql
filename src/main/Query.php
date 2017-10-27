@@ -116,6 +116,10 @@ class Query
                 }
             }
 
+            if ($last !== null) {
+                $string .= $padding . '  }' . PHP_EOL;
+            }
+
             $string .= $padding . "}";
         }
 

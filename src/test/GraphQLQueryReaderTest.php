@@ -2,6 +2,8 @@
 
 namespace GraphQL;
 
+use GraphQL\Language\AST\DocumentNode;
+use GraphQL\Language\Parser;
 use PHPUnit\Framework\TestCase;
 
 class GraphQLQueryReaderTest extends TestCase
@@ -19,7 +21,7 @@ class GraphQLQueryReaderTest extends TestCase
         $punctuator = '[\!\$\(\)\:\=\@\[\]\{\}\|]|(\.\.\.)';
         $comment = "#.*";
         $token = sprintf(
-            "(%s)|(%s)|(%s)|(%s)|(%s)|(%s)|(%s)|(%s)",
+            "(?P<punctuator>%s)|(?P<name>%s)|(?P<int>%s)|(?P<float>%s)|(?P<string>%s)|(?P<boolean>%s)|(?P<null>%s)|(?P<comment>%s)",
             $punctuator,
             $name,
             $intValue,
@@ -37,6 +39,7 @@ class GraphQLQueryReaderTest extends TestCase
 
         $found = $matches[0][0];
         $offset = $matches[0][1] + strlen($found);
+
         return $found;
     }
 
@@ -151,13 +154,6 @@ _GQL
         ];
     }
 
-    public function build($tokens)
-    {
-        for ($i = 0; $i < count($tokens); $i++) {
-
-        }
-    }
-
     /**
      * @param $expect
      * @param $query
@@ -167,18 +163,5 @@ _GQL
     {
         $actual = $this->lex($query);
         $this->assertEquals($expect, $actual);
-    }
-
-    /**
-     * @param $expect
-     * @param $query
-     * @dataProvider queryProvider
-     */
-    public function testBuild($expect, $query)
-    {
-        $actual = $this->build($this->lex($query));
-
-        $this->assertTrue(true);
-//        $this->assertEquals($expect, $actual);
     }
 }

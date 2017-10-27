@@ -50,7 +50,7 @@ class BasicTest extends TestCase
         }
     }
 
-    public function caseProvider()
+    public function xmlProvider()
     {
         $files = glob(dirname(dirname(__DIR__)) . '/resources/test/*.xml');
         return array_merge([], ...array_map(function ($xml) {
@@ -63,21 +63,70 @@ class BasicTest extends TestCase
         }, $files));
     }
 
-    public function queryXML(string $xml)
+    public function gqlProvider()
+    {
+        $files = glob(dirname(dirname(__DIR__)) . '/resources/test/*.gql');
+        return array_merge([], ...array_map(function ($xml) {
+            return [
+                basename($xml) => [
+                    file_get_contents($xml),
+                    json_decode(file_get_contents(str_replace('.gql', '.json', $xml))),
+                ]
+            ];
+        }, $files));
+    }
+
+    public function readXML($xml)
     {
         $queryBuilder = new XMLQueryReader();
-        $query = $queryBuilder->read($this->schema, $xml);
+        return $queryBuilder->read($this->schema, $xml);
+    }
+
+    public function readGQL($xml)
+    {
+        $queryBuilder = new GQLQueryReader();
+        return $queryBuilder->read($this->schema, $xml);
+    }
+
+    public function query(Query $query)
+    {
         $executor = new BFSExecutor();
         return $executor->execute($this->schema, $query);
     }
 
     /**
-     * @dataProvider caseProvider
+     * @dataProvider xmlProvider
+     * @param $xml
+     * @param $expect
      */
-    public function testQuery($xml, $json)
+    public function testXML($xml, $expect)
     {
-        $actual = $this->queryXML($xml);
-        $expect = $json;
+        $actual = $this->query($this->readXML($xml));
+
+        $this->assertEquals(json_encode($expect), json_encode($actual));
+    }
+
+    /**
+     * @dataProvider xmlProvider
+     * @param $xml
+     * @param $expect
+     */
+    public function testGQLFromXML($xml, $expect)
+    {
+        $gql = $this->readXML($xml)->toString();
+        $actual = $this->query($this->readGQL($gql));
+
+        $this->assertEquals(json_encode($expect), json_encode($actual));
+    }
+
+    /**
+     * @dataProvider gqlProvider
+     * @param $gql
+     * @param $expect
+     */
+    public function testGQL($gql, $expect)
+    {
+        $actual = $this->query($this->readGQL($gql));
 
         $this->assertEquals(json_encode($expect), json_encode($actual));
     }

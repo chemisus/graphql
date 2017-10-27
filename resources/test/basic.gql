@@ -1,0 +1,15 @@
+{
+    greeting(name:"Terrence")
+    gwen:person(name:"gwen") {
+        name
+    }
+    terrence:person(name:"terrence") {
+        name
+        mom:mother {
+            name
+            children {
+                name
+            }
+        }
+    }
+}
