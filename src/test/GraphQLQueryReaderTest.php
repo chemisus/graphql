@@ -95,6 +95,37 @@ _GQL
 }
 _GQL
             ],
+            [
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', 'name', '#test some comment', '#another comment', 'blah', '}', '}'],
+                <<< _GQL
+{
+    person(name:"terrence") {
+        name
+        #test some comment
+        #another comment
+        blah
+    }
+}
+_GQL
+            ],
+            [
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', 'name', '#test some comment', '#another comment', '#another comment }', 'blah', '}', '}'],
+                <<< _GQL
+{
+    person(name:"terrence") {
+        name
+        #test some comment
+        #another comment
+        #another comment }
+        blah
+    }
+}
+_GQL
+            ],
+            [
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', '...', 'Person', '}', '}', 'fragment', 'Person', '{', 'name', '}'],
+                '{person(name:"terrence") {...Person}} fragment Person { name }'
+            ],
         ];
     }
 
