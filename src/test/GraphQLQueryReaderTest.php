@@ -130,6 +130,20 @@ _GQL
                 ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', '...', 'Person', 'id', '}', '}', 'fragment', 'Person', '{', 'name', '}'],
                 '{person(name:"terrence") {...Person id}} fragment Person { name }'
             ],
+            [
+                ['{', 'person', '(', 'name', ':', '"terrence"', ')', '{', 'name', '#test some comment', 'a', '#another comment', 'b', '{', 'c', '}', '#another comment }', 'blah', '}', '}'],
+                <<< _GQL
+{
+    person(name:"terrence") {
+        name
+        #test some comment
+        a #another comment
+        b{c} #another comment }
+        blah
+    }
+}
+_GQL
+            ],
         ];
     }
 
