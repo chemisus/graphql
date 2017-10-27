@@ -74,4 +74,33 @@ class Query
             return $query->on === null || $query->on === $on;
         });
     }
+
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    public function toString($level = 0)
+    {
+        $padding = str_repeat(' ', $level * 2);
+        $string = $padding;
+        if ($this->alias !== null) {
+            $string .= 'alias:';
+        }
+        $string .= $this->name;
+
+        if (!empty($this->args)) {
+            $string .= '(' . implode(', ', array_map(function ($key, $value) {
+                    return $key . ':' . json_encode($value);
+                }, array_keys($this->args), array_values($this->args))) . ')';
+        }
+
+        if (!empty($this->fields)) {
+            $string .= ' {' . PHP_EOL . implode(PHP_EOL, array_map(function (Query $field) use ($level, $padding) {
+                    return $field->toString($level + 1);
+                }, $this->fields)) . PHP_EOL . $padding . '}';
+        }
+
+        return $string;
+    }
 }
