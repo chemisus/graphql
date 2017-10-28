@@ -2,6 +2,9 @@
 
 namespace GraphQL;
 
+use React\Promise\FulfilledPromise;
+use function React\Promise\all;
+
 class Field
 {
     /**

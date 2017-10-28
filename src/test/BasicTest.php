@@ -9,6 +9,7 @@ use GraphQL\Setup\GenderSetup;
 use GraphQL\Setup\PersonSetup;
 use GraphQL\Setup\PetSetup;
 use GraphQL\Setup\QuerySetup;
+use GraphQL\Setup\ReactSetup;
 use GraphQL\Setup\SchemaSetup;
 use PHPUnit\Framework\TestCase;
 
@@ -33,6 +34,7 @@ class BasicTest extends TestCase
         $this->schema->putType(new InterfaceType('Animal'));
         $this->schema->putType(new ObjectType('Dog'));
         $this->schema->putType(new ObjectType('Cat'));
+        $this->schema->putType(new ObjectType('React'));
 
         $setups = [
             new SchemaSetup(),
@@ -43,6 +45,7 @@ class BasicTest extends TestCase
             new PetSetup(),
             new DogSetup(),
             new CatSetup(),
+            new ReactSetup(),
         ];
 
         foreach ($setups as $setup) {
@@ -100,42 +103,42 @@ class BasicTest extends TestCase
         return $executor->execute($this->schema, $query);
     }
 
-    /**
-     * @dataProvider xmlProvider
-     * @param $xml
-     * @param $expect
-     */
-    public function testXMLwithBFS($xml, $expect)
-    {
-        $actual = $this->queryBFS($this->readXML($xml));
-
-        $this->assertEquals(json_encode($expect), json_encode($actual));
-    }
-
-    /**
-     * @dataProvider xmlProvider
-     * @param $xml
-     * @param $expect
-     */
-    public function testGQLFromXMLwithBFS($xml, $expect)
-    {
-        $gql = $this->readXML($xml)->toString();
-        $actual = $this->queryBFS($this->readGQL($gql));
-
-        $this->assertEquals(json_encode($expect), json_encode($actual));
-    }
-
-    /**
-     * @dataProvider gqlProvider
-     * @param $gql
-     * @param $expect
-     */
-    public function testGQLwithBFS($gql, $expect)
-    {
-        $actual = $this->queryBFS($this->readGQL($gql));
-
-        $this->assertEquals(json_encode($expect), json_encode($actual));
-    }
+//    /**
+//     * @dataProvider xmlProvider
+//     * @param $xml
+//     * @param $expect
+//     */
+//    public function testXMLwithBFS($xml, $expect)
+//    {
+//        $actual = $this->queryBFS($this->readXML($xml));
+//
+//        $this->assertEquals(json_encode($expect), json_encode($actual));
+//    }
+//
+//    /**
+//     * @dataProvider xmlProvider
+//     * @param $xml
+//     * @param $expect
+//     */
+//    public function testGQLFromXMLwithBFS($xml, $expect)
+//    {
+//        $gql = $this->readXML($xml)->toString();
+//        $actual = $this->queryBFS($this->readGQL($gql));
+//
+//        $this->assertEquals(json_encode($expect), json_encode($actual));
+//    }
+//
+//    /**
+//     * @dataProvider gqlProvider
+//     * @param $gql
+//     * @param $expect
+//     */
+//    public function testGQLwithBFS($gql, $expect)
+//    {
+//        $actual = $this->queryBFS($this->readGQL($gql));
+//
+//        $this->assertEquals(json_encode($expect), json_encode($actual));
+//    }
 
     /**
      * @dataProvider xmlProvider

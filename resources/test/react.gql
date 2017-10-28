@@ -1,0 +1,14 @@
+{
+    react {
+        a:message(duration:3, size:1)
+        b:message(duration:2, size:2)
+        c:message(duration:1, size:3)
+        d:message(duration:3, size:4)
+        e:message(duration:1, size:5)
+        f:message(duration:2, size:6)
+        g:message(duration:1, size:7)
+        h:message(duration:3, size:8)
+        i:message(duration:1, size:9)
+        j:message(duration:2, size:10)
+    }
+}

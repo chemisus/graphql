@@ -15,6 +15,7 @@ class QuerySetup
     public function setup(Schema $schema, &$graph)
     {
         $query = $schema->getType('Query');
+        $query->addField(new Field($query, 'react', $schema->getType('React')));
         $query->addField(new Field($query, 'greeting', $schema->getType('String')));
         $query->addField(new Field($query, 'person', $schema->getType('Person')));
         $query->addField(new Field($query, 'people', new ListType($schema->getType('Person'))));
@@ -22,6 +23,10 @@ class QuerySetup
 
         $query->field('greeting')->setResolver(new CallbackResolver(function (Node $node) {
             return sprintf("Hello, %s!", $node->arg('name', 'World'));
+        }));
+
+        $query->field('react')->setResolver(new CallbackResolver(function (Node $node) {
+            return (object) [];
         }));
 
         $query->field('person')

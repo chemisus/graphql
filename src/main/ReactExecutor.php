@@ -3,32 +3,33 @@
 namespace GraphQL;
 
 use React\EventLoop\Factory;
-use React\Promise\Deferred;
+use function React\Promise\all;
 
 class ReactExecutor
 {
     public function execute(Schema $schema, Query $query)
     {
+        $loop = Factory::create();
+        Http::init($loop);
+
         $root = new Node($schema, $schema->field($query->name()), $query);
 
-        $loop = Factory::create();
-
-        $callback = function (Node $node) use (&$callback) {
-            $children = $node->fetch();
-
-            foreach ($children as $child) {
-                $deferred = new Deferred();
-                $deferred->promise()->then($callback);
-                $deferred->resolve($child);
+        $waits = [];
+        $a = function ($nodes) use (&$a, &$waits) {
+            foreach ($nodes as $node) {
+                $waits[] = $node->fetch()->then($a);
             }
         };
 
-        $deferred = new Deferred();
-        $deferred->promise()->then($callback);
-        $deferred->resolve($root);
+        $value = null;
+        $root->fetch()->then($a);
+
+        all($waits)->then(function () use ($root, &$value) {
+            $value = $root->resolve(null, (object) []);
+        });
 
         $loop->run();
 
-        return $root->resolve(null, (object) []);
+        return $value;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace GraphQL;
 
+use function React\Promise\all;
+
 class Node
 {
     /**
@@ -107,22 +109,23 @@ class Node
      */
     public function fetch()
     {
-        $this->items = $this->field->fetch($this);
+        return all($this->field->fetch($this))->then(function ($items) {
+            $this->items = $items;
 
-//        $this->types = $this->field->returnType()->types($this, $this->items());
-        $this->types = array_map(function (Type $type) {
-            return $type->name();
-        }, $this->field->returnType()->possibleTypes());
+            $this->types = array_map(function (Type $type) {
+                return $type->name();
+            }, $this->field->returnType()->possibleTypes());
 
-        $types = array_unique($this->types);
+            $types = array_unique($this->types);
 
-        $this->children = array_merge([], ...array_map(function (string $type) {
-            return array_map(function (Query $query) use ($type) {
-                return new Node($this->schema, $this->schema()->getType($type)->field($query->name()), $query, $this);
-            }, $this->query->queries($type));
-        }, $types));
+            $this->children = array_merge([], ...array_map(function (string $type) {
+                return array_map(function (Query $query) use ($type) {
+                    return new Node($this->schema, $this->schema()->getType($type)->field($query->name()), $query, $this);
+                }, $this->query->queries($type));
+            }, $types));
 
-        return $this->children;
+            return $this->children;
+        });
     }
 
     public function resolve($parent = null, $value = null)

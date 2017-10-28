@@ -10,6 +10,7 @@ use GraphQL\Node;
 use GraphQL\NonNullType;
 use GraphQL\Repositories;
 use GraphQL\Schema;
+use React\Promise\FulfilledPromise;
 
 class PersonSetup
 {
@@ -45,7 +46,7 @@ class PersonSetup
                     $graph[$person->name] = $person;
                 }
 
-                return $fetched;
+                return new FulfilledPromise($fetched);
             }))
             ->setResolver(new CallbackResolver(function (Node $node, $parent, $value) use (&$graph) {
                 return $graph[$parent->mother];
