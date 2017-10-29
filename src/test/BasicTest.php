@@ -2,6 +2,7 @@
 
 namespace GraphQL;
 
+use GraphQL\Language\Parser;
 use GraphQL\Setup\AnimalSetup;
 use GraphQL\Setup\CatSetup;
 use GraphQL\Setup\DogSetup;
@@ -55,7 +56,7 @@ class BasicTest extends TestCase
 
     public function xmlProvider()
     {
-        $files = glob(dirname(dirname(__DIR__)) . '/resources/test/*.xml');
+        $files = glob(dirname(dirname(__DIR__)) . '/resources/test/query/*.xml');
         return array_merge([], ...array_map(function ($xml) {
             return [
                 basename($xml) => [
@@ -68,7 +69,7 @@ class BasicTest extends TestCase
 
     public function gqlProvider()
     {
-        $files = glob(dirname(dirname(__DIR__)) . '/resources/test/*.gql');
+        $files = glob(dirname(dirname(__DIR__)) . '/resources/test/query/*.gql');
         return array_merge([], ...array_map(function ($xml) {
             return [
                 basename($xml) => [
@@ -103,42 +104,42 @@ class BasicTest extends TestCase
         return $executor->execute($this->schema, $query);
     }
 
-//    /**
-//     * @dataProvider xmlProvider
-//     * @param $xml
-//     * @param $expect
-//     */
-//    public function testXMLwithBFS($xml, $expect)
-//    {
-//        $actual = $this->queryBFS($this->readXML($xml));
-//
-//        $this->assertEquals(json_encode($expect), json_encode($actual));
-//    }
-//
-//    /**
-//     * @dataProvider xmlProvider
-//     * @param $xml
-//     * @param $expect
-//     */
-//    public function testGQLFromXMLwithBFS($xml, $expect)
-//    {
-//        $gql = $this->readXML($xml)->toString();
-//        $actual = $this->queryBFS($this->readGQL($gql));
-//
-//        $this->assertEquals(json_encode($expect), json_encode($actual));
-//    }
-//
-//    /**
-//     * @dataProvider gqlProvider
-//     * @param $gql
-//     * @param $expect
-//     */
-//    public function testGQLwithBFS($gql, $expect)
-//    {
-//        $actual = $this->queryBFS($this->readGQL($gql));
-//
-//        $this->assertEquals(json_encode($expect), json_encode($actual));
-//    }
+    /**
+     * @dataProvider xmlProvider
+     * @param $xml
+     * @param $expect
+     */
+    public function testXMLwithBFS($xml, $expect)
+    {
+        $actual = $this->queryBFS($this->readXML($xml));
+
+        $this->assertEquals(json_encode($expect), json_encode($actual));
+    }
+
+    /**
+     * @dataProvider xmlProvider
+     * @param $xml
+     * @param $expect
+     */
+    public function testGQLFromXMLwithBFS($xml, $expect)
+    {
+        $gql = $this->readXML($xml)->toString();
+        $actual = $this->queryBFS($this->readGQL($gql));
+
+        $this->assertEquals(json_encode($expect), json_encode($actual));
+    }
+
+    /**
+     * @dataProvider gqlProvider
+     * @param $gql
+     * @param $expect
+     */
+    public function testGQLwithBFS($gql, $expect)
+    {
+        $actual = $this->queryBFS($this->readGQL($gql));
+
+        $this->assertEquals(json_encode($expect), json_encode($actual));
+    }
 
     /**
      * @dataProvider xmlProvider

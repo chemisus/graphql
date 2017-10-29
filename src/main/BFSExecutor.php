@@ -16,10 +16,11 @@ class BFSExecutor
         while (count($queue)) {
             $node = array_shift($queue);
 
-            $children = $node->fetch();
-            if (count($children)) {
-                array_push($queue, ...$children);
-            }
+            $node->fetch()->then(function ($children) use (&$queue) {
+                if (count($children)) {
+                    array_push($queue, ...$children);
+                }
+            });
         }
 
         return $root->resolve(null, (object) []);
