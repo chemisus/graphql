@@ -4,12 +4,13 @@
 - Type
 - Resolve
 
-```
-for each $node in $queue
-    fetch $items for $node
-        for each $item in $items
-            determine $type for $item
-                        
+```php
+$gql = 'query { greeting(name:"World") }'
+$schema = ...
+$queryBuilder = new QueryBuilder();
+$query = $queryBuilder->build($schema, $gql);
+$executor = new ReactExecutor();
+$data = $executor->execute($schema, $query);                        
 
 ```
     
