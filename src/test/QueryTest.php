@@ -14,7 +14,7 @@ use GraphQL\Setup\ReactSetup;
 use GraphQL\Setup\SchemaSetup;
 use PHPUnit\Framework\TestCase;
 
-class BasicTest extends TestCase
+class QueryTest extends TestCase
 {
     /**
      * @var Schema
