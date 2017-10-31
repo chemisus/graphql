@@ -62,9 +62,8 @@ class ScalarType implements Type
         return null;
     }
 
-    public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
+    public function resolve(Node $node, $parent, $value)
     {
-        $value = $resolver ? $resolver->resolve($node, $parent, $value) : $value;
         return $this->coercer ? $this->coercer->coerce($node, $value) : $value;
     }
 

@@ -43,10 +43,8 @@ class ListType implements Type
         return $this->type->fields();
     }
 
-    public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
+    public function resolve(Node $node, $parent, $value)
     {
-        $value = $resolver ? $resolver->resolve($node, $parent, $value) : $value;
-
         if ($value === null) {
             return null;
         }

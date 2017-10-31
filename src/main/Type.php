@@ -40,10 +40,9 @@ interface Type
      * @param Node $node
      * @param object $parent
      * @param mixed $value
-     * @param Resolver $resolver
      * @return
      */
-    public function resolve(Node $node, $parent, $value, Resolver $resolver = null);
+    public function resolve(Node $node, $parent, $value);
 
     /**
      * @param Node $node

@@ -2,9 +2,6 @@
 
 namespace GraphQL;
 
-use React\Promise\FulfilledPromise;
-use function React\Promise\all;
-
 class Field
 {
     /**
@@ -89,7 +86,8 @@ class Field
 
     public function resolve(Node $node, $parent, $value)
     {
-        return $this->returnType->resolve($node, $parent, $value, $this->resolver);
+        $value = $this->resolver ? $this->resolver->resolve($node, $parent, $value) : $value;
+        return $this->returnType->resolve($node, $parent, $value);
     }
 
     public function name(): string

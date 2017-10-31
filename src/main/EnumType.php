@@ -60,9 +60,9 @@ class EnumType implements Type
         throw new KindDoesNotSupportFieldsException();
     }
 
-    public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
+    public function resolve(Node $node, $parent, $value)
     {
-        return $resolver ? $resolver->resolve($node, $parent, $value) : $value;
+        return $value;
     }
 
     public function typeOf(Node $node, $value): Type
