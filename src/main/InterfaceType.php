@@ -1,8 +1,8 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
-class InterfaceType implements FieldedType
+class InterfaceType implements Type
 {
     /**
      * @var string

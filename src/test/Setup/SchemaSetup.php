@@ -1,12 +1,8 @@
 <?php
 
-namespace GraphQL\Setup;
+namespace Chemisus\GraphQL\Setup;
 
-use GraphQL\CallbackFetcher;
-use GraphQL\CallbackResolver;
-use GraphQL\Field;
-use GraphQL\Node;
-use GraphQL\Schema;
+use Chemisus\GraphQL\Schema;
 
 class SchemaSetup
 {

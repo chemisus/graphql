@@ -1,0 +1,76 @@
+scalar String
+scalar Boolean
+scalar Integer
+scalar Float
+
+type Query {
+    allPeople: PeopleConnection
+    allPlanets: PlanetsConnection
+}
+
+type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
+}
+
+type PeopleConnection {
+    pageInfo: PageInfo!
+    edges: [PeopleEdge]
+    totalCount: Integer
+    people: [Person]
+}
+
+type PeopleEdge {
+    node: Person
+    cursor: String!
+}
+
+type Person {
+    id: ID!
+    name: String
+    birthYear: String
+    eyeColor: String
+    gender: String
+    hairColor: String
+    height: Int
+    mass: Float
+    skinColor: String
+    homeworld: Planet
+    filmConnection: PersonFilmsConnection
+    species: Species
+    starshipConnection: PersonStarshipsConnection
+    vehicleConnection: PersonVehiclesConnection
+    created: String
+    edited: String
+}
+
+type PlanetsConnection {
+    pageInfo: PageInfo!
+    edges: [PlanetsEdge]
+    totalCount: Integer
+    planets: [Planet]
+}
+
+type PlanetsEdge {
+    node: Planet
+    cursor: String!
+}
+
+type Planet {
+    name: String
+    diameter: Int
+    rotationPeriod: Int
+    orbitalPeriod: Int
+    gravity: String
+    population: Float
+    climates: [String]
+    terrains: [String]
+    surfaceWater: Float
+    residentConnection: PlanetResidentsConnection
+    filmConnection: PlanetFilmsConnection
+    created: String
+    edited: String
+    id: ID!
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
 use ArrayAccess;
 use IteratorAggregate;

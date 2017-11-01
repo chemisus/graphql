@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
 class ScalarType implements Type
 {
@@ -100,5 +100,10 @@ class ScalarType implements Type
     public function ofType()
     {
         return null;
+    }
+
+    public function __toString()
+    {
+        return sprintf("scalar %s", $this->name);
     }
 }

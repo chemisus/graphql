@@ -1,10 +1,10 @@
 <?php
 
-namespace GraphQL\Setup;
+namespace Chemisus\GraphQL\Setup;
 
-use GraphQL\CallbackTyper;
-use GraphQL\Node;
-use GraphQL\Schema;
+use Chemisus\GraphQL\CallbackTyper;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Schema;
 
 class PetSetup
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace GraphQL\Setup;
+namespace Chemisus\GraphQL\Setup;
 
-use GraphQL\Field;
-use GraphQL\Schema;
+use Chemisus\GraphQL\Field;
+use Chemisus\GraphQL\Schema;
 
 class CatSetup
 {

@@ -1,17 +1,17 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
-use GraphQL\Language\Parser;
-use GraphQL\Setup\AnimalSetup;
-use GraphQL\Setup\CatSetup;
-use GraphQL\Setup\DogSetup;
-use GraphQL\Setup\GenderSetup;
-use GraphQL\Setup\PersonSetup;
-use GraphQL\Setup\PetSetup;
-use GraphQL\Setup\QuerySetup;
-use GraphQL\Setup\ReactSetup;
-use GraphQL\Setup\SchemaSetup;
+use Chemisus\GraphQL\Language\Parser;
+use Chemisus\GraphQL\Setup\AnimalSetup;
+use Chemisus\GraphQL\Setup\CatSetup;
+use Chemisus\GraphQL\Setup\DogSetup;
+use Chemisus\GraphQL\Setup\GenderSetup;
+use Chemisus\GraphQL\Setup\PersonSetup;
+use Chemisus\GraphQL\Setup\PetSetup;
+use Chemisus\GraphQL\Setup\QuerySetup;
+use Chemisus\GraphQL\Setup\ReactSetup;
+use Chemisus\GraphQL\Setup\SchemaSetup;
 use PHPUnit\Framework\TestCase;
 
 class QueryTest extends TestCase

@@ -1,14 +1,14 @@
 <?php
 
-namespace GraphQL\Setup;
+namespace Chemisus\GraphQL\Setup;
 
-use GraphQL\CallbackFetcher;
-use GraphQL\CallbackResolver;
-use GraphQL\Field;
-use GraphQL\ListType;
-use GraphQL\Node;
-use GraphQL\Repositories;
-use GraphQL\Schema;
+use Chemisus\GraphQL\CallbackFetcher;
+use Chemisus\GraphQL\CallbackResolver;
+use Chemisus\GraphQL\Field;
+use Chemisus\GraphQL\ListType;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Repositories;
+use Chemisus\GraphQL\Schema;
 
 class QuerySetup
 {

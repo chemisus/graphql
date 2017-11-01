@@ -1,8 +1,8 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
-class UnionType implements FieldedType
+class UnionType implements Type
 {
     /**
      * @var string

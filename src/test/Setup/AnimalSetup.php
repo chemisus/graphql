@@ -1,11 +1,11 @@
 <?php
 
-namespace GraphQL\Setup;
+namespace Chemisus\GraphQL\Setup;
 
-use GraphQL\CallbackTyper;
-use GraphQL\Field;
-use GraphQL\Node;
-use GraphQL\Schema;
+use Chemisus\GraphQL\CallbackTyper;
+use Chemisus\GraphQL\Field;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Schema;
 
 class AnimalSetup
 {

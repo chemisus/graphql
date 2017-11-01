@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
 class Schema extends ObjectType
 {
@@ -14,10 +14,17 @@ class Schema extends ObjectType
      */
     private $types = [];
 
-    public function __construct()
+    public function __construct($initialize = true)
     {
         parent::__construct('Schema');
 
+        if ($initialize) {
+            $this->initialize();
+        }
+    }
+
+    public function initialize()
+    {
         $schema = new ObjectType('__Schema');
         $type = new ObjectType('__Type');
         $directive = new ObjectType('__Directive');
@@ -27,7 +34,11 @@ class Schema extends ObjectType
         $inputValue = new ObjectType('__InputValue');
         $directiveLocation = new EnumType('__DirectiveLocation');
 
-        $query = new ObjectType('Query');
+        if (!array_key_exists('Query', $this->types)) {
+            $this->putType(new ObjectType('Query'));
+        }
+
+        $query = $this->queryType();
         $string = new ScalarType('String');
         $boolean = new ScalarType('Boolean');
         $integer = new ScalarType('Integer');
@@ -42,7 +53,6 @@ class Schema extends ObjectType
         $this->putType($inputValue);
         $this->putType($directiveLocation);
 
-        $this->putType($query);
         $this->putType($string);
         $this->putType($boolean);
         $this->putType($integer);
@@ -216,5 +226,12 @@ class Schema extends ObjectType
     public function getType($name)
     {
         return $this->types[$name];
+    }
+
+    public function __toString()
+    {
+        return implode(PHP_EOL, array_filter($this->types, function (Type $type) {
+            return !preg_match('/^__/', $type->name());
+        }));
     }
 }

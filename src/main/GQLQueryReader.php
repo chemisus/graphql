@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
 use GraphQL\Language\AST\NodeKind;
 use GraphQL\Language\Parser;

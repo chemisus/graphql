@@ -1,0 +1,12 @@
+{
+    allPeople {
+        people {
+            name
+        }
+    }
+    allPlanets {
+        planets {
+            name
+        }
+    }
+}

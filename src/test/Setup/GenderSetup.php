@@ -1,9 +1,9 @@
 <?php
 
-namespace GraphQL\Setup;
+namespace Chemisus\GraphQL\Setup;
 
-use GraphQL\EnumValue;
-use GraphQL\Schema;
+use Chemisus\GraphQL\EnumValue;
+use Chemisus\GraphQL\Schema;
 
 class GenderSetup
 {

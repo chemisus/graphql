@@ -1,8 +1,8 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
-class ObjectType implements FieldedType
+class ObjectType implements Type
 {
     /**
      * @var string
@@ -123,5 +123,12 @@ class ObjectType implements FieldedType
     public function ofType()
     {
         return null;
+    }
+
+    public function __toString()
+    {
+        return sprintf("type %s {\n    %s\n}", $this->name, join("\n    ", array_filter($this->fields, function (Field $field) {
+            return !preg_match('/^__/', $field->name());
+        })));
     }
 }

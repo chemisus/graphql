@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
 class Field
 {
@@ -51,11 +51,11 @@ class Field
 
     /**
      * Field constructor.
-     * @param FieldedType $ownerType
+     * @param Type $ownerType
      * @param string $name
      * @param Type $returnType
      */
-    public function __construct(FieldedType $ownerType, string $name, Type $returnType)
+    public function __construct(Type $ownerType, string $name, Type $returnType)
     {
         $this->ownerType = $ownerType;
         $this->name = $name;
@@ -132,5 +132,10 @@ class Field
     public function deprecationReason()
     {
         return $this->deprecationReason;
+    }
+
+    public function __toString()
+    {
+        return sprintf("%s%s: %s", $this->name, "", $this->returnType()->name());
     }
 }

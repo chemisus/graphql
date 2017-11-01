@@ -1,8 +1,8 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
-class InputObjectType implements FieldedType
+class InputObjectType implements Type
 {
     /**
      * @var string

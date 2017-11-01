@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
 use React\EventLoop\LoopInterface;
 use React\HttpClient\Client;

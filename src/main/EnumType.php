@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
 class EnumType implements Type
 {
@@ -98,5 +98,10 @@ class EnumType implements Type
     public function ofType()
     {
         return null;
+    }
+
+    public function __toString()
+    {
+        return sprintf("enum %s {\n}", $this->name);
     }
 }

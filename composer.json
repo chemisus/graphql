@@ -1,12 +1,12 @@
 {
   "autoload": {
     "psr-4": {
-      "GraphQL\\": "src/main/"
+      "Chemisus\\GraphQL\\": "src/main/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "GraphQL\\": [
+      "Chemisus\\GraphQL\\": [
         "src/test/",
         "src/demo/"
       ]

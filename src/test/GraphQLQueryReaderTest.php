@@ -1,9 +1,9 @@
 <?php
 
-namespace GraphQL;
+namespace Chemisus\GraphQL;
 
-use GraphQL\Language\AST\DocumentNode;
-use GraphQL\Language\Parser;
+use Chemisus\GraphQL\Language\AST\DocumentNode;
+use Chemisus\GraphQL\Language\Parser;
 use PHPUnit\Framework\TestCase;
 
 class GraphQLQueryReaderTest extends TestCase
