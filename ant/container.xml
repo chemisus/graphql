@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:unless="ant:unless" xmlns:if="ant:if" name="container">
     <macrodef name="container">
+        <attribute name="name" default="ant"/>
         <element name="task" implicit="true"/>
         <sequential>
             <script language="javascript">
@@ -9,7 +10,7 @@
             <exec executable="docker-compose" if:blank="${contained}" failonerror="true">
                 <env key="TARGET" value="${current_target}"/>
                 <arg value="up"/>
-                <arg value="ant"/>
+                <arg value="@{name}"/>
             </exec>
             <sequential unless:blank="${contained}">
                 <task/>

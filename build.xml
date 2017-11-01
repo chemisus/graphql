@@ -10,6 +10,14 @@
     <target name="build" depends="composer:install"/>
     <target name="test" depends="phpunit:phpunit"/>
     <target name="doc"/>
+    <target name="demo">
+        <container>
+            <exec executable="php">
+                <arg line="src/demo/main.php"/>
+            </exec>
+        </container>
+    </target>
+
 
     <target name="all" depends="clean,build,test,doc"/>
 </project>
