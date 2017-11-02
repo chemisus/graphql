@@ -10,41 +10,41 @@ class GQLQueryReader
 {
     public function read(Schema $schema, $gql): Query
     {
-        return $this->readDocument($schema, json_decode(json_encode(Parser::parse($gql)->toArray(true))));
+        return $this->readDocument(json_decode(json_encode(Parser::parse($gql)->toArray(true))));
     }
 
-    public function readDocument(Schema $schema, $doc)
+    public function readDocument($doc)
     {
         $node = $doc->definitions[0];
 
         $name = isset($node->name->value) ? $node->name->value : 'query';
-        $fields = $this->readSelections($schema, $node->selectionSet->selections);
+        $fields = $this->readSelections($node->selectionSet->selections);
         $query = new Query($name, $fields);
 
         return $query;
     }
 
-    public function readField(Schema $schema, $node)
+    public function readField($node)
     {
         $name = $node->name->value;
         $alias = isset($node->alias->value) ? $node->alias->value : null;
-        $fields = $this->readSelections($schema, $node->selectionSet->selections);
-        $args = $this->readArgs($schema, $node->arguments);
+        $fields = $this->readSelections($node->selectionSet->selections);
+        $args = $this->readArgs($node->arguments);
         $on = null;
         $query = new Query($name, $fields, $alias, $on, $args);
 
         return $query;
     }
 
-    public function readSelections(Schema $schema, $nodes)
+    public function readSelections($nodes)
     {
-        return array_merge([], ...array_map(function ($node) use ($schema) {
+        return array_merge([], ...array_map(function ($node) {
             if ($node->kind === NodeKind::FIELD) {
-                return [$this->readField($schema, $node)];
+                return [$this->readField($node)];
             }
 
             if ($node->kind === NodeKind::INLINE_FRAGMENT) {
-                $selections = $this->readSelections($schema, $node->selectionSet->selections);
+                $selections = $this->readSelections($node->selectionSet->selections);
                 foreach ($selections as $selection) {
                     if ($selection->on === null) {
                         $selection->on = $node->typeCondition->name->value;
@@ -57,7 +57,7 @@ class GQLQueryReader
         }, (array) $nodes));
     }
 
-    public function readArgs(Schema $schema, $nodes)
+    public function readArgs($nodes)
     {
         $args = [];
         foreach ($nodes as $node) {
