@@ -30,7 +30,7 @@ trait CompositeTypeTrait
 
     public function type(Node $node, $value): Type
     {
-        return $this->typer->typeOf($node, $value);
+        return $this->typer->type($node, $value);
     }
 
     public function possibleTypes(): array
