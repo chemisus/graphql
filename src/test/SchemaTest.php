@@ -84,8 +84,8 @@ class SchemaTest extends TestCase
 
     public function makeQuery($gql, $schema)
     {
-        $queryBuilder = new GQLQueryReader();
-        return $queryBuilder->read($schema, $gql);
+        $queryBuilder = new GQLQueryReader($schema);
+        return $queryBuilder->read($gql);
     }
 
     /**

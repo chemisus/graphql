@@ -8,7 +8,16 @@ use GraphQL\Language\Parser;
 
 class GQLQueryReader
 {
-    public function __construct()
+    /**
+     * @var Schema
+     */
+    private $schema;
+
+    /**
+     * GQLQueryReader constructor.
+     * @param Schema $schema
+     */
+    public function __construct(Schema $schema)
     {
         $this->kinds = [
             NodeKind::FIELD => function ($node) {
@@ -16,9 +25,10 @@ class GQLQueryReader
             },
             NodeKind::INLINE_FRAGMENT => [$this, 'readInlineFragment'],
         ];
+        $this->schema = $schema;
     }
 
-    public function read(Schema $schema, $gql): Query
+    public function read(string $gql): Query
     {
         return $this->readDocument(json_decode(json_encode(Parser::parse($gql)->toArray(true))));
     }

@@ -93,8 +93,8 @@ class QueryTest extends TestCase
 
     public function readGQL($xml)
     {
-        $queryBuilder = new GQLQueryReader();
-        return $queryBuilder->read($this->schema, $xml);
+        $queryBuilder = new GQLQueryReader($this->schema);
+        return $queryBuilder->read($xml);
     }
 
     public function queryBFS(Query $query)
