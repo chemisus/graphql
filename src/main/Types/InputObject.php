@@ -5,18 +5,15 @@ namespace Chemisus\GraphQL\Types;
 use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
+use Chemisus\GraphQL\Types\Traits\KindTrait;
+use Chemisus\GraphQL\Types\Traits\NameTrait;
 
 class InputObjectType implements Type
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $description;
+    use KindTrait;
+    use NameTrait;
+    use DescriptionTrait;
 
     /**
      * @var Field[]
@@ -25,22 +22,8 @@ class InputObjectType implements Type
 
     public function __construct(string $name)
     {
+        $this->kind = 'INPUT_OBJECT';
         $this->name = $name;
-    }
-
-    public function kind()
-    {
-        return 'INPUT_OBJECT';
-    }
-
-    public function description()
-    {
-        return $this->description;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
     }
 
     public function addField(Field $field)

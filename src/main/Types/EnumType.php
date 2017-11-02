@@ -7,42 +7,25 @@ use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\KindDoesNotSupportFieldsException;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
+use Chemisus\GraphQL\Types\Traits\KindTrait;
+use Chemisus\GraphQL\Types\Traits\NameTrait;
 
 class EnumType implements Type
 {
-    /**
-     * @var string
-     */
-    private $name;
+    use KindTrait;
+    use NameTrait;
+    use DescriptionTrait;
 
     /**
      * @var EnumValue[]
      */
     private $values;
 
-    /**
-     * @var string
-     */
-    private $description;
-
     public function __construct(string $name)
     {
+        $this->kind = 'ENUM';
         $this->name = $name;
-    }
-
-    public function kind()
-    {
-        return 'ENUM';
-    }
-
-    public function description()
-    {
-        return $this->description;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
     }
 
     public function fields()

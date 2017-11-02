@@ -6,9 +6,14 @@ use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Resolver;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
+use Chemisus\GraphQL\Types\Traits\KindTrait;
 
 class NonNullType implements Type
 {
+    use KindTrait;
+    use DescriptionTrait;
+
     /**
      * @var Type
      */
@@ -16,17 +21,8 @@ class NonNullType implements Type
 
     public function __construct(Type $type)
     {
+        $this->kind = 'NON_NULL';
         $this->type = $type;
-    }
-
-    public function kind()
-    {
-        return 'NON_NULL';
-    }
-
-    public function description()
-    {
-        return null;
     }
 
     public function name(): string

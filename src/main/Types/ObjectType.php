@@ -6,23 +6,20 @@ use Chemisus\GraphQL\Coercer;
 use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
+use Chemisus\GraphQL\Types\Traits\KindTrait;
+use Chemisus\GraphQL\Types\Traits\NameTrait;
 
 class ObjectType implements Type
 {
-    /**
-     * @var string
-     */
-    private $name;
+    use KindTrait;
+    use NameTrait;
+    use DescriptionTrait;
 
     /**
      * @var Field[]
      */
     private $fields = [];
-
-    /**
-     * @var string
-     */
-    private $description;
 
     /**
      * @var Coercer
@@ -31,6 +28,7 @@ class ObjectType implements Type
 
     public function __construct(string $name)
     {
+        $this->kind = 'OBJECT';
         $this->name = $name;
     }
 
@@ -40,21 +38,6 @@ class ObjectType implements Type
     public function setCoercer(Coercer $coercer)
     {
         $this->coercer = $coercer;
-    }
-
-    public function kind()
-    {
-        return 'OBJECT';
-    }
-
-    public function description()
-    {
-        return $this->description;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
     }
 
     public function addField(Field $field)

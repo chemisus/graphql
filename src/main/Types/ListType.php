@@ -5,9 +5,14 @@ namespace Chemisus\GraphQL\Types;
 use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
+use Chemisus\GraphQL\Types\Traits\KindTrait;
 
 class ListType implements Type
 {
+    use KindTrait;
+    use DescriptionTrait;
+
     /**
      * @var Type
      */
@@ -15,17 +20,8 @@ class ListType implements Type
 
     public function __construct(Type $type)
     {
+        $this->kind = 'LIST';
         $this->type = $type;
-    }
-
-    public function kind()
-    {
-        return 'LIST';
-    }
-
-    public function description()
-    {
-        return null;
     }
 
     public function name(): string

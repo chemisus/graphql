@@ -11,8 +11,9 @@ trait DescriptionTrait
 
     /**
      * @return null|string
+     * @todo uncomment type cast
      */
-    public function description(): ?string
+    public function description() // : ?string
     {
         return $this->description;
     }

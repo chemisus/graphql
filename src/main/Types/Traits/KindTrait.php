@@ -11,8 +11,9 @@ trait KindTrait
 
     /**
      * @return string
+     * @todo uncomment type cast
      */
-    public function kind(): string
+    public function kind() // : string
     {
         return $this->kind;
     }

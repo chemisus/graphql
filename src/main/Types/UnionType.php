@@ -6,23 +6,20 @@ use Chemisus\GraphQL\KindDoesNotSupportFieldsException;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Typer;
+use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
+use Chemisus\GraphQL\Types\Traits\KindTrait;
+use Chemisus\GraphQL\Types\Traits\NameTrait;
 
 class UnionType implements Type
 {
-    /**
-     * @var string
-     */
-    private $name;
+    use KindTrait;
+    use NameTrait;
+    use DescriptionTrait;
 
     /**
      * @var Typer
      */
     public $typer;
-
-    /**
-     * @var string
-     */
-    private $description;
 
     /**
      * @var Type[]
@@ -31,27 +28,13 @@ class UnionType implements Type
 
     public function __construct(string $name)
     {
+        $this->kind = 'UNION';
         $this->name = $name;
     }
 
     public function addType(Type $type)
     {
         $this->possibleTypes[$type->name()] = $type;
-    }
-
-    public function kind()
-    {
-        return 'UNION';
-    }
-
-    public function description()
-    {
-        return $this->description;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
     }
 
     public function field(string $name)

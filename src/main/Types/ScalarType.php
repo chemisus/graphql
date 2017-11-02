@@ -7,18 +7,15 @@ use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\KindDoesNotSupportFieldsException;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
+use Chemisus\GraphQL\Types\Traits\KindTrait;
+use Chemisus\GraphQL\Types\Traits\NameTrait;
 
 class ScalarType implements Type
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $description;
+    use KindTrait;
+    use NameTrait;
+    use DescriptionTrait;
 
     /**
      * @var Coercer
@@ -27,6 +24,7 @@ class ScalarType implements Type
 
     public function __construct(string $name)
     {
+        $this->kind = 'SCALAR';
         $this->name = $name;
     }
 
@@ -36,21 +34,6 @@ class ScalarType implements Type
     public function setCoercer(Coercer $coercer)
     {
         $this->coercer = $coercer;
-    }
-
-    public function kind()
-    {
-        return 'SCALAR';
-    }
-
-    public function description()
-    {
-        return $this->description;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
     }
 
     /**
