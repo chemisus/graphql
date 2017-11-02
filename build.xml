@@ -18,6 +18,5 @@
         </container>
     </target>
 
-
-    <target name="all" depends="clean,build,test,doc"/>
+    <target name="all" depends="build,test,doc"/>
 </project>

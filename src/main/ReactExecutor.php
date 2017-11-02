@@ -4,15 +4,24 @@ namespace Chemisus\GraphQL;
 
 use Chemisus\GraphQL\Types\Schema;
 use React\EventLoop\Factory;
+use React\EventLoop\LoopInterface;
 use function React\Promise\all;
 
 class ReactExecutor
 {
+    /**
+     * @var LoopInterface
+     */
+    private $loop;
+
+    public function __construct(LoopInterface $loop = null)
+    {
+        $this->loop = $loop ?? Factory::create();
+        Http::init($this->loop);
+    }
+
     public function execute(Schema $schema, Query $query)
     {
-        $loop = Factory::create();
-        Http::init($loop);
-
         $root = new Node($schema, $schema->field($query->name()), $query);
 
         $queue = [];
@@ -33,7 +42,7 @@ class ReactExecutor
             $value = $root->resolve(null, (object) []);
         });
 
-        $loop->run();
+        $this->loop->run();
 
         return $value;
     }
