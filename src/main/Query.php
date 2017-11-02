@@ -7,12 +7,12 @@ class Query
     /**
      * @var string
      */
-    public $name;
+    private $name;
 
     /**
      * @var string
      */
-    public $alias;
+    private $alias;
 
     /**
      * @var string
@@ -22,7 +22,7 @@ class Query
     /**
      * @var array
      */
-    public $args = [];
+    private $args = [];
 
     /**
      * @var Query[]
@@ -32,34 +32,57 @@ class Query
     /**
      * @param string $name
      * @param Query[] $fields
+     * @param null|string $alias
+     * @param null|string $on
+     * @param array|null $args
      */
-    public function __construct(string $name, Query... $fields)
+    public function __construct(string $name, array $fields, ?string $alias = null, ?string $on = null, ?array $args = null)
     {
         $this->name = $name;
         $this->fields = $fields;
+        $this->on = $on;
+        $this->args = $args;
+        $this->alias = $alias;
     }
 
+    /**
+     * @return string
+     */
     public function name(): string
     {
         return $this->name;
     }
 
+    /**
+     * @return string
+     */
     public function alias(): string
     {
         return $this->alias ?? $this->name;
     }
 
-    public function on()
+    /**
+     * @return string|null
+     */
+    public function on(): ?string
     {
         return $this->on;
     }
 
+    /**
+     * @param string $key
+     * @param mixed|null $default
+     * @return mixed|null
+     */
     public function arg(string $key, $default = null)
     {
         return array_key_exists($key, $this->args) ? $this->args[$key] : $default;
     }
 
-    public function args()
+    /**
+     * @return array|null
+     */
+    public function args(): ?array
     {
         return $this->args;
     }

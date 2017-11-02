@@ -25,10 +25,9 @@ class XMLQueryReader
             }
         }
 
-        $query = new Query($node->getName(), ...$this->buildChildren($schema, $node));
-        $query->alias = $alias;
-        $query->on = $on;
-        $query->args = $this->buildAttributes($schema, $node);
+        $args = $this->buildAttributes($schema, $node);
+
+        $query = new Query($node->getName(), $this->buildChildren($schema, $node), $alias, $on, $args);
         return $query;
     }
 

@@ -19,7 +19,7 @@ class GQLQueryReader
 
         $name = isset($node->name->value) ? $node->name->value : 'query';
         $fields = $this->readSelections($schema, $node->selectionSet->selections);
-        $query = new Query($name, ...$fields);
+        $query = new Query($name, $fields);
 
         return $query;
     }
@@ -30,9 +30,8 @@ class GQLQueryReader
         $alias = isset($node->alias->value) ? $node->alias->value : null;
         $fields = $this->readSelections($schema, $node->selectionSet->selections);
         $args = $this->readArgs($schema, $node->arguments);
-        $query = new Query($name, ...$fields);
-        $query->alias = $alias;
-        $query->args = $args;
+        $on = null;
+        $query = new Query($name, $fields, $alias, $on, $args);
 
         return $query;
     }
