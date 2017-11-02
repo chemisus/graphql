@@ -2,6 +2,7 @@
 
 namespace Chemisus\GraphQL;
 
+use React\Promise\ExtendedPromiseInterface;
 use function React\Promise\all;
 
 class Node
@@ -55,17 +56,17 @@ class Node
         $this->schema = $schema;
     }
 
-    public function schema()
+    public function schema(): Schema
     {
         return $this->schema;
     }
 
-    public function name()
+    public function name(): string
     {
         return $this->query->name();
     }
 
-    public function alias()
+    public function alias(): string
     {
         return $this->query->alias();
     }
@@ -74,7 +75,7 @@ class Node
      * @param string $on
      * @return Node[]
      */
-    public function children(string $on = null)
+    public function children(string $on = null): array
     {
         if ($this->children === null) {
             $this->children = array_merge([], ...array_map(function (string $type) {
@@ -89,7 +90,7 @@ class Node
         });
     }
 
-    public function items()
+    public function items(): ?array
     {
         return $this->items;
     }
@@ -99,12 +100,12 @@ class Node
         return $this->query->arg($key, $default);
     }
 
-    public function parent()
+    public function parent(): ?Node
     {
         return $this->parent;
     }
 
-    public function types()
+    public function types(): array
     {
         if ($this->types === null) {
             $this->types = array_unique(array_values(array_map(function (Type $type) {
@@ -124,9 +125,9 @@ class Node
     }
 
     /**
-     * @return Node[]
+     * @return ExtendedPromiseInterface
      */
-    public function fetch()
+    public function fetch(): ExtendedPromiseInterface
     {
         return all($this->field->fetch($this))->then(function ($items) {
             $this->items = $items;
