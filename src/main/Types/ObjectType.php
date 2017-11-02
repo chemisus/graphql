@@ -2,10 +2,10 @@
 
 namespace Chemisus\GraphQL\Types;
 
-use Chemisus\GraphQL\Coercer;
 use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\Traits\CoercerTrait;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\FieldsTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
@@ -25,11 +25,12 @@ class ObjectType implements Type
     use NullOfTypeTrait;
     use FieldsTrait;
     use LeafTypeTrait;
+    use CoercerTrait;
 
     /**
-     * @var Coercer
+     * @var Type[]
      */
-    private $coercer;
+    private $interfaces = [];
 
     public function __construct(string $name)
     {
@@ -37,12 +38,14 @@ class ObjectType implements Type
         $this->name = $name;
     }
 
-    /**
-     * @param Coercer $coercer
-     */
-    public function setCoercer(Coercer $coercer)
+    public function interfaces()
     {
-        $this->coercer = $coercer;
+        return array_values($this->interfaces);
+    }
+
+    public function addInterface(Type $type)
+    {
+        $this->interfaces[$type->name()] = $type;
     }
 
     public function resolve(Node $node, $parent, $value)
@@ -61,11 +64,6 @@ class ObjectType implements Type
         }
 
         return $object;
-    }
-
-    public function interfaces()
-    {
-        return null;
     }
 
     public function __toString()

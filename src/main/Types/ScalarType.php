@@ -2,9 +2,9 @@
 
 namespace Chemisus\GraphQL\Types;
 
-use Chemisus\GraphQL\Coercer;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\Traits\CoercerTrait;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
 use Chemisus\GraphQL\Types\Traits\LeafTypeTrait;
@@ -26,24 +26,12 @@ class ScalarType implements Type
     use NullEnumValuesTrait;
     use NullOfTypeTrait;
     use LeafTypeTrait;
-
-    /**
-     * @var Coercer
-     */
-    private $coercer;
+    use CoercerTrait;
 
     public function __construct(string $name)
     {
         $this->kind = Type::KIND_SCALAR;
         $this->name = $name;
-    }
-
-    /**
-     * @param Coercer $coercer
-     */
-    public function setCoercer(Coercer $coercer)
-    {
-        $this->coercer = $coercer;
     }
 
     public function resolve(Node $node, $parent, $value)
