@@ -49,7 +49,7 @@ class ScalarType implements Type
         return $this->coercer ? $this->coercer->coerce($node, $value) : $value;
     }
 
-    public function typeOf(Node $node, $value): Type
+    public function type(Node $node, $value): Type
     {
         return $this;
     }

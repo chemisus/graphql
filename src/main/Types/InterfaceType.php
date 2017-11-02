@@ -72,10 +72,10 @@ class InterfaceType implements Type
 
     public function resolve(Node $node, $parent, $value)
     {
-        return $this->typeOf($node, $value)->resolve($node, $parent, $value);
+        return $this->type($node, $value)->resolve($node, $parent, $value);
     }
 
-    public function typeOf(Node $node, $value): Type
+    public function type(Node $node, $value): Type
     {
         return $this->typer->typeOf($node, $value);
     }
@@ -83,7 +83,7 @@ class InterfaceType implements Type
     public function types(Node $node, $values)
     {
         return array_merge([], ...array_map(function ($value) use ($node) {
-            return $this->typeOf($node, $value);
+            return $this->type($node, $value);
         }, $values));
     }
 

@@ -58,7 +58,7 @@ interface Type
      * @param $value
      * @return Type
      */
-    public function typeOf(Node $node, $value): Type;
+    public function type(Node $node, $value): Type;
 
     /**
      * @param Node $node

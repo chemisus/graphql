@@ -71,7 +71,7 @@ class InputObjectType implements Type
         return $object;
     }
 
-    public function typeOf(Node $node, $value): Type
+    public function type(Node $node, $value): Type
     {
         return $this;
     }

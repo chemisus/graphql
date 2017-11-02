@@ -64,15 +64,15 @@ class ListType implements Type
         return $array;
     }
 
-    public function typeOf(Node $node, $value): Type
+    public function type(Node $node, $value): Type
     {
-        return $this->type->typeOf($node, $value);
+        return $this->type->type($node, $value);
     }
 
     public function types(Node $node, $values)
     {
         return array_map(function ($value) use ($node) {
-            return $this->typeOf($node, $value)->name();
+            return $this->type($node, $value)->name();
         }, $values);
     }
 

@@ -45,7 +45,7 @@ class EnumType implements Type
         return $value;
     }
 
-    public function typeOf(Node $node, $value): Type
+    public function type(Node $node, $value): Type
     {
         return $this;
     }

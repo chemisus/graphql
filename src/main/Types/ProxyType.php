@@ -33,7 +33,7 @@ class ProxyType implements Type
         $this->name = $name;
     }
 
-    public function type()
+    public function dereference()
     {
         if ($this->type === null) {
             $this->type = $this->schema->getType($this->name);
@@ -44,7 +44,7 @@ class ProxyType implements Type
 
     public function kind()
     {
-        return $this->type()->kind();
+        return $this->dereference()->kind();
     }
 
     public function name(): string
@@ -54,57 +54,57 @@ class ProxyType implements Type
 
     public function description()
     {
-        return $this->type()->description();
+        return $this->dereference()->description();
     }
 
     public function field(string $name)
     {
-        return $this->type()->field($name);
+        return $this->dereference()->field($name);
     }
 
     public function fields()
     {
-        return $this->type()->fields();
+        return $this->dereference()->fields();
     }
 
     public function enumValues()
     {
-        return $this->type()->enumValues();
+        return $this->dereference()->enumValues();
     }
 
     public function resolve(Node $node, $parent, $value)
     {
-        return $this->type()->resolve($node, $parent, $value);
+        return $this->dereference()->resolve($node, $parent, $value);
     }
 
-    public function typeOf(Node $node, $value): Type
+    public function type(Node $node, $value): Type
     {
-        return $this->type()->typeOf($node, $value);
+        return $this->dereference()->type($node, $value);
     }
 
     public function types(Node $node, $values)
     {
-        return $this->type()->types($node, $values);
+        return $this->dereference()->types($node, $values);
     }
 
     public function interfaces()
     {
-        return $this->type()->interfaces();
+        return $this->dereference()->interfaces();
     }
 
     public function possibleTypes()
     {
-        return $this->type()->possibleTypes();
+        return $this->dereference()->possibleTypes();
     }
 
     public function inputFields()
     {
-        return $this->type()->inputFields();
+        return $this->dereference()->inputFields();
     }
 
     public function ofType()
     {
-        return $this->type()->ofType();
+        return $this->dereference()->ofType();
     }
 
 }
