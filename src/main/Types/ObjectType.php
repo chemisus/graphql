@@ -9,6 +9,7 @@ use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\FieldsTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
+use Chemisus\GraphQL\Types\Traits\LeafTypeTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
 use Chemisus\GraphQL\Types\Traits\NullEnumValuesTrait;
 use Chemisus\GraphQL\Types\Traits\NullInputFieldsTrait;
@@ -23,6 +24,7 @@ class ObjectType implements Type
     use NullEnumValuesTrait;
     use NullOfTypeTrait;
     use FieldsTrait;
+    use LeafTypeTrait;
 
     /**
      * @var Coercer
@@ -61,19 +63,9 @@ class ObjectType implements Type
         return $object;
     }
 
-    public function type(Node $node, $value): Type
-    {
-        return $this;
-    }
-
     public function interfaces()
     {
         return null;
-    }
-
-    public function possibleTypes()
-    {
-        return [$this];
     }
 
     public function __toString()

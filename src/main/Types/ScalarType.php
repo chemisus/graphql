@@ -7,6 +7,7 @@ use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
+use Chemisus\GraphQL\Types\Traits\LeafTypeTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
 use Chemisus\GraphQL\Types\Traits\NullEnumValuesTrait;
 use Chemisus\GraphQL\Types\Traits\NullFieldsTrait;
@@ -24,6 +25,7 @@ class ScalarType implements Type
     use NullInputFieldsTrait;
     use NullEnumValuesTrait;
     use NullOfTypeTrait;
+    use LeafTypeTrait;
 
     /**
      * @var Coercer
@@ -47,16 +49,6 @@ class ScalarType implements Type
     public function resolve(Node $node, $parent, $value)
     {
         return $this->coercer ? $this->coercer->coerce($node, $value) : $value;
-    }
-
-    public function type(Node $node, $value): Type
-    {
-        return $this;
-    }
-
-    public function possibleTypes()
-    {
-        return [$this];
     }
 
     public function __toString()

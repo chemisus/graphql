@@ -7,6 +7,7 @@ use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
+use Chemisus\GraphQL\Types\Traits\LeafTypeTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
 use Chemisus\GraphQL\Types\Traits\NullFieldsTrait;
 use Chemisus\GraphQL\Types\Traits\NullInputFieldsTrait;
@@ -22,6 +23,7 @@ class EnumType implements Type
     use NullInterfacesTrait;
     use NullInputFieldsTrait;
     use NullOfTypeTrait;
+    use LeafTypeTrait;
 
     /**
      * @var EnumValue[]
@@ -45,19 +47,9 @@ class EnumType implements Type
         return $value;
     }
 
-    public function type(Node $node, $value): Type
-    {
-        return $this;
-    }
-
     public function enumValues()
     {
         return $this->values;
-    }
-
-    public function possibleTypes()
-    {
-        return [$this];
     }
 
     public function __toString()

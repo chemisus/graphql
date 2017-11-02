@@ -5,6 +5,7 @@ namespace Chemisus\GraphQL\Types;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Typer;
+use Chemisus\GraphQL\Types\Traits\CompositeTypeTrait;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
@@ -24,16 +25,7 @@ class UnionType implements Type
     use NullInputFieldsTrait;
     use NullEnumValuesTrait;
     use NullOfTypeTrait;
-
-    /**
-     * @var Typer
-     */
-    public $typer;
-
-    /**
-     * @var Type[]
-     */
-    private $possibleTypes = [];
+    use CompositeTypeTrait;
 
     public function __construct(string $name)
     {
@@ -41,23 +33,8 @@ class UnionType implements Type
         $this->name = $name;
     }
 
-    public function addType(Type $type)
-    {
-        $this->possibleTypes[$type->name()] = $type;
-    }
-
     public function resolve(Node $node, $parent, $value)
     {
         return $this->type($node, $value)->resolve($node, $parent, $value);
-    }
-
-    public function type(Node $node, $value): Type
-    {
-        return $this->typer->typeOf($node, $value);
-    }
-
-    public function possibleTypes()
-    {
-        return array_values($this->possibleTypes);
     }
 }
