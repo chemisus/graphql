@@ -3,8 +3,8 @@
 namespace Chemisus\GraphQL\Builders;
 
 use Chemisus\GraphQL\Field;
-use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Schema;
+use Chemisus\GraphQL\Type;
 
 class FieldBuilder
 {
