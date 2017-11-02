@@ -21,12 +21,12 @@ trait FieldsTrait
      * @param string $name
      * @return Field
      */
-    public function field(string $name)
+    public function field(string $name): Field
     {
         return $this->fields[$name];
     }
 
-    public function fields()
+    public function fields(): ?array
     {
         return $this->fields;
     }

@@ -4,7 +4,7 @@ namespace Chemisus\GraphQL\Types\Traits;
 
 trait NullEnumValuesTrait
 {
-    public function enumValues()
+    public function enumValues(): ?array
     {
         return null;
     }

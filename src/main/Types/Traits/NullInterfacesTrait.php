@@ -4,7 +4,7 @@ namespace Chemisus\GraphQL\Types\Traits;
 
 trait NullInterfacesTrait
 {
-    public function interfaces()
+    public function interfaces(): ?array
     {
         return null;
     }

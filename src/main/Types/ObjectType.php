@@ -38,7 +38,7 @@ class ObjectType implements Type
         $this->name = $name;
     }
 
-    public function interfaces()
+    public function interfaces(): ?array
     {
         return array_values($this->interfaces);
     }

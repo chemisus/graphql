@@ -2,6 +2,7 @@
 
 namespace Chemisus\GraphQL\Types;
 
+use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Schema;
 use Chemisus\GraphQL\Type;
@@ -40,27 +41,27 @@ class ProxyType implements Type
         return $this->type;
     }
 
-    public function kind()
+    public function kind(): string
     {
         return $this->dereference()->kind();
     }
 
-    public function description()
+    public function description(): ?string
     {
         return $this->dereference()->description();
     }
 
-    public function field(string $name)
+    public function field(string $name): Field
     {
         return $this->dereference()->field($name);
     }
 
-    public function fields()
+    public function fields(): ?array
     {
         return $this->dereference()->fields();
     }
 
-    public function enumValues()
+    public function enumValues(): ?array
     {
         return $this->dereference()->enumValues();
     }
@@ -75,24 +76,23 @@ class ProxyType implements Type
         return $this->dereference()->type($node, $value);
     }
 
-    public function interfaces()
+    public function interfaces(): ?array
     {
         return $this->dereference()->interfaces();
     }
 
-    public function possibleTypes()
+    public function possibleTypes(): array
     {
         return $this->dereference()->possibleTypes();
     }
 
-    public function inputFields()
+    public function inputFields(): ?array
     {
         return $this->dereference()->inputFields();
     }
 
-    public function ofType()
+    public function ofType(): ?Type
     {
         return $this->dereference()->ofType();
     }
-
 }

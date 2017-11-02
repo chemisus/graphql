@@ -47,7 +47,7 @@ class EnumType implements Type
         return $value;
     }
 
-    public function enumValues()
+    public function enumValues(): ?array
     {
         return $this->values;
     }

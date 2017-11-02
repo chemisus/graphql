@@ -16,7 +16,7 @@ interface Type
     /**
      * @return string
      */
-    public function kind();
+    public function kind(): string;
 
     /**
      * @return string
@@ -26,24 +26,24 @@ interface Type
     /**
      * @return string|null
      */
-    public function description();
+    public function description(): ?string;
 
     /**
      * @param string $name
      * @return Field
      * @throws KindDoesNotSupportFieldsException
      */
-    public function field(string $name);
+    public function field(string $name): Field;
 
     /**
      * @return Field[]|null
      */
-    public function fields();
+    public function fields(): ?array;
 
     /**
      * @return EnumValue[]|null
      */
-    public function enumValues();
+    public function enumValues(): ?array;
 
     /**
      * @param Node $node
@@ -63,20 +63,20 @@ interface Type
     /**
      * @return Type[]|null
      */
-    public function interfaces();
+    public function interfaces(): ?array;
 
     /**
-     * @return Type[]|null
+     * @return Type[]
      */
-    public function possibleTypes();
+    public function possibleTypes(): array;
 
     /**
      * @return InputValue[]|null
      */
-    public function inputFields();
+    public function inputFields(): ?array;
 
     /**
      * @return Type|null
      */
-    public function ofType();
+    public function ofType(): ?Type;
 }

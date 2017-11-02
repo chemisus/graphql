@@ -12,7 +12,7 @@ trait LeafTypeTrait
         return $this;
     }
 
-    public function possibleTypes()
+    public function possibleTypes(): array
     {
         return [$this];
     }

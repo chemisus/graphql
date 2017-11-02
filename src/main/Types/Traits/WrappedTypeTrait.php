@@ -36,12 +36,12 @@ trait WrappedTypeTrait
      * @param string $name
      * @return Field
      */
-    public function field(string $name)
+    public function field(string $name): Field
     {
         return $this->type->field($name);
     }
 
-    public function fields()
+    public function fields(): ?array
     {
         return $this->type->fields();
     }
@@ -51,12 +51,12 @@ trait WrappedTypeTrait
         return $this->type->type($node, $value);
     }
 
-    public function possibleTypes()
+    public function possibleTypes(): array
     {
         return $this->type->possibleTypes();
     }
 
-    public function ofType()
+    public function ofType(): ?Type
     {
         return $this->type;
     }
