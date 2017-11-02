@@ -61,13 +61,6 @@ interface Type
     public function type(Node $node, $value): Type;
 
     /**
-     * @param Node $node
-     * @param mixed[] $values
-     * @return string[]
-     */
-    public function types(Node $node, $values);
-
-    /**
      * @return Type[]|null
      */
     public function interfaces();

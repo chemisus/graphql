@@ -75,11 +75,6 @@ class ProxyType implements Type
         return $this->dereference()->type($node, $value);
     }
 
-    public function types(Node $node, $values)
-    {
-        return $this->dereference()->types($node, $values);
-    }
-
     public function interfaces()
     {
         return $this->dereference()->interfaces();

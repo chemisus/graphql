@@ -54,11 +54,6 @@ class ScalarType implements Type
         return $this;
     }
 
-    public function types(Node $node, $values)
-    {
-        return [$this->name];
-    }
-
     public function possibleTypes()
     {
         return [$this];
