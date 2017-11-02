@@ -6,6 +6,7 @@ use React\EventLoop\LoopInterface;
 use React\HttpClient\Client;
 use React\HttpClient\Response;
 use React\Promise\Deferred;
+use React\Promise\FulfilledPromise;
 
 class Http
 {
@@ -21,6 +22,10 @@ class Http
 
     public static function get($url, callable $config = null)
     {
+        if (!self::$client) {
+            return new FulfilledPromise(file_get_contents($url));
+        }
+
         $deferred = new Deferred();
         $request = self::$client->request('GET', $url);
         $request->on('response', function (Response $response) use ($deferred) {
