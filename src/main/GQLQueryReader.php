@@ -8,6 +8,16 @@ use GraphQL\Language\Parser;
 
 class GQLQueryReader
 {
+    public function __construct()
+    {
+        $this->kinds = [
+            NodeKind::FIELD => function ($node) {
+                return [$this->readField($node)];
+            },
+            NodeKind::INLINE_FRAGMENT => [$this, 'readInlineFragment'],
+        ];
+    }
+
     public function read(Schema $schema, $gql): Query
     {
         return $this->readDocument(json_decode(json_encode(Parser::parse($gql)->toArray(true))));
@@ -36,24 +46,21 @@ class GQLQueryReader
         return $query;
     }
 
+    public function readInlineFragment($node)
+    {
+        $selections = $this->readSelections($node->selectionSet->selections);
+        foreach ($selections as $selection) {
+            if ($selection->on === null) {
+                $selection->on = $node->typeCondition->name->value;
+            }
+        }
+        return $selections;
+    }
+
     public function readSelections($nodes)
     {
         return array_merge([], ...array_map(function ($node) {
-            if ($node->kind === NodeKind::FIELD) {
-                return [$this->readField($node)];
-            }
-
-            if ($node->kind === NodeKind::INLINE_FRAGMENT) {
-                $selections = $this->readSelections($node->selectionSet->selections);
-                foreach ($selections as $selection) {
-                    if ($selection->on === null) {
-                        $selection->on = $node->typeCondition->name->value;
-                    }
-                }
-                return $selections;
-            }
-
-            throw new \Exception("Unimplemented kind: " . $node->kind);
+            return call_user_func($this->kinds[$node->kind], $node);
         }, (array) $nodes));
     }
 
