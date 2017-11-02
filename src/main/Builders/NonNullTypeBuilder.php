@@ -2,9 +2,9 @@
 
 namespace Chemisus\GraphQL\Builders;
 
-use Chemisus\GraphQL\NonNullType;
 use Chemisus\GraphQL\Schema;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\NonNullType;
 
 class NonNullTypeBuilder implements TypeBuilder
 {

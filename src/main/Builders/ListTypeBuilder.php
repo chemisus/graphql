@@ -2,10 +2,9 @@
 
 namespace Chemisus\GraphQL\Builders;
 
-use Chemisus\GraphQL\ListType;
-use Chemisus\GraphQL\ObjectType;
 use Chemisus\GraphQL\Schema;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\ListType;
 
 class ListTypeBuilder implements TypeBuilder
 {

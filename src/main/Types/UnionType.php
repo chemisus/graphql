@@ -1,6 +1,11 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Types;
+
+use Chemisus\GraphQL\KindDoesNotSupportFieldsException;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Typer;
 
 class UnionType implements Type
 {

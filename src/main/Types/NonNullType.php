@@ -1,8 +1,13 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Types;
 
-class ListType implements Type
+use Chemisus\GraphQL\Field;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Resolver;
+use Chemisus\GraphQL\Type;
+
+class NonNullType implements Type
 {
     /**
      * @var Type
@@ -16,7 +21,7 @@ class ListType implements Type
 
     public function kind()
     {
-        return 'LIST';
+        return 'NON_NULL';
     }
 
     public function description()
@@ -26,7 +31,7 @@ class ListType implements Type
 
     public function name(): string
     {
-        return sprintf('[%s]', $this->type->name());
+        return sprintf('%s!', $this->type->name());
     }
 
     /**
@@ -43,19 +48,15 @@ class ListType implements Type
         return $this->type->fields();
     }
 
-    public function resolve(Node $node, $parent, $value)
+    public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
     {
+        $value = $this->type->resolve($node, $parent, $value);
+
         if ($value === null) {
-            return null;
+            throw new \Exception($node->path() . ' can not be null');
         }
 
-        $array = [];
-
-        foreach ($value as $item) {
-            $array[] = $this->type->resolve($node, $parent, $item);
-        }
-
-        return $array;
+        return $value;
     }
 
     public function typeOf(Node $node, $value): Type
@@ -65,9 +66,7 @@ class ListType implements Type
 
     public function types(Node $node, $values)
     {
-        return array_map(function ($value) use ($node) {
-            return $this->typeOf($node, $value)->name();
-        }, $values);
+        return $this->type->types($node, $values);
     }
 
     public function enumValues()

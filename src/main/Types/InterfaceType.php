@@ -1,8 +1,13 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Types;
 
-class ObjectType implements Type
+use Chemisus\GraphQL\Field;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Typer;
+
+class InterfaceType implements Type
 {
     /**
      * @var string
@@ -12,7 +17,12 @@ class ObjectType implements Type
     /**
      * @var Field[]
      */
-    private $fields = [];
+    public $fields = [];
+
+    /**
+     * @var Typer
+     */
+    public $typer;
 
     /**
      * @var string
@@ -20,26 +30,23 @@ class ObjectType implements Type
     private $description;
 
     /**
-     * @var Coercer
+     * @var Type[]
      */
-    private $coercer;
+    private $possibleTypes = [];
 
     public function __construct(string $name)
     {
         $this->name = $name;
     }
 
-    /**
-     * @param Coercer $coercer
-     */
-    public function setCoercer(Coercer $coercer)
+    public function addType(Type $type)
     {
-        $this->coercer = $coercer;
+        $this->possibleTypes[$type->name()] = $type;
     }
 
     public function kind()
     {
-        return 'OBJECT';
+        return 'INTERFACE';
     }
 
     public function description()
@@ -74,30 +81,19 @@ class ObjectType implements Type
 
     public function resolve(Node $node, $parent, $value)
     {
-        if ($value === null) {
-            return null;
-        }
-
-        $coerced = $this->coercer ? $this->coercer->coerce($node, $value) : (object) [];
-        $object = (object) [];
-
-        foreach ($node->children($this->name) as $child) {
-            $name = $child->name();
-            $field = isset($coerced->{$name}) ? $coerced->{$name} : (isset($value->{$name}) ? $value->{$name} : null);
-            $object->{$child->alias()} = $child->resolve($value, $field);
-        }
-
-        return $object;
+        return $this->typeOf($node, $value)->resolve($node, $parent, $value);
     }
 
     public function typeOf(Node $node, $value): Type
     {
-        return $this;
+        return $this->typer->typeOf($node, $value);
     }
 
     public function types(Node $node, $values)
     {
-        return [$this->name];
+        return array_merge([], ...array_map(function ($value) use ($node) {
+            return $this->typeOf($node, $value);
+        }, $values));
     }
 
     public function enumValues()
@@ -107,12 +103,12 @@ class ObjectType implements Type
 
     public function interfaces()
     {
-        return null;
+        return [];
     }
 
     public function possibleTypes()
     {
-        return [$this];
+        return array_values($this->possibleTypes);
     }
 
     public function inputFields()
@@ -123,12 +119,5 @@ class ObjectType implements Type
     public function ofType()
     {
         return null;
-    }
-
-    public function __toString()
-    {
-        return sprintf("type %s {\n    %s\n}", $this->name, join("\n    ", array_filter($this->fields, function (Field $field) {
-            return !preg_match('/^__/', $field->name());
-        })));
     }
 }

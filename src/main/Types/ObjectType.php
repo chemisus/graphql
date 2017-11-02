@@ -1,13 +1,23 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Types;
 
-class ScalarType implements Type
+use Chemisus\GraphQL\Coercer;
+use Chemisus\GraphQL\Field;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Type;
+
+class ObjectType implements Type
 {
     /**
      * @var string
      */
     private $name;
+
+    /**
+     * @var Field[]
+     */
+    private $fields = [];
 
     /**
      * @var string
@@ -34,7 +44,7 @@ class ScalarType implements Type
 
     public function kind()
     {
-        return 'SCALAR';
+        return 'OBJECT';
     }
 
     public function description()
@@ -47,24 +57,42 @@ class ScalarType implements Type
         return $this->name;
     }
 
+    public function addField(Field $field)
+    {
+        $this->fields[$field->name()] = $field;
+        return $this;
+    }
+
     /**
      * @param string $name
      * @return Field
-     * @throws KindDoesNotSupportFieldsException
      */
     public function field(string $name)
     {
-        throw new KindDoesNotSupportFieldsException();
+        return $this->fields[$name];
     }
 
     public function fields()
     {
-        return null;
+        return $this->fields;
     }
 
     public function resolve(Node $node, $parent, $value)
     {
-        return $this->coercer ? $this->coercer->coerce($node, $value) : $value;
+        if ($value === null) {
+            return null;
+        }
+
+        $coerced = $this->coercer ? $this->coercer->coerce($node, $value) : (object) [];
+        $object = (object) [];
+
+        foreach ($node->children($this->name) as $child) {
+            $name = $child->name();
+            $field = isset($coerced->{$name}) ? $coerced->{$name} : (isset($value->{$name}) ? $value->{$name} : null);
+            $object->{$child->alias()} = $child->resolve($value, $field);
+        }
+
+        return $object;
     }
 
     public function typeOf(Node $node, $value): Type
@@ -104,6 +132,8 @@ class ScalarType implements Type
 
     public function __toString()
     {
-        return sprintf("scalar %s", $this->name);
+        return sprintf("type %s {\n    %s\n}", $this->name, join("\n    ", array_filter($this->fields, function (Field $field) {
+            return !preg_match('/^__/', $field->name());
+        })));
     }
 }

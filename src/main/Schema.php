@@ -2,6 +2,12 @@
 
 namespace Chemisus\GraphQL;
 
+use Chemisus\GraphQL\Types\EnumType;
+use Chemisus\GraphQL\Types\ListType;
+use Chemisus\GraphQL\Types\NonNullType;
+use Chemisus\GraphQL\Types\ObjectType;
+use Chemisus\GraphQL\Types\ScalarType;
+
 class Schema extends ObjectType
 {
     /**

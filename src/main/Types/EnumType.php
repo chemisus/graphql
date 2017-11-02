@@ -1,8 +1,14 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Types;
 
-class InputObjectType implements Type
+use Chemisus\GraphQL\EnumValue;
+use Chemisus\GraphQL\Field;
+use Chemisus\GraphQL\KindDoesNotSupportFieldsException;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Type;
+
+class EnumType implements Type
 {
     /**
      * @var string
@@ -10,14 +16,14 @@ class InputObjectType implements Type
     private $name;
 
     /**
+     * @var EnumValue[]
+     */
+    private $values;
+
+    /**
      * @var string
      */
     private $description;
-
-    /**
-     * @var Field[]
-     */
-    public $fields = [];
 
     public function __construct(string $name)
     {
@@ -26,7 +32,7 @@ class InputObjectType implements Type
 
     public function kind()
     {
-        return 'INPUT_OBJECT';
+        return 'ENUM';
     }
 
     public function description()
@@ -39,41 +45,30 @@ class InputObjectType implements Type
         return $this->name;
     }
 
-    public function addField(Field $field)
+    public function fields()
     {
-        $this->fields[$field->name()] = $field;
+        return null;
+    }
+
+    public function addValue(EnumValue $value)
+    {
+        $this->values[$value->name()] = $value;
         return $this;
     }
 
     /**
      * @param string $name
      * @return Field
+     * @throws KindDoesNotSupportFieldsException
      */
     public function field(string $name)
     {
-        return $this->fields[$name];
-    }
-
-    public function fields()
-    {
-        return $this->fields;
+        throw new KindDoesNotSupportFieldsException();
     }
 
     public function resolve(Node $node, $parent, $value)
     {
-        if ($value === null) {
-            return null;
-        }
-
-        $object = (object) [];
-
-        foreach ($node->children($this->name) as $child) {
-            $name = $child->name();
-            $field = property_exists($value, $name) ? $value->{$name} : null;
-            $object->{$child->alias()} = $child->resolve($value, $field);
-        }
-
-        return $object;
+        return $value;
     }
 
     public function typeOf(Node $node, $value): Type
@@ -88,7 +83,7 @@ class InputObjectType implements Type
 
     public function enumValues()
     {
-        return null;
+        return $this->values;
     }
 
     public function interfaces()
@@ -109,5 +104,10 @@ class InputObjectType implements Type
     public function ofType()
     {
         return null;
+    }
+
+    public function __toString()
+    {
+        return sprintf("enum %s {\n}", $this->name);
     }
 }

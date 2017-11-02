@@ -5,11 +5,11 @@ namespace Chemisus\GraphQL\Setup;
 use Chemisus\GraphQL\CallbackFetcher;
 use Chemisus\GraphQL\CallbackResolver;
 use Chemisus\GraphQL\Field;
-use Chemisus\GraphQL\ListType;
 use Chemisus\GraphQL\Node;
-use Chemisus\GraphQL\NonNullType;
 use Chemisus\GraphQL\Repositories;
 use Chemisus\GraphQL\Schema;
+use Chemisus\GraphQL\Types\ListType;
+use Chemisus\GraphQL\Types\NonNullType;
 use React\Promise\FulfilledPromise;
 
 class PersonSetup

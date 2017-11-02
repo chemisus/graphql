@@ -12,6 +12,10 @@ use Chemisus\GraphQL\Setup\PetSetup;
 use Chemisus\GraphQL\Setup\QuerySetup;
 use Chemisus\GraphQL\Setup\ReactSetup;
 use Chemisus\GraphQL\Setup\SchemaSetup;
+use Chemisus\GraphQL\Types\EnumType;
+use Chemisus\GraphQL\Types\InterfaceType;
+use Chemisus\GraphQL\Types\ObjectType;
+use Chemisus\GraphQL\Types\UnionType;
 use PHPUnit\Framework\TestCase;
 
 class QueryTest extends TestCase

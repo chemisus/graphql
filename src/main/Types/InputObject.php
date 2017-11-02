@@ -1,8 +1,12 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Types;
 
-class InterfaceType implements Type
+use Chemisus\GraphQL\Field;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Type;
+
+class InputObjectType implements Type
 {
     /**
      * @var string
@@ -10,38 +14,23 @@ class InterfaceType implements Type
     private $name;
 
     /**
-     * @var Field[]
-     */
-    public $fields = [];
-
-    /**
-     * @var Typer
-     */
-    public $typer;
-
-    /**
      * @var string
      */
     private $description;
 
     /**
-     * @var Type[]
+     * @var Field[]
      */
-    private $possibleTypes = [];
+    public $fields = [];
 
     public function __construct(string $name)
     {
         $this->name = $name;
     }
 
-    public function addType(Type $type)
-    {
-        $this->possibleTypes[$type->name()] = $type;
-    }
-
     public function kind()
     {
-        return 'INTERFACE';
+        return 'INPUT_OBJECT';
     }
 
     public function description()
@@ -76,19 +65,29 @@ class InterfaceType implements Type
 
     public function resolve(Node $node, $parent, $value)
     {
-        return $this->typeOf($node, $value)->resolve($node, $parent, $value);
+        if ($value === null) {
+            return null;
+        }
+
+        $object = (object) [];
+
+        foreach ($node->children($this->name) as $child) {
+            $name = $child->name();
+            $field = property_exists($value, $name) ? $value->{$name} : null;
+            $object->{$child->alias()} = $child->resolve($value, $field);
+        }
+
+        return $object;
     }
 
     public function typeOf(Node $node, $value): Type
     {
-        return $this->typer->typeOf($node, $value);
+        return $this;
     }
 
     public function types(Node $node, $values)
     {
-        return array_merge([], ...array_map(function ($value) use ($node) {
-            return $this->typeOf($node, $value);
-        }, $values));
+        return [$this->name];
     }
 
     public function enumValues()
@@ -98,12 +97,12 @@ class InterfaceType implements Type
 
     public function interfaces()
     {
-        return [];
+        return null;
     }
 
     public function possibleTypes()
     {
-        return array_values($this->possibleTypes);
+        return [$this];
     }
 
     public function inputFields()

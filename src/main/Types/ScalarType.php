@@ -1,8 +1,14 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Types;
 
-class EnumType implements Type
+use Chemisus\GraphQL\Coercer;
+use Chemisus\GraphQL\Field;
+use Chemisus\GraphQL\KindDoesNotSupportFieldsException;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Type;
+
+class ScalarType implements Type
 {
     /**
      * @var string
@@ -10,23 +16,31 @@ class EnumType implements Type
     private $name;
 
     /**
-     * @var EnumValue[]
-     */
-    private $values;
-
-    /**
      * @var string
      */
     private $description;
+
+    /**
+     * @var Coercer
+     */
+    private $coercer;
 
     public function __construct(string $name)
     {
         $this->name = $name;
     }
 
+    /**
+     * @param Coercer $coercer
+     */
+    public function setCoercer(Coercer $coercer)
+    {
+        $this->coercer = $coercer;
+    }
+
     public function kind()
     {
-        return 'ENUM';
+        return 'SCALAR';
     }
 
     public function description()
@@ -39,17 +53,6 @@ class EnumType implements Type
         return $this->name;
     }
 
-    public function fields()
-    {
-        return null;
-    }
-
-    public function addValue(EnumValue $value)
-    {
-        $this->values[$value->name()] = $value;
-        return $this;
-    }
-
     /**
      * @param string $name
      * @return Field
@@ -60,9 +63,14 @@ class EnumType implements Type
         throw new KindDoesNotSupportFieldsException();
     }
 
+    public function fields()
+    {
+        return null;
+    }
+
     public function resolve(Node $node, $parent, $value)
     {
-        return $value;
+        return $this->coercer ? $this->coercer->coerce($node, $value) : $value;
     }
 
     public function typeOf(Node $node, $value): Type
@@ -77,7 +85,7 @@ class EnumType implements Type
 
     public function enumValues()
     {
-        return $this->values;
+        return null;
     }
 
     public function interfaces()
@@ -102,6 +110,6 @@ class EnumType implements Type
 
     public function __toString()
     {
-        return sprintf("enum %s {\n}", $this->name);
+        return sprintf("scalar %s", $this->name);
     }
 }

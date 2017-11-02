@@ -1,6 +1,10 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Types;
+
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Schema;
+use Chemisus\GraphQL\Type;
 
 class ProxyType implements Type
 {

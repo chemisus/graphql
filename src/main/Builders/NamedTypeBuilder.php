@@ -2,9 +2,9 @@
 
 namespace Chemisus\GraphQL\Builders;
 
-use Chemisus\GraphQL\ProxyType;
 use Chemisus\GraphQL\Schema;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\ProxyType;
 
 class NamedTypeBuilder implements TypeBuilder
 {

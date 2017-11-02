@@ -2,6 +2,8 @@
 
 namespace Chemisus\GraphQL;
 
+use Chemisus\GraphQL\Types\ObjectType;
+
 class Field
 {
     /**
