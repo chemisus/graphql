@@ -9,12 +9,18 @@ use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
+use Chemisus\GraphQL\Types\Traits\NullEnumValuesTrait;
+use Chemisus\GraphQL\Types\Traits\NullInputFieldsTrait;
+use Chemisus\GraphQL\Types\Traits\NullOfTypeTrait;
 
 class ObjectType implements Type
 {
     use KindTrait;
     use NameTrait;
     use DescriptionTrait;
+    use NullInputFieldsTrait;
+    use NullEnumValuesTrait;
+    use NullOfTypeTrait;
 
     /**
      * @var Field[]
@@ -28,7 +34,7 @@ class ObjectType implements Type
 
     public function __construct(string $name)
     {
-        $this->kind = 'OBJECT';
+        $this->kind = Type::KIND_OBJECT;
         $this->name = $name;
     }
 
@@ -88,11 +94,6 @@ class ObjectType implements Type
         return [$this->name];
     }
 
-    public function enumValues()
-    {
-        return null;
-    }
-
     public function interfaces()
     {
         return null;
@@ -101,16 +102,6 @@ class ObjectType implements Type
     public function possibleTypes()
     {
         return [$this];
-    }
-
-    public function inputFields()
-    {
-        return null;
-    }
-
-    public function ofType()
-    {
-        return null;
     }
 
     public function __toString()

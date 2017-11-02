@@ -7,11 +7,17 @@ use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
+use Chemisus\GraphQL\Types\Traits\NullEnumValuesTrait;
+use Chemisus\GraphQL\Types\Traits\NullInputFieldsTrait;
+use Chemisus\GraphQL\Types\Traits\NullInterfacesTrait;
 
 class ListType implements Type
 {
     use KindTrait;
     use DescriptionTrait;
+    use NullInterfacesTrait;
+    use NullInputFieldsTrait;
+    use NullEnumValuesTrait;
 
     /**
      * @var Type
@@ -20,7 +26,7 @@ class ListType implements Type
 
     public function __construct(Type $type)
     {
-        $this->kind = 'LIST';
+        $this->kind = Type::KIND_LIST;
         $this->type = $type;
     }
 
@@ -70,28 +76,13 @@ class ListType implements Type
         }, $values);
     }
 
-    public function enumValues()
-    {
-        return null;
-    }
-
-    public function interfaces()
-    {
-        return null;
-    }
-
     public function possibleTypes()
     {
         return $this->type->possibleTypes();
     }
 
-    public function inputFields()
-    {
-        return null;
-    }
-
     public function ofType()
     {
-        return null;
+        return $this->type;
     }
 }

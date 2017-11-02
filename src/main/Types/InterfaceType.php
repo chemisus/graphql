@@ -9,12 +9,20 @@ use Chemisus\GraphQL\Typer;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
+use Chemisus\GraphQL\Types\Traits\NullEnumValuesTrait;
+use Chemisus\GraphQL\Types\Traits\NullInputFieldsTrait;
+use Chemisus\GraphQL\Types\Traits\NullInterfacesTrait;
+use Chemisus\GraphQL\Types\Traits\NullOfTypeTrait;
 
 class InterfaceType implements Type
 {
     use KindTrait;
     use NameTrait;
     use DescriptionTrait;
+    use NullInterfacesTrait;
+    use NullInputFieldsTrait;
+    use NullEnumValuesTrait;
+    use NullOfTypeTrait;
 
     /**
      * @var Field[]
@@ -33,7 +41,7 @@ class InterfaceType implements Type
 
     public function __construct(string $name)
     {
-        $this->kind = 'INTERFACE';
+        $this->kind = Type::KIND_INTERFACE;
         $this->name = $name;
     }
 
@@ -79,28 +87,8 @@ class InterfaceType implements Type
         }, $values));
     }
 
-    public function enumValues()
-    {
-        return null;
-    }
-
-    public function interfaces()
-    {
-        return [];
-    }
-
     public function possibleTypes()
     {
         return array_values($this->possibleTypes);
-    }
-
-    public function inputFields()
-    {
-        return null;
-    }
-
-    public function ofType()
-    {
-        return null;
     }
 }

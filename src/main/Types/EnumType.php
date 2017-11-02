@@ -3,19 +3,25 @@
 namespace Chemisus\GraphQL\Types;
 
 use Chemisus\GraphQL\EnumValue;
-use Chemisus\GraphQL\Field;
-use Chemisus\GraphQL\KindDoesNotSupportFieldsException;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
+use Chemisus\GraphQL\Types\Traits\NullFieldsTrait;
+use Chemisus\GraphQL\Types\Traits\NullInputFieldsTrait;
+use Chemisus\GraphQL\Types\Traits\NullInterfacesTrait;
+use Chemisus\GraphQL\Types\Traits\NullOfTypeTrait;
 
 class EnumType implements Type
 {
     use KindTrait;
     use NameTrait;
     use DescriptionTrait;
+    use NullFieldsTrait;
+    use NullInterfacesTrait;
+    use NullInputFieldsTrait;
+    use NullOfTypeTrait;
 
     /**
      * @var EnumValue[]
@@ -24,29 +30,14 @@ class EnumType implements Type
 
     public function __construct(string $name)
     {
-        $this->kind = 'ENUM';
+        $this->kind = Type::KIND_ENUM;
         $this->name = $name;
-    }
-
-    public function fields()
-    {
-        return null;
     }
 
     public function addValue(EnumValue $value)
     {
         $this->values[$value->name()] = $value;
         return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return Field
-     * @throws KindDoesNotSupportFieldsException
-     */
-    public function field(string $name)
-    {
-        throw new KindDoesNotSupportFieldsException();
     }
 
     public function resolve(Node $node, $parent, $value)
@@ -69,24 +60,9 @@ class EnumType implements Type
         return $this->values;
     }
 
-    public function interfaces()
-    {
-        return null;
-    }
-
     public function possibleTypes()
     {
         return [$this];
-    }
-
-    public function inputFields()
-    {
-        return null;
-    }
-
-    public function ofType()
-    {
-        return null;
     }
 
     public function __toString()

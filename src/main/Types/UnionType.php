@@ -2,19 +2,28 @@
 
 namespace Chemisus\GraphQL\Types;
 
-use Chemisus\GraphQL\KindDoesNotSupportFieldsException;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Typer;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
+use Chemisus\GraphQL\Types\Traits\NullEnumValuesTrait;
+use Chemisus\GraphQL\Types\Traits\NullFieldsTrait;
+use Chemisus\GraphQL\Types\Traits\NullInputFieldsTrait;
+use Chemisus\GraphQL\Types\Traits\NullInterfacesTrait;
+use Chemisus\GraphQL\Types\Traits\NullOfTypeTrait;
 
 class UnionType implements Type
 {
     use KindTrait;
     use NameTrait;
     use DescriptionTrait;
+    use NullFieldsTrait;
+    use NullInterfacesTrait;
+    use NullInputFieldsTrait;
+    use NullEnumValuesTrait;
+    use NullOfTypeTrait;
 
     /**
      * @var Typer
@@ -28,23 +37,13 @@ class UnionType implements Type
 
     public function __construct(string $name)
     {
-        $this->kind = 'UNION';
+        $this->kind = Type::KIND_UNION;
         $this->name = $name;
     }
 
     public function addType(Type $type)
     {
         $this->possibleTypes[$type->name()] = $type;
-    }
-
-    public function field(string $name)
-    {
-        throw new KindDoesNotSupportFieldsException();
-    }
-
-    public function fields()
-    {
-        return null;
     }
 
     public function resolve(Node $node, $parent, $value)
@@ -64,28 +63,8 @@ class UnionType implements Type
         }, $values);
     }
 
-    public function enumValues()
-    {
-        return null;
-    }
-
-    public function interfaces()
-    {
-        return null;
-    }
-
     public function possibleTypes()
     {
         return array_values($this->possibleTypes);
-    }
-
-    public function inputFields()
-    {
-        return null;
-    }
-
-    public function ofType()
-    {
-        return null;
     }
 }

@@ -3,19 +3,27 @@
 namespace Chemisus\GraphQL\Types;
 
 use Chemisus\GraphQL\Coercer;
-use Chemisus\GraphQL\Field;
-use Chemisus\GraphQL\KindDoesNotSupportFieldsException;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
+use Chemisus\GraphQL\Types\Traits\NullEnumValuesTrait;
+use Chemisus\GraphQL\Types\Traits\NullFieldsTrait;
+use Chemisus\GraphQL\Types\Traits\NullInputFieldsTrait;
+use Chemisus\GraphQL\Types\Traits\NullInterfacesTrait;
+use Chemisus\GraphQL\Types\Traits\NullOfTypeTrait;
 
 class ScalarType implements Type
 {
     use KindTrait;
     use NameTrait;
     use DescriptionTrait;
+    use NullFieldsTrait;
+    use NullInterfacesTrait;
+    use NullInputFieldsTrait;
+    use NullEnumValuesTrait;
+    use NullOfTypeTrait;
 
     /**
      * @var Coercer
@@ -24,7 +32,7 @@ class ScalarType implements Type
 
     public function __construct(string $name)
     {
-        $this->kind = 'SCALAR';
+        $this->kind = Type::KIND_SCALAR;
         $this->name = $name;
     }
 
@@ -34,21 +42,6 @@ class ScalarType implements Type
     public function setCoercer(Coercer $coercer)
     {
         $this->coercer = $coercer;
-    }
-
-    /**
-     * @param string $name
-     * @return Field
-     * @throws KindDoesNotSupportFieldsException
-     */
-    public function field(string $name)
-    {
-        throw new KindDoesNotSupportFieldsException();
-    }
-
-    public function fields()
-    {
-        return null;
     }
 
     public function resolve(Node $node, $parent, $value)
@@ -66,29 +59,9 @@ class ScalarType implements Type
         return [$this->name];
     }
 
-    public function enumValues()
-    {
-        return null;
-    }
-
-    public function interfaces()
-    {
-        return null;
-    }
-
     public function possibleTypes()
     {
         return [$this];
-    }
-
-    public function inputFields()
-    {
-        return null;
-    }
-
-    public function ofType()
-    {
-        return null;
     }
 
     public function __toString()
