@@ -2,7 +2,6 @@
 
 namespace Chemisus\GraphQL\Types;
 
-use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Resolver;
 use Chemisus\GraphQL\Type;
@@ -11,6 +10,7 @@ use Chemisus\GraphQL\Types\Traits\KindTrait;
 use Chemisus\GraphQL\Types\Traits\NullEnumValuesTrait;
 use Chemisus\GraphQL\Types\Traits\NullInputFieldsTrait;
 use Chemisus\GraphQL\Types\Traits\NullInterfacesTrait;
+use Chemisus\GraphQL\Types\Traits\WrappedTypeTrait;
 
 class NonNullType implements Type
 {
@@ -19,35 +19,13 @@ class NonNullType implements Type
     use NullInterfacesTrait;
     use NullInputFieldsTrait;
     use NullEnumValuesTrait;
-
-    /**
-     * @var Type
-     */
-    private $type;
+    use WrappedTypeTrait;
 
     public function __construct(Type $type)
     {
         $this->kind = Type::KIND_NON_NULL;
         $this->type = $type;
-    }
-
-    public function name(): string
-    {
-        return sprintf('%s!', $this->type->name());
-    }
-
-    /**
-     * @param string $name
-     * @return Field
-     */
-    public function field(string $name)
-    {
-        return $this->type->field($name);
-    }
-
-    public function fields()
-    {
-        return $this->type->fields();
+        $this->namePattern = '%s!';
     }
 
     public function resolve(Node $node, $parent, $value, Resolver $resolver = null)
@@ -59,20 +37,5 @@ class NonNullType implements Type
         }
 
         return $value;
-    }
-
-    public function type(Node $node, $value): Type
-    {
-        return $this->type->type($node, $value);
-    }
-
-    public function possibleTypes()
-    {
-        return $this->type->possibleTypes();
-    }
-
-    public function ofType()
-    {
-        return $this->type;
     }
 }
