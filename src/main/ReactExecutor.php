@@ -2,6 +2,7 @@
 
 namespace Chemisus\GraphQL;
 
+use Chemisus\GraphQL\Types\Schema;
 use React\EventLoop\Factory;
 use function React\Promise\all;
 
@@ -14,17 +15,21 @@ class ReactExecutor
 
         $root = new Node($schema, $schema->field($query->name()), $query);
 
-        $waits = [];
-        $a = function ($nodes) use (&$a, &$waits) {
+        $queue = [];
+
+        /**
+         * @param Node[] $nodes
+         */
+        $fetchChildren = function ($nodes) use (&$fetchChildren, &$queue) {
             foreach ($nodes as $node) {
-                $waits[] = $node->fetch()->then($a);
+                $queue[] = $node->fetch()->then($fetchChildren);
             }
         };
 
-        $value = null;
-        $root->fetch()->then($a);
+        $root->fetch()->then($fetchChildren);
 
-        all($waits)->then(function () use ($root, &$value) {
+        $value = null;
+        all($queue)->then(function () use ($root, &$value) {
             $value = $root->resolve(null, (object) []);
         });
 

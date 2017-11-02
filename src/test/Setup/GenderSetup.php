@@ -2,8 +2,8 @@
 
 namespace Chemisus\GraphQL\Setup;
 
-use Chemisus\GraphQL\EnumValue;
-use Chemisus\GraphQL\Schema;
+use Chemisus\GraphQL\Types\EnumValue;
+use Chemisus\GraphQL\Types\Schema;
 
 class GenderSetup
 {

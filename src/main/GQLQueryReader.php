@@ -2,6 +2,7 @@
 
 namespace Chemisus\GraphQL;
 
+use Chemisus\GraphQL\Types\Schema;
 use GraphQL\Language\AST\NodeKind;
 use GraphQL\Language\Parser;
 

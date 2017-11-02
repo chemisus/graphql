@@ -2,6 +2,8 @@
 
 namespace Chemisus\GraphQL;
 
+use Chemisus\GraphQL\Types\Field;
+use Chemisus\GraphQL\Types\Schema;
 use React\Promise\ExtendedPromiseInterface;
 use function React\Promise\all;
 
@@ -38,7 +40,7 @@ class Node
     private $schema;
 
     /**
-     * @var
+     * @var Type[]
      */
     private $types;
 
@@ -56,16 +58,25 @@ class Node
         $this->schema = $schema;
     }
 
+    /**
+     * @return Schema
+     */
     public function schema(): Schema
     {
         return $this->schema;
     }
 
+    /**
+     * @return string
+     */
     public function name(): string
     {
         return $this->query->name();
     }
 
+    /**
+     * @return string
+     */
     public function alias(): string
     {
         return $this->query->alias();
@@ -90,21 +101,35 @@ class Node
         });
     }
 
+    /**
+     * @return mixed[]
+     */
     public function items(): ?array
     {
         return $this->items;
     }
 
+    /**
+     * @param string $key
+     * @param null $default
+     * @return mixed
+     */
     public function arg(string $key, $default = null)
     {
         return $this->query->arg($key, $default);
     }
 
+    /**
+     * @return Node|null
+     */
     public function parent(): ?Node
     {
         return $this->parent;
     }
 
+    /**
+     * @return Type[]
+     */
     public function types(): array
     {
         if ($this->types === null) {
@@ -136,6 +161,11 @@ class Node
         });
     }
 
+    /**
+     * @param mixed|null $parent
+     * @param mixed|null $value
+     * @return mixed
+     */
     public function resolve($parent = null, $value = null)
     {
         return $this->field->resolve($this, $parent, $value);

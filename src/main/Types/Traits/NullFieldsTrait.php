@@ -2,8 +2,8 @@
 
 namespace Chemisus\GraphQL\Types\Traits;
 
-use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\KindDoesNotSupportFieldsException;
+use Chemisus\GraphQL\Types\Field;
 
 trait NullFieldsTrait
 {

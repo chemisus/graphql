@@ -2,8 +2,8 @@
 
 namespace Chemisus\GraphQL\Setup;
 
-use Chemisus\GraphQL\Field;
-use Chemisus\GraphQL\Schema;
+use Chemisus\GraphQL\Types\Field;
+use Chemisus\GraphQL\Types\Schema;
 
 class DogSetup
 {

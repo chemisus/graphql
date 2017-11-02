@@ -2,7 +2,6 @@
 
 namespace Chemisus\GraphQL\Types;
 
-use Chemisus\GraphQL\EnumValue;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;

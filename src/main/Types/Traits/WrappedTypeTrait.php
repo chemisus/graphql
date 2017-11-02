@@ -2,9 +2,9 @@
 
 namespace Chemisus\GraphQL\Types\Traits;
 
-use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\Field;
 
 trait WrappedTypeTrait
 {

@@ -2,9 +2,9 @@
 
 namespace Chemisus\GraphQL\Builders;
 
-use Chemisus\GraphQL\Schema;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\ScalarType;
+use Chemisus\GraphQL\Types\Schema;
 
 class ScalarTypeBuilder implements TypeBuilder
 {

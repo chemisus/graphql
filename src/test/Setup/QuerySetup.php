@@ -4,11 +4,11 @@ namespace Chemisus\GraphQL\Setup;
 
 use Chemisus\GraphQL\CallbackFetcher;
 use Chemisus\GraphQL\CallbackResolver;
-use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Repositories;
-use Chemisus\GraphQL\Schema;
+use Chemisus\GraphQL\Types\Field;
 use Chemisus\GraphQL\Types\ListType;
+use Chemisus\GraphQL\Types\Schema;
 
 class QuerySetup
 {

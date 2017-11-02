@@ -3,9 +3,9 @@
 namespace Chemisus\GraphQL\Setup;
 
 use Chemisus\GraphQL\CallbackTyper;
-use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
-use Chemisus\GraphQL\Schema;
+use Chemisus\GraphQL\Types\Field;
+use Chemisus\GraphQL\Types\Schema;
 
 class AnimalSetup
 {

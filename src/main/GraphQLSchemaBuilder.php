@@ -8,6 +8,7 @@ use Chemisus\GraphQL\Builders\NamedTypeBuilder;
 use Chemisus\GraphQL\Builders\NonNullTypeBuilder;
 use Chemisus\GraphQL\Builders\ObjectTypeBuilder;
 use Chemisus\GraphQL\Builders\ScalarTypeBuilder;
+use Chemisus\GraphQL\Types\Schema;
 
 class GraphQLSchemaBuilder
 {

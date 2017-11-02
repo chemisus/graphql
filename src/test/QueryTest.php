@@ -15,6 +15,7 @@ use Chemisus\GraphQL\Setup\SchemaSetup;
 use Chemisus\GraphQL\Types\EnumType;
 use Chemisus\GraphQL\Types\InterfaceType;
 use Chemisus\GraphQL\Types\ObjectType;
+use Chemisus\GraphQL\Types\Schema;
 use Chemisus\GraphQL\Types\UnionType;
 use PHPUnit\Framework\TestCase;
 

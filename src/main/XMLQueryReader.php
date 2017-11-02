@@ -2,6 +2,7 @@
 
 namespace Chemisus\GraphQL;
 
+use Chemisus\GraphQL\Types\Schema;
 use SimpleXMLElement;
 
 class XMLQueryReader

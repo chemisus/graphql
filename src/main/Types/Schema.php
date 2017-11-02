@@ -1,12 +1,11 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Types;
 
-use Chemisus\GraphQL\Types\EnumType;
-use Chemisus\GraphQL\Types\ListType;
-use Chemisus\GraphQL\Types\NonNullType;
-use Chemisus\GraphQL\Types\ObjectType;
-use Chemisus\GraphQL\Types\ScalarType;
+use Chemisus\GraphQL\CallbackCoercer;
+use Chemisus\GraphQL\CallbackResolver;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Type;
 
 class Schema extends ObjectType
 {

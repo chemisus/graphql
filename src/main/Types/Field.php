@@ -1,11 +1,21 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Types;
 
-use Chemisus\GraphQL\Types\ObjectType;
+use Chemisus\GraphQL\Fetcher;
+use Chemisus\GraphQL\Node;
+use Chemisus\GraphQL\Resolver;
+use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\Traits\DeprecationTrait;
+use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
+use Chemisus\GraphQL\Types\Traits\NameTrait;
 
 class Field
 {
+    use NameTrait;
+    use DescriptionTrait;
+    use DeprecationTrait;
+
     /**
      * @var Fetcher
      */
@@ -22,19 +32,9 @@ class Field
     private $ownerType;
 
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
      * @var Type
      */
     private $returnType;
-
-    /**
-     * @var string
-     */
-    private $description;
 
     /**
      * @var InputValue[]
@@ -42,31 +42,36 @@ class Field
     private $args;
 
     /**
-     * @var bool
-     */
-    private $isDeprecated = false;
-
-    /**
-     * @var string
-     */
-    private $deprecationReason;
-
-    /**
      * Field constructor.
      * @param Type $ownerType
      * @param string $name
      * @param Type $returnType
+     * @param null|string $description
      */
-    public function __construct(Type $ownerType, string $name, Type $returnType)
+    public function __construct(Type $ownerType, string $name, Type $returnType, ?string $description = null)
     {
         $this->ownerType = $ownerType;
         $this->name = $name;
         $this->returnType = $returnType;
+        $this->description = $description;
     }
 
-    public function hasFetcher()
+    public function ownerType(): ObjectType
     {
-        return $this->fetcher !== null;
+        return $this->ownerType;
+    }
+
+    public function returnType(): Type
+    {
+        return $this->returnType;
+    }
+
+    /**
+     * @return InputValue[]
+     */
+    public function args(): ?array
+    {
+        return $this->args;
     }
 
     public function setFetcher(Fetcher $fetcher): self
@@ -90,50 +95,6 @@ class Field
     {
         $value = $this->resolver ? $this->resolver->resolve($node, $parent, $value) : $value;
         return $this->returnType->resolve($node, $parent, $value);
-    }
-
-    public function name(): string
-    {
-        return $this->name;
-    }
-
-    public function ownerType(): ObjectType
-    {
-        return $this->ownerType;
-    }
-
-    public function returnType(): Type
-    {
-        return $this->returnType;
-    }
-
-    public function description()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return InputValue[]
-     */
-    public function args()
-    {
-        return $this->args;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDeprecated(): bool
-    {
-        return $this->isDeprecated;
-    }
-
-    /**
-     * @return string
-     */
-    public function deprecationReason()
-    {
-        return $this->deprecationReason;
     }
 
     public function __toString()

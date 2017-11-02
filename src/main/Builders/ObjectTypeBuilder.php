@@ -2,9 +2,9 @@
 
 namespace Chemisus\GraphQL\Builders;
 
-use Chemisus\GraphQL\Schema;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\ObjectType;
+use Chemisus\GraphQL\Types\Schema;
 
 class ObjectTypeBuilder implements TypeBuilder
 {

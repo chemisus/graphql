@@ -2,7 +2,7 @@
 
 namespace Chemisus\GraphQL\Setup;
 
-use Chemisus\GraphQL\Schema;
+use Chemisus\GraphQL\Types\Schema;
 
 class SchemaSetup
 {

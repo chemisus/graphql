@@ -2,9 +2,7 @@
 
 namespace Chemisus\GraphQL\Types;
 
-use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
-use Chemisus\GraphQL\Schema;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
 

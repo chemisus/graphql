@@ -4,10 +4,10 @@ namespace Chemisus\GraphQL\Setup;
 
 use Chemisus\GraphQL\CallbackFetcher;
 use Chemisus\GraphQL\CallbackResolver;
-use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Http;
 use Chemisus\GraphQL\Node;
-use Chemisus\GraphQL\Schema;
+use Chemisus\GraphQL\Types\Field;
+use Chemisus\GraphQL\Types\Schema;
 
 class ReactSetup
 {

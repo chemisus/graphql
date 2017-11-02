@@ -2,6 +2,8 @@
 
 namespace Chemisus\GraphQL;
 
+use Chemisus\GraphQL\Types\Schema;
+
 class BFSExecutor
 {
     public function execute(Schema $schema, Query $query)

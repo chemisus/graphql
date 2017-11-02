@@ -2,6 +2,10 @@
 
 namespace Chemisus\GraphQL;
 
+use Chemisus\GraphQL\Types\EnumValue;
+use Chemisus\GraphQL\Types\Field;
+use Chemisus\GraphQL\Types\InputValue;
+
 interface Type
 {
     const KIND_SCALAR = 'SCALAR';
