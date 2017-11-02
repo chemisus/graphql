@@ -2,11 +2,11 @@
 
 namespace Chemisus\GraphQL\Types;
 
-use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Typer;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
+use Chemisus\GraphQL\Types\Traits\FieldsTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
 use Chemisus\GraphQL\Types\Traits\NullEnumValuesTrait;
@@ -23,11 +23,7 @@ class InterfaceType implements Type
     use NullInputFieldsTrait;
     use NullEnumValuesTrait;
     use NullOfTypeTrait;
-
-    /**
-     * @var Field[]
-     */
-    public $fields = [];
+    use FieldsTrait;
 
     /**
      * @var Typer
@@ -48,26 +44,6 @@ class InterfaceType implements Type
     public function addType(Type $type)
     {
         $this->possibleTypes[$type->name()] = $type;
-    }
-
-    public function addField(Field $field)
-    {
-        $this->fields[$field->name()] = $field;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return Field
-     */
-    public function field(string $name)
-    {
-        return $this->fields[$name];
-    }
-
-    public function fields()
-    {
-        return $this->fields;
     }
 
     public function resolve(Node $node, $parent, $value)

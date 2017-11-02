@@ -5,18 +5,16 @@ namespace Chemisus\GraphQL\Types;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Schema;
 use Chemisus\GraphQL\Type;
+use Chemisus\GraphQL\Types\Traits\NameTrait;
 
 class ProxyType implements Type
 {
+    use NameTrait;
+
     /**
      * @var Schema
      */
     private $schema;
-
-    /**
-     * @var string
-     */
-    private $name;
 
     /**
      * @var Type
@@ -45,11 +43,6 @@ class ProxyType implements Type
     public function kind()
     {
         return $this->dereference()->kind();
-    }
-
-    public function name(): string
-    {
-        return $this->name;
     }
 
     public function description()

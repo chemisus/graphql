@@ -7,6 +7,7 @@ use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
+use Chemisus\GraphQL\Types\Traits\FieldsTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
 use Chemisus\GraphQL\Types\Traits\NullEnumValuesTrait;
@@ -21,11 +22,7 @@ class ObjectType implements Type
     use NullInputFieldsTrait;
     use NullEnumValuesTrait;
     use NullOfTypeTrait;
-
-    /**
-     * @var Field[]
-     */
-    private $fields = [];
+    use FieldsTrait;
 
     /**
      * @var Coercer
@@ -44,26 +41,6 @@ class ObjectType implements Type
     public function setCoercer(Coercer $coercer)
     {
         $this->coercer = $coercer;
-    }
-
-    public function addField(Field $field)
-    {
-        $this->fields[$field->name()] = $field;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return Field
-     */
-    public function field(string $name)
-    {
-        return $this->fields[$name];
-    }
-
-    public function fields()
-    {
-        return $this->fields;
     }
 
     public function resolve(Node $node, $parent, $value)

@@ -6,6 +6,7 @@ use Chemisus\GraphQL\Field;
 use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Type;
 use Chemisus\GraphQL\Types\Traits\DescriptionTrait;
+use Chemisus\GraphQL\Types\Traits\FieldsTrait;
 use Chemisus\GraphQL\Types\Traits\KindTrait;
 use Chemisus\GraphQL\Types\Traits\NameTrait;
 use Chemisus\GraphQL\Types\Traits\NullEnumValuesTrait;
@@ -22,36 +23,12 @@ class InputObjectType implements Type
     use NullInputFieldsTrait;
     use NullOfTypeTrait;
     use NullEnumValuesTrait;
-
-    /**
-     * @var Field[]
-     */
-    public $fields = [];
+    use FieldsTrait;
 
     public function __construct(string $name)
     {
         $this->kind = Type::KIND_INPUT_OBJECT;
         $this->name = $name;
-    }
-
-    public function addField(Field $field)
-    {
-        $this->fields[$field->name()] = $field;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return Field
-     */
-    public function field(string $name)
-    {
-        return $this->fields[$name];
-    }
-
-    public function fields()
-    {
-        return $this->fields;
     }
 
     public function resolve(Node $node, $parent, $value)
