@@ -7,12 +7,12 @@ use SimpleXMLElement;
 
 class XMLQueryReader
 {
-    public function read(Schema $schema, $xml): Query
+    public function read(Schema $schema, $xml): Selection
     {
         return $this->build($schema, simplexml_load_string($xml));
     }
 
-    public function build(Schema $schema, SimpleXMLElement $node): Query
+    public function build(Schema $schema, SimpleXMLElement $node): Selection
     {
         $alias = null;
         $on = null;
@@ -27,7 +27,7 @@ class XMLQueryReader
 
         $args = $this->buildAttributes($schema, $node);
 
-        $query = new Query($node->getName(), $this->buildChildren($schema, $node), $alias, $on, $args);
+        $query = new FieldSelection($node->getName(), $this->buildChildren($schema, $node), $alias, $on, $args);
         return $query;
     }
 

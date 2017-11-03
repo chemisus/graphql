@@ -24,22 +24,32 @@ class GQLQueryReader
                 return [$this->readField($node)];
             },
             NodeKind::INLINE_FRAGMENT => [$this, 'readInlineFragment'],
+            NodeKind::FRAGMENT_DEFINITION => [$this, 'readFragmentDefinition'],
+            NodeKind::FRAGMENT_SPREAD => [$this, 'readFragmentSpread'],
         ];
         $this->schema = $schema;
     }
 
-    public function read(string $gql): Query
+    public function read(string $gql): Selection
     {
         return $this->readDocument(json_decode(json_encode(Parser::parse($gql)->toArray(true))));
     }
 
     public function readDocument($doc)
     {
-        $node = $doc->definitions[0];
+        $fragments = array_filter($doc->definitions, function ($definition) {
+            return $definition->kind = NodeKind::FRAGMENT_DEFINITION;
+        });
 
-        $name = isset($node->name->value) ? $node->name->value : 'query';
-        $fields = $this->readSelections($node->selectionSet->selections);
-        $query = new Query($name, $fields);
+        $operations = array_filter($doc->definitions, function ($definition) {
+            return $definition->kind = NodeKind::OPERATION_DEFINITION;
+        });
+
+        $definition = $operations[0];
+
+        $name = isset($definition->name->value) ? $definition->name->value : 'query';
+        $fields = $this->readSelections($definition->selectionSet->selections);
+        $query = new FieldSelection($name, $fields);
 
         return $query;
     }
@@ -51,7 +61,7 @@ class GQLQueryReader
         $fields = $this->readSelections($node->selectionSet->selections);
         $args = $this->readArgs($node->arguments);
         $on = null;
-        $query = new Query($name, $fields, $alias, $on, $args);
+        $query = new FieldSelection($name, $fields, $alias, $on, $args);
 
         return $query;
     }
@@ -65,6 +75,16 @@ class GQLQueryReader
             }
         }
         return $selections;
+    }
+
+    public function readFragmentDefinition($node)
+    {
+        return [];
+    }
+
+    public function readFragmentSpread($node)
+    {
+        return [];
     }
 
     public function readSelections($nodes)

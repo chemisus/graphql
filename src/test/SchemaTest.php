@@ -93,7 +93,7 @@ class SchemaTest extends TestCase
      * @param string $schemaSource
      * @param Schema $schema
      */
-    public function testSchema(string $schemaSource, Schema $schema, string $querySource, Query $query, $result)
+    public function testSchema(string $schemaSource, Schema $schema, string $querySource, Selection $query, $result)
     {
         $expect = implode(PHP_EOL, array_filter(explode(PHP_EOL, trim($schemaSource))));
         $actual = (string) $schema;
@@ -101,7 +101,7 @@ class SchemaTest extends TestCase
         $this->assertEquals($expect, $actual);
     }
 
-    public function queryReact(Schema $schema, Query $query)
+    public function queryReact(Schema $schema, Selection $query)
     {
         $executor = new ReactExecutor();
         return $executor->execute($schema, $query);
@@ -112,7 +112,7 @@ class SchemaTest extends TestCase
      * @param string $schemaSource
      * @param Schema $schema
      */
-    public function testQuery(string $schemaSource, Schema $schema, string $querySource, Query $query, string $result)
+    public function testQuery(string $schemaSource, Schema $schema, string $querySource, Selection $query, string $result)
     {
         $expect = $result;
         $actual = json_encode($this->queryReact($schema, $query));

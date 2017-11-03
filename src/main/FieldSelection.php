@@ -2,7 +2,7 @@
 
 namespace Chemisus\GraphQL;
 
-class Query
+class FieldSelection implements Selection
 {
     /**
      * @var string
@@ -25,13 +25,13 @@ class Query
     private $args = [];
 
     /**
-     * @var Query[]
+     * @var Selection[]
      */
-    private $fields;
+    private $selections;
 
     /**
      * @param string $name
-     * @param Query[] $fields
+     * @param Selection[] $fields
      * @param null|string $alias
      * @param null|string $on
      * @param array|null $args
@@ -39,7 +39,7 @@ class Query
     public function __construct(string $name, array $fields, ?string $alias = null, ?string $on = null, ?array $args = null)
     {
         $this->name = $name;
-        $this->fields = $fields;
+        $this->selections = $fields;
         $this->on = $on;
         $this->args = $args;
         $this->alias = $alias;
@@ -88,14 +88,27 @@ class Query
     }
 
     /**
-     * @param string $on
-     * @return Query[]
+     * @return Selection[]
      */
-    public function queries(string $on)
+    public function selections()
     {
-        return array_filter($this->fields, function (Query $query) use ($on) {
-            return $query->on === null || $query->on === $on;
-        });
+        return $this->selections;
+    }
+
+    /**
+     * @param string $on
+     * @return Selection[]
+     */
+    public function fields(?string $on = null)
+    {
+        return array_merge([], ...array_map(function (Selection $selection) use ($on) {
+            return $selection->flatten($on);
+        }, $this->selections));
+    }
+
+    public function flatten(?string $on = null)
+    {
+        return $this->on === null || $this->on === $on ? [$this] : [];
     }
 
     public function __toString()
@@ -118,11 +131,11 @@ class Query
                 }, array_keys($this->args), array_values($this->args))) . ')';
         }
 
-        if (!empty($this->fields)) {
+        if (!empty($this->selections)) {
             $last = null;
             $string .= " {\n";
 
-            foreach ($this->fields as $field) {
+            foreach ($this->selections as $field) {
                 if ($last !== null && $field->on() !== $last) {
                     $string .= $padding . '  }' . PHP_EOL;
                     $last = null;

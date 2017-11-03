@@ -20,7 +20,7 @@ class ReactExecutor
         Http::init($this->loop);
     }
 
-    public function execute(Schema $schema, Query $query)
+    public function execute(Schema $schema, Selection $query)
     {
         $root = new Node($schema, $schema->field($query->name()), $query);
 

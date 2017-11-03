@@ -15,7 +15,7 @@ class Node
     private $field;
 
     /**
-     * @var Query
+     * @var Selection
      */
     private $query;
 
@@ -47,10 +47,10 @@ class Node
     /**
      * @param Schema $schema
      * @param Field $field
-     * @param Query $query
+     * @param Selection $query
      * @param Node|null $parent
      */
-    public function __construct(Schema $schema, Field $field, Query $query, Node $parent = null)
+    public function __construct(Schema $schema, Field $field, Selection $query, Node $parent = null)
     {
         $this->field = $field;
         $this->query = $query;
@@ -90,9 +90,9 @@ class Node
     {
         if ($this->children === null) {
             $this->children = array_merge([], ...array_map(function (string $type) {
-                return array_map(function (Query $query) use ($type) {
+                return array_map(function (Selection $query) use ($type) {
                     return new Node($this->schema, $this->schema()->getType($type)->field($query->name()), $query, $this);
-                }, $this->query->queries($type));
+                }, $this->query->fields($type));
             }, $this->types()));
         }
 

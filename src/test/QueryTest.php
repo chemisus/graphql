@@ -97,13 +97,13 @@ class QueryTest extends TestCase
         return $queryBuilder->read($xml);
     }
 
-    public function queryBFS(Query $query)
+    public function queryBFS(Selection $query)
     {
         $executor = new BFSExecutor();
         return $executor->execute($this->schema, $query);
     }
 
-    public function queryReact(Query $query)
+    public function queryReact(Selection $query)
     {
         $executor = new ReactExecutor();
         return $executor->execute($this->schema, $query);
