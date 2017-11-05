@@ -9,6 +9,7 @@ use Chemisus\GraphQL\Builders\NonNullTypeBuilder;
 use Chemisus\GraphQL\Builders\ObjectTypeBuilder;
 use Chemisus\GraphQL\Builders\ScalarTypeBuilder;
 use Chemisus\GraphQL\Types\Schema;
+use GraphQL\Language\AST\NodeKind;
 
 class GraphQLSchemaBuilder
 {
@@ -16,6 +17,8 @@ class GraphQLSchemaBuilder
 
     public function __construct()
     {
+        $this->schema = new Schema(false);
+
         $this->readers = $readers = [
             'operationTypes' => function ($definition) {
                 return $this->builds($definition->operationTypes, $definition);
@@ -148,10 +151,10 @@ class GraphQLSchemaBuilder
                 $fields = $this->builds($definition->fields, $definition);
             },
             'InputObjectTypeDefinition' => function ($definition, $parent) {
-                $name = $this->build($definition->name, $definition);
+//                $name = $this->build($definition->name, $definition);
                 $description = $this->description($definition);
-                $directives = $this->builds($definition->directives, $definition);
-                $fields = $this->builds($definition->fields, $definition);
+//                $directives = $this->builds($definition->directives, $definition);
+//                $fields = $this->builds($definition->fields, $definition);
             },
             'UnionTypeDefinition' => function ($definition, $parent) {
                 $name = $this->build($definition->name, $definition);
@@ -242,17 +245,38 @@ class GraphQLSchemaBuilder
         return isset($definition->description) ? trim($definition->description) : null;
     }
 
-    public function buildSchema($node)
+    public function readSchema($doc)
     {
-        $schema = new Schema(false);
-        $definitions = $this->build($node);
+        $kinds = [
+            NodeKind::SCALAR_TYPE_DEFINITION,
+            NodeKind::ENUM_TYPE_DEFINITION,
+            NodeKind::INTERFACE_TYPE_DEFINITION,
+            NodeKind::OBJECT_TYPE_DEFINITION,
+            NodeKind::UNION_TYPE_DEFINITION,
+            NodeKind::INPUT_OBJECT_TYPE_DEFINITION,
+            NodeKind::TYPE_EXTENSION_DEFINITION,
+        ];
+
+        $definitions = array_merge([], ...array_map(function ($kind) use (&$doc) {
+            return array_values(array_filter($doc->definitions, function ($definition) use (&$kind) {
+                return $definition->kind = $kind;
+            }));
+        }, $kinds));
+
         foreach ($definitions as $definition) {
             if ($definition) {
-                $definition->build($schema);
+                $this->build($definition);
             }
         }
-        $schema->initialize();
-        return $schema;
+
+        return $this;
+    }
+
+    public function buildSchema()
+    {
+        $this->schema->initialize();
+
+        return $this->schema;
     }
 
     public function build($node, $parent = null)

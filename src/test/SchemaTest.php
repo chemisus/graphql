@@ -44,7 +44,7 @@ class SchemaTest extends TestCase
     public function makeSchema($gql)
     {
         $queryBuilder = new GraphQLSchemaBuilder();
-        return $queryBuilder->buildSchema(json_decode(json_encode(Parser::parse($gql)->toArray(true))));
+        return $queryBuilder->readSchema(json_decode(json_encode(Parser::parse($gql)->toArray(true))))->buildSchema();
     }
 
     public function wireSchema($name, Schema $schema)
