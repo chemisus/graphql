@@ -44,6 +44,21 @@ class SchemaTest extends TestCase
 
     public function wire($name, Document $document)
     {
+        $document->resolver('Query', '__type', new CallbackResolver(function (Node $node) use ($document) {
+            return $document->types[$node->getSelection()->getArguments()['name']];
+        }));
+
+        $document->coercer('__Schema', new CallbackCoercer(function (Node $node, $value) {
+        }));
+
+        $document->coercer('__Type', new CallbackCoercer(function (Node $node, Type $value) {
+            return (object)[
+                'kind' => $value->getKind(),
+                'name' => $value->getName(),
+                'description' => $value->getDescription(),
+            ];
+        }));
+
         if ($name === 'sw') {
             $graph = [];
 
