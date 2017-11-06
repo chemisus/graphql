@@ -23,6 +23,7 @@ class DocumentWirer
         $document->coercer('__Type', new CallbackCoercer(function (Node $node, Type $value) {
             return (object)[
                 'kind' => $value->getKind(),
+                'fullName' => $value->getFullName(),
                 'name' => $value->getName(),
                 'description' => $value->getDescription(),
                 'fields' => $value->getFields(),

@@ -18,6 +18,7 @@ type __Schema {
 
 type __Type {
     kind: __TypeKind!
+    fullName: String!
     name: String
     description: String
 
