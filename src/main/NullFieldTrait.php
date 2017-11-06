@@ -11,6 +11,6 @@ trait NullFieldTrait
 
     public function getFields()
     {
-        return [];
+        return null;
     }
 }

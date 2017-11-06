@@ -1,6 +1,15 @@
 {
-    __type(name:"__Schema") {
+    __Schema:__type(name:"__Schema") {
         name:fullName
         kind
+    }
+    __TypeKind:__type(name:"__TypeKind") {
+        name:fullName
+        kind
+    }
+    String:__type(name:"String") {
+        name:fullName
+        kind
+        fields
     }
 }

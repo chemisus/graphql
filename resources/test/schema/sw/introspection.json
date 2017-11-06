@@ -1,6 +1,15 @@
 {
-  "__type": {
+  "__Schema": {
     "name": "__Schema",
     "kind": "OBJECT"
+  },
+  "__TypeKind": {
+    "name": "__TypeKind",
+    "kind": "ENUM"
+  },
+  "String": {
+    "name": "String",
+    "kind": "SCALAR",
+    "fields": null
   }
 }
