@@ -2,7 +2,6 @@
 
 namespace Chemisus\GraphQL;
 
-use Chemisus\GraphQL\Types\Schema;
 use PHPUnit\Framework\TestCase;
 
 class SchemaTest extends TestCase
@@ -49,30 +48,30 @@ class SchemaTest extends TestCase
             $graph = [];
 
             $document->fetcher('Query', 'allPeople', new CallbackFetcher(function (Node $node) use (&$graph) {
-                    return Http::get('https://swapi.co/api/people/')
-                        ->then(function ($data) {
-                            return json_decode($data)->results;
-                        });
-                }));
+                return Http::get('https://swapi.co/api/people/')
+                    ->then(function ($data) {
+                        return json_decode($data)->results;
+                    });
+            }));
 
             $document->resolver('Query', 'allPeople', new CallbackResolver(function (Node $node) {
-                    return (object) [
-                        'people' => $node->getItems(),
-                    ];
-                }));
+                return (object) [
+                    'people' => $node->getItems(),
+                ];
+            }));
 
             $document->fetcher('Query', 'allPlanets', new CallbackFetcher(function (Node $node) use (&$graph) {
-                    return Http::get('https://swapi.co/api/planets/')
-                        ->then(function ($data) {
-                            return json_decode($data)->results;
-                        });
-                }));
+                return Http::get('https://swapi.co/api/planets/')
+                    ->then(function ($data) {
+                        return json_decode($data)->results;
+                    });
+            }));
 
             $document->resolver('Query', 'allPlanets', new CallbackResolver(function (Node $node) {
-                    return (object) [
-                        'planets' => $node->getItems(),
-                    ];
-                }));
+                return (object) [
+                    'planets' => $node->getItems(),
+                ];
+            }));
         }
     }
 
@@ -85,8 +84,6 @@ class SchemaTest extends TestCase
      */
     public function testQuery(string $schemaName, string $schemaSource, string $querySource, $result)
     {
-        error_reporting(E_ALL);
-
         $builder = new DocumentBuilder();
         $executor = new DocumentExecutor();
         $builder->load($querySource);

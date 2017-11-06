@@ -1,0 +1,26 @@
+{
+    allPeople {
+        people {
+            ... on Person {
+                id
+            }
+            ... Person
+        }
+    }
+    allPlanets {
+        planets {
+            ... on Planet {
+                id
+            }
+            ... Planet
+        }
+    }
+}
+
+fragment Planet on Planet {
+    name
+}
+
+fragment Person on Person {
+    name
+}
