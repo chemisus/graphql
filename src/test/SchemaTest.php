@@ -53,8 +53,6 @@ class SchemaTest extends TestCase
                 $key = base64_encode($url);
                 $file = $dir . $key;
 
-                echo PHP_EOL . $file . PHP_EOL;
-
                 if (file_exists($file)) {
                     return json_decode(file_get_contents($file))->results;
                 }
@@ -80,8 +78,6 @@ class SchemaTest extends TestCase
                 $dir = dirname(dirname(__DIR__)) . '/out/cache/';
                 $key = base64_encode($url);
                 $file = $dir . $key;
-
-                echo PHP_EOL . $file . PHP_EOL;
 
                 if (file_exists($file)) {
                     return json_decode(file_get_contents($file))->results;
@@ -134,13 +130,13 @@ class SchemaTest extends TestCase
 
         $end = microtime(true);
 
-        printf("%2\$0.6f %1\$s\n", 'instance', $instance - $start);
-        printf("%2\$0.6f %1\$s\n", 'load query', $loadQuery - $instance);
-        printf("%2\$0.6f %1\$s\n", 'load schema', $loadSchema - $loadQuery);
-        printf("%2\$0.6f %1\$s\n", 'build', $build - $loadSchema);
-        printf("%2\$0.6f %1\$s\n", 'wire', $wire - $build);
-        printf("%2\$0.6f %1\$s\n", 'execute', $execute - $wire);
-        printf("%2\$0.6f %1\$s\n", 'total', $end - $start);
+//        printf("%2\$0.6f %1\$s\n", 'instance', $instance - $start);
+//        printf("%2\$0.6f %1\$s\n", 'load query', $loadQuery - $instance);
+//        printf("%2\$0.6f %1\$s\n", 'load schema', $loadSchema - $loadQuery);
+//        printf("%2\$0.6f %1\$s\n", 'build', $build - $loadSchema);
+//        printf("%2\$0.6f %1\$s\n", 'wire', $wire - $build);
+//        printf("%2\$0.6f %1\$s\n", 'execute', $execute - $wire);
+//        printf("%2\$0.6f %1\$s\n", 'total', $end - $start);
 
         $expect = $result;
         $this->assertEquals($expect, $actual);
