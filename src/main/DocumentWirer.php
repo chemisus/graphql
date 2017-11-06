@@ -37,7 +37,7 @@ class DocumentWirer
                 'interfaces' => $value->getInterfaces(),
                 'possibleTypes' => $value->getPossibleTypes(),
                 'enumValues' => $value->getEnumValues(),
-//                'ofType' => $value->getOfType(),
+                'ofType' => $value->getOfType(),
             ];
         }));
 

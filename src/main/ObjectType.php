@@ -30,6 +30,7 @@ class ObjectType implements Type
 
     public function getOfType(): ?Type
     {
+        return null;
     }
 
     public function resolve(Node $node, $parent, $value)
