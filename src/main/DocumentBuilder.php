@@ -15,6 +15,8 @@ class DocumentBuilder
 
     private $document;
 
+    private $parsed;
+
     public function __construct()
     {
         $this->document = new Document();
@@ -137,9 +139,18 @@ class DocumentBuilder
         return $this->document;
     }
 
+    public function parse()
+    {
+        if (!$this->parsed) {
+            $this->parsed = json_decode(json_encode(Parser::parse($this->source)->toArray(true)));
+        }
+
+        return $this->parsed;
+    }
+
     public function buildOperations()
     {
-        $document = json_decode(json_encode(Parser::parse($this->source)->toArray(true)));
+        $document = $this->parse();
 
         $kinds = [
             NodeKind::VARIABLE_DEFINITION,
@@ -160,7 +171,7 @@ class DocumentBuilder
 
     public function buildSchema()
     {
-        $document = json_decode(json_encode(Parser::parse($this->source)->toArray(true)));
+        $parsed = $this->parse();
 
         $kinds = [
             NodeKind::SCALAR_TYPE_DEFINITION,
@@ -171,13 +182,13 @@ class DocumentBuilder
             NodeKind::UNION_TYPE_DEFINITION,
         ];
 
-        $nodes = $this->kinds($document, ...$kinds);
+        $nodes = $this->kinds($parsed, ...$kinds);
 
         foreach ($nodes as $node) {
             $this->make($node);
         }
 
-        foreach ($this->kinds($document, ...$kinds) as $node) {
+        foreach ($this->kinds($parsed, ...$kinds) as $node) {
             $this->buildNode($node);
         }
 
@@ -185,7 +196,7 @@ class DocumentBuilder
             NodeKind::SCHEMA_DEFINITION,
         ];
 
-        $nodes = $this->kinds($document, ...$kinds);
+        $nodes = $this->kinds($parsed, ...$kinds);
 
         foreach ($nodes as $node) {
             $this->buildNode($node);
