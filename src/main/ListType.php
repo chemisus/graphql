@@ -9,7 +9,7 @@ class ListType implements Type
 
     public function getKind(): string
     {
-        return 'LIST';
+        return Type::KIND_LIST;
     }
 
     public function getName(): ?string

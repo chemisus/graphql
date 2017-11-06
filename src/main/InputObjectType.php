@@ -12,7 +12,7 @@ class InputObjectType implements Type
 
     public function getKind(): string
     {
-        return 'INPUT_OBJECT';
+        return Type::KIND_INPUT_OBJECT;
     }
 
     public function getField(string $name): Field

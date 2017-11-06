@@ -11,7 +11,7 @@ class NonNullType implements Type
 
     public function getKind(): string
     {
-        return 'NON_NULL';
+        return Type::KIND_NON_NULL;
     }
 
     public function getName(): ?string

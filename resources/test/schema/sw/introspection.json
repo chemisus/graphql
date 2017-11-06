@@ -9,7 +9,10 @@
   },
   "String": {
     "name": "String",
-    "kind": "SCALAR",
-    "fields": null
+    "kind": "SCALAR"
+  },
+  "__Type": {
+    "name": "__Type",
+    "kind": "OBJECT"
   }
 }

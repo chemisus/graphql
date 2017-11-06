@@ -13,7 +13,7 @@ class ObjectType implements Type
 
     public function getKind(): string
     {
-        return 'OBJECT';
+        return Type::KIND_OBJECT;
     }
 
     public function resolve(Node $node, $parent, $value)

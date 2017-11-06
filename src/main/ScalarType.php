@@ -12,7 +12,7 @@ class ScalarType implements Type
 
     public function getKind(): string
     {
-        return 'SCALAR';
+        return Type::KIND_SCALAR;
     }
 
     public function resolve(Node $node, $parent, $value)

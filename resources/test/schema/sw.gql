@@ -46,6 +46,7 @@ type __Field {
     description: String
     args: [__InputValue!]!
     type: __Type!
+    typeName: String!
     isDeprecated: Boolean!
     deprecationReason: String
 }

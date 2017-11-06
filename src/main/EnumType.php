@@ -13,7 +13,7 @@ class EnumType implements Type
 
     public function getKind(): string
     {
-        return 'ENUM';
+        return Type::KIND_ENUM;
     }
 
     public function resolve(Node $node, $parent, $value)

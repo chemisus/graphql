@@ -14,7 +14,7 @@ class InterfaceType implements Type
 
     public function getKind(): string
     {
-        return 'INTERFACE';
+        return Type::KIND_INTERFACE;
     }
 
     public function getField(string $name): Field
