@@ -5,14 +5,14 @@ namespace Chemisus\GraphQL;
 trait ValuesTrait
 {
     /**
-     * @var string
+     * @var EnumValue[]
      */
     private $values;
 
     /**
-     * @return string
+     * @return EnumValue[]
      */
-    public function getValues(): string
+    public function getValues(): ?array
     {
         return $this->values;
     }

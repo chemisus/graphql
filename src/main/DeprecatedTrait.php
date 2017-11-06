@@ -7,7 +7,7 @@ trait DeprecatedTrait
     /**
      * @var string
      */
-    private $isDeprecated;
+    private $isDeprecated = false;
 
     /**
      * @var string
@@ -23,10 +23,10 @@ trait DeprecatedTrait
     }
 
     /**
-     * @param string|null $isDeprecated
+     * @param bool $isDeprecated
      * @return self
      */
-    public function setIsDeprecated(?string $isDeprecated): self
+    public function setIsDeprecated(bool $isDeprecated): self
     {
         $this->isDeprecated = $isDeprecated;
         return $this;

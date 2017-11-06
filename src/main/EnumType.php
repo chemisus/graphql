@@ -30,6 +30,7 @@ class EnumType implements Type
 
     public function getEnumValues()
     {
+        return $this->getValues();
     }
 
     public function getOfType(): ?Type

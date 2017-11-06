@@ -6,6 +6,9 @@
     __TypeKind:__type(name:"__TypeKind") {
         name:fullName
         kind
+        enumValues {
+            name
+        }
     }
     String:__type(name:"String") {
         name:fullName

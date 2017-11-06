@@ -5,7 +5,33 @@
   },
   "__TypeKind": {
     "name": "__TypeKind",
-    "kind": "ENUM"
+    "kind": "ENUM",
+    "enumValues": [
+      {
+        "name": "SCALAR"
+      },
+      {
+        "name": "OBJECT"
+      },
+      {
+        "name": "INTERFACE"
+      },
+      {
+        "name": "UNION"
+      },
+      {
+        "name": "ENUM"
+      },
+      {
+        "name": "INPUT_OBJECT"
+      },
+      {
+        "name": "LIST"
+      },
+      {
+        "name": "NON_NULL"
+      }
+    ]
   },
   "String": {
     "name": "String",

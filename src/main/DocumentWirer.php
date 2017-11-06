@@ -9,10 +9,13 @@ class DocumentWirer
 {
     public function wire(Document $document)
     {
+        $document->resolver('Query', '__schema', new CallbackResolver(function (Node $node) use ($document) {
+            return $document->getSchema();
+        }));
+
         $document->resolver('Query', '__type', new CallbackResolver(function (Node $node) use ($document) {
             return $document->getType($node->getSelection()->getArguments()['name']);
         }));
-
 
 // type __Schema {
 //     types: [__Type!]!
@@ -99,6 +102,11 @@ class DocumentWirer
 //
         $document->coercer('__InputValue', new CallbackCoercer(function (Node $node, InputValue $value) {
             return (object) [
+                'name' => $value->getName(),
+                'description' => $value->getDescription(),
+                'type' => $value->getType(),
+//                'typeName' => $value->getTypeName(),
+                'defaultValue' => $value->getDefaultValue(),
             ];
         }));
 
@@ -125,6 +133,10 @@ class DocumentWirer
 // }
         $document->coercer('__Directive', new CallbackCoercer(function (Node $node, $value) {
             return (object) [
+//                'name' => $value->getName(),
+//                'description' => $value->getDescription(),
+//                'isDeprecated' => $value->isDeprecated(),
+//                'deprecationReason' => $value->getDeprecationReason(),
             ];
         }));
     }
