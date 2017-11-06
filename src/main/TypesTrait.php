@@ -5,14 +5,14 @@ namespace Chemisus\GraphQL;
 trait TypesTrait
 {
     /**
-     * @var string
+     * @var array
      */
     private $types;
 
     /**
-     * @return string
+     * @return array
      */
-    public function getTypes(): string
+    public function getTypes(): ?array
     {
         return $this->types;
     }

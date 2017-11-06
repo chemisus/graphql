@@ -13,6 +13,27 @@ class DocumentExecutor
      */
     private $loop;
 
+    public function execute(Document $document, string $operation = 'Query')
+    {
+        /**
+         * @var Node[] $roots
+         * @var PromiseInterface[] $fetchers
+         */
+        $roots = $this->makeRootNodes($document, $document->getOperation($operation), $document->getSchema()->getOperation($document->getOperation($operation)->getOperation()));
+
+        $value = [];
+
+        $this->fetch($document, $roots)->then(function () use (&$value, $roots) {
+            foreach ($roots as $root) {
+                $value[$root->getSelection()->getAlias()] = $root->resolve(null, null);
+            }
+        });
+
+        $this->loop->run();
+
+        return (object) $value;
+    }
+
     public function __construct(LoopInterface $loop = null)
     {
         $this->loop = $loop ?? \React\EventLoop\Factory::create();
@@ -34,27 +55,6 @@ class DocumentExecutor
     public function makeChildNode(Document $document, FieldSelection $field, Node $parent)
     {
         return new Node($document->getSchema(), $parent->getField()->getType()->getField($field->getName()), $field, $parent);
-    }
-
-    public function execute(Document $document, string $operation = 'Query')
-    {
-        /**
-         * @var Node[] $roots
-         * @var PromiseInterface[] $fetchers
-         */
-        $roots = $this->makeRootNodes($document, $document->getOperation($operation), $document->getSchema()->getOperation($document->getOperation($operation)->getOperation()));
-
-        $value = [];
-
-        $this->fetch($document, $roots)->then(function () use (&$value, $roots) {
-            foreach ($roots as $root) {
-                $value[$root->getSelection()->getAlias()] = $root->resolve(null, null);
-            }
-        });
-
-        $this->loop->run();
-
-        return (object) $value;
     }
 
     /**

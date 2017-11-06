@@ -5,14 +5,14 @@ namespace Chemisus\GraphQL;
 trait InterfacesTrait
 {
     /**
-     * @var string
+     * @var InterfaceType[]
      */
     private $interfaces;
 
     /**
-     * @return string
+     * @return InterfaceType[]
      */
-    public function getInterfaces(): string
+    public function getInterfaces(): ?array
     {
         return $this->interfaces;
     }

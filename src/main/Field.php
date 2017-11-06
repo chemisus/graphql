@@ -11,6 +11,7 @@ class Field implements Fetcher, Resolver
     use ArgumentsTrait;
     use FetcherTrait;
     use ResolverTrait;
+    use DeprecatedTrait;
 
     public function fetch(Node $node, $parents)
     {
