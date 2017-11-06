@@ -11,7 +11,7 @@ class OperationBuilder implements Factory, Builder
         /**
          * @var OperationDefinitionNode $node
          */
-        $document->operations[$builder->buildNode($node->name) ?? 'Query'] = new Operation();
+        $document->setOperation($builder->buildNode($node->name) ?? 'Query', new Operation());
     }
 
     public function build(DocumentBuilder $builder, Document $document, $node)
@@ -21,7 +21,7 @@ class OperationBuilder implements Factory, Builder
          * @var Operation $built
          */
         $name = $builder->buildNode($node->name) ?? 'Query';
-        $built = $document->operations[$name];
+        $built = $document->getOperation($name);
         $built->setName($name);
         $built->setDirectives($builder->buildNodes($node->directives));
         $built->setOperation($node->operation);

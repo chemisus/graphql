@@ -11,7 +11,7 @@ class SchemaBuilder implements Builder
         /**
          * @var SchemaDefinitionNode $node
          */
-        $document->schema = $built = new Schema();
+        $built = $document->getSchema();
         $built->setOperationTypes($builder->buildNodes($node->operationTypes));
         return $built;
     }

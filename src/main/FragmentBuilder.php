@@ -11,7 +11,7 @@ class FragmentBuilder implements Factory, Builder
         /**
          * @var FragmentDefinitionNode $node
          */
-        $document->fragments[$builder->buildNode($node->name)] = new Fragment();
+        $document->setFragment($builder->buildNode($node->name), new Fragment());
     }
 
     public function build(DocumentBuilder $builder, Document $document, $node)
@@ -21,7 +21,7 @@ class FragmentBuilder implements Factory, Builder
          * @var Fragment $built
          */
         $name = $builder->buildNode($node->name);
-        $built = $document->fragments[$name];
+        $built = $document->getFragment($name);
         $built->setName($name);
         $built->setDirectives($builder->buildNodes($node->directives));
         $built->setSelectionSet($builder->buildNode($node->selectionSet));

@@ -7,7 +7,7 @@ class DocumentWirer
     public function wire(Document $document)
     {
         $document->resolver('Query', '__type', new CallbackResolver(function (Node $node) use ($document) {
-            return $document->types[$node->getSelection()->getArguments()['name']];
+            return $document->getType($node->getSelection()->getArguments()['name']);
         }));
 
         $document->coercer('__Schema', new CallbackCoercer(function (Node $node, Schema $value) {

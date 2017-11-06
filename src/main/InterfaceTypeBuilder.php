@@ -11,7 +11,7 @@ class InterfaceTypeBuilder implements Factory, Builder
         /**
          * @var InterfaceTypeDefinitionNode $node
          */
-        $document->types[$builder->buildNode($node->name)] = new InterfaceType();
+        $document->setType($builder->buildNode($node->name), new InterfaceType());
     }
 
     public function build(DocumentBuilder $builder, Document $document, $node)
@@ -21,7 +21,7 @@ class InterfaceTypeBuilder implements Factory, Builder
          * @var InterfaceType $built
          */
         $name = $builder->buildNode($node->name);
-        $built = $document->types[$name];
+        $built = $document->getType($name);
         $built->setName($name);
         $built->setDescription($node->description);
         $built->setDirectives($builder->buildNodes($node->directives));

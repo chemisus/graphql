@@ -11,7 +11,7 @@ class ObjectTypeBuilder implements Factory, Builder
         /**
          * @var ObjectTypeDefinitionNode $node
          */
-        $document->types[$builder->buildNode($node->name)] = new ObjectType();
+        $document->setType($builder->buildNode($node->name), new ObjectType());
     }
 
     public function build(DocumentBuilder $builder, Document $document, $node)
@@ -21,7 +21,7 @@ class ObjectTypeBuilder implements Factory, Builder
          * @var ObjectType $built
          */
         $name = $builder->buildNode($node->name);
-        $built = $document->types[$name];
+        $built = $document->getType($name);
         $built->setName($name);
         $built->setDescription($node->description);
         $built->setDirectives($builder->buildNodes($node->directives));

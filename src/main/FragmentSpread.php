@@ -32,7 +32,7 @@ class FragmentSpread implements Selection
 
     public function getFragment(): Fragment
     {
-        return $this->getDocument()->fragments[$this->getName()];
+        return $this->getDocument()->getFragment($this->getName());
     }
 
     public function flatten(?Type $on = null)

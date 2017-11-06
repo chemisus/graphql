@@ -11,7 +11,7 @@ class InputObjectTypeBuilder implements Factory, Builder
         /**
          * @var InputObjectTypeDefinitionNode $node
          */
-        $document->types[$builder->buildNode($node->name)] = new InputObjectType();
+        $document->setType($builder->buildNode($node->name), new InputObjectType());
     }
 
     public function build(DocumentBuilder $builder, Document $document, $node)
@@ -21,7 +21,7 @@ class InputObjectTypeBuilder implements Factory, Builder
          * @var InputObjectType $built
          */
         $name = $builder->buildNode($node->name);
-        $built = $document->types[$name];
+        $built = $document->getType($name);
         $built->setName($name);
         $built->setDescription($node->description);
         $built->setDirectives($builder->buildNodes($node->directives));

@@ -10,10 +10,10 @@ class NamedTypeBuilder implements Builder
     {
         $name = $builder->buildNode($node->name);
 
-        if (!array_key_exists($builder->buildNode($node->name), $document->types)) {
+        if (!$document->hasType($name)) {
             throw new Exception(sprintf("type %s is undefined.", $name));
         }
 
-        return $document->types[$name];
+        return $document->getType($name);
     }
 }

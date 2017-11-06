@@ -28,12 +28,12 @@ class DocumentExecutor
 
     public function makeRootNode(Document $document, Field $field, FieldSelection $selection)
     {
-        return new Node($document->schema, $field, $selection);
+        return new Node($document->getSchema(), $field, $selection);
     }
 
     public function makeChildNode(Document $document, FieldSelection $field, Node $parent)
     {
-        return new Node($document->schema, $parent->getField()->getType()->getField($field->getName()), $field, $parent);
+        return new Node($document->getSchema(), $parent->getField()->getType()->getField($field->getName()), $field, $parent);
     }
 
     public function execute(Document $document, string $operation = 'Query')
@@ -42,7 +42,7 @@ class DocumentExecutor
          * @var Node[] $roots
          * @var PromiseInterface[] $fetchers
          */
-        $roots = $this->makeRootNodes($document, $document->operations[$operation], $document->schema->getOperation($document->operations[$operation]->getOperation()));
+        $roots = $this->makeRootNodes($document, $document->getOperation($operation), $document->getSchema()->getOperation($document->getOperation($operation)->getOperation()));
 
         $value = [];
 
@@ -51,8 +51,6 @@ class DocumentExecutor
                 $value[$root->getSelection()->getAlias()] = $root->resolve(null, null);
             }
         });
-
-        $root = $roots[0];
 
         $this->loop->run();
 

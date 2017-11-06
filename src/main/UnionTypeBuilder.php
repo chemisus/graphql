@@ -11,7 +11,7 @@ class UnionTypeBuilder implements Factory, Builder
         /**
          * @var UnionTypeDefinitionNode $node
          */
-        $document->types[$builder->buildNode($node->name)] = new UnionType();
+        $document->setType($builder->buildNode($node->name), new UnionType());
     }
 
     public function build(DocumentBuilder $builder, Document $document, $node)
@@ -21,7 +21,7 @@ class UnionTypeBuilder implements Factory, Builder
          * @var UnionType $built
          */
         $name = $builder->buildNode($node->name);
-        $built = $document->types[$name];
+        $built = $document->getType($name);
         $built->setName($name);
         $built->setDescription($node->description);
         $built->setDirectives($builder->buildNodes($node->directives));

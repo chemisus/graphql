@@ -9,11 +9,11 @@ trait FieldsTrait
     /**
      * @var Field[]
      */
-    private $fields = [];
+    private $fields;
 
     public function getField(string $name): Field
     {
-        if (!array_key_exists($name, $this->fields)) {
+        if (!is_array($this->fields) || !array_key_exists($name, $this->fields)) {
             throw new Exception(sprintf("field %s.%s is undefined.", $this->getName(), $name));
         }
 

@@ -10,7 +10,7 @@
     String:__type(name:"String") {
         name:fullName
         kind
-#        fields
+        fields
     }
     __Type:__type(name:"__Type") {
         name:fullName

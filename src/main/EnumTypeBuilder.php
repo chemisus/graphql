@@ -11,7 +11,7 @@ class EnumTypeBuilder implements Factory, Builder
         /**
          * @var EnumTypeDefinitionNode $node
          */
-        $document->types[$builder->buildNode($node->name)] = new EnumType();
+        $document->setType($builder->buildNode($node->name), new EnumType());
     }
 
     public function build(DocumentBuilder $builder, Document $document, $node)
@@ -21,7 +21,7 @@ class EnumTypeBuilder implements Factory, Builder
          * @var EnumType $built
          */
         $name = $builder->buildNode($node->name);
-        $built = $document->types[$name];
+        $built = $document->getType($name);
         $built->setName($name);
         $built->setDescription($node->description);
         $built->setDirectives($builder->buildNodes($node->directives));
