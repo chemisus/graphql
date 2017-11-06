@@ -143,8 +143,14 @@ class DocumentBuilder
 
     public function build()
     {
+        $this->parse();
         $this->buildSchema();
         $this->buildOperations();
+        return $this->document;
+    }
+
+    public function document()
+    {
         return $this->document;
     }
 

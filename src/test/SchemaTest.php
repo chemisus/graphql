@@ -110,37 +110,69 @@ class SchemaTest extends TestCase
      */
     public function testQuery(string $schemaName, string $schemaSource, string $querySource, $result)
     {
-        $start = microtime(true);
+        echo PHP_EOL;
 
-        $builder = new DocumentBuilder();
-        $executor = new DocumentExecutor();
-        $wirer = new DocumentWirer();
+        $actual = $this->benchmark('total', function () use ($schemaName, $schemaSource, $querySource) {
+            $builder = $this->benchmark('init builder', function () {
+                return new DocumentBuilder();
+            });
 
-        $instance = microtime(true);
-        $builder->load($querySource);
-        $loadQuery = microtime(true);
-        $builder->load($schemaSource);
-        $loadSchema = microtime(true);
-        $document = $builder->build();
-        $build = microtime(true);
-        $wirer->wire($document);
-        $this->wire($schemaName, $document);
-        $wire = microtime(true);
+            $executor = $this->benchmark('init executor', function () {
+                return new DocumentExecutor();
+            });
 
-        $actual = json_encode($executor->execute($document));
-        $execute = microtime(true);
+            $wirer = $this->benchmark('init wirer', function () {
+                return new DocumentWirer();
+            });
 
-        $end = microtime(true);
+            $this->benchmark('load query', function () use (&$builder, $querySource) {
+                $builder->load($querySource);
+            });
 
-//        printf("%2\$0.6f %1\$s\n", 'instance', $instance - $start);
-//        printf("%2\$0.6f %1\$s\n", 'load query', $loadQuery - $instance);
-//        printf("%2\$0.6f %1\$s\n", 'load schema', $loadSchema - $loadQuery);
-//        printf("%2\$0.6f %1\$s\n", 'build', $build - $loadSchema);
-//        printf("%2\$0.6f %1\$s\n", 'wire', $wire - $build);
-//        printf("%2\$0.6f %1\$s\n", 'execute', $execute - $wire);
-//        printf("%2\$0.6f %1\$s\n", 'total', $end - $start);
+            $this->benchmark('load schema', function () use (&$builder, $schemaSource) {
+                $builder->load($schemaSource);
+            });
+
+            $this->benchmark('parse', function () use (&$builder) {
+                $builder->parse();
+            });
+
+            $this->benchmark('build schema', function () use (&$builder) {
+                $builder->buildSchema();
+
+            });
+
+            $this->benchmark('build operations', function () use (&$builder) {
+                $builder->buildOperations();
+            });
+
+            $document = $this->benchmark('document', function () use (&$builder) {
+                return $builder->document();
+            });
+
+            $this->benchmark('wire introspection', function () use (&$wirer, &$document) {
+                $wirer->wire($document);
+            });
+
+            $this->benchmark('wire schema', function () use (&$schemaName, &$document) {
+                $this->wire($schemaName, $document);
+            });
+
+            return $this->benchmark('execute', function () use (&$executor, &$document) {
+                return json_encode($executor->execute($document));
+            });
+        });
 
         $expect = $result;
         $this->assertEquals($expect, $actual);
+    }
+
+    public function benchmark($label, callable $callback)
+    {
+        $start = microtime(true);
+        $result = call_user_func($callback);
+        $end = microtime(true);
+        printf("%2\$10.6f %1\$s\n", $label, $end - $start);
+        return $result;
     }
 }
