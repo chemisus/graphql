@@ -13,7 +13,7 @@ class FieldSelectionBuilder implements Builder
          */
         $field = new FieldSelection();
         $field->setName($builder->buildNode($node->name));
-        $field->setDirectives($node->directives);
+        $field->setDirectives($builder->buildNodes($node->directives));
         $field->setSelectionSet($builder->buildNode($node->selectionSet));
         $field->setArguments(array_merge([], ...$builder->buildNodes($node->arguments)));
         $field->setAlias($builder->buildNode($node->alias));

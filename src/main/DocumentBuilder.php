@@ -121,9 +121,18 @@ class DocumentBuilder
         return call_user_func($builder, $node);
     }
 
+    public function toArray($nodes)
+    {
+        $array = [];
+        foreach ($nodes as $node) {
+            $array[] = $node;
+        }
+        return $array;
+    }
+
     public function buildNodes($nodes)
     {
-        return array_map([$this, 'buildNode'], $nodes);
+        return array_map([$this, 'buildNode'], $this->toArray($nodes));
     }
 
     public function load($source)
@@ -142,7 +151,7 @@ class DocumentBuilder
     public function parse()
     {
         if (!$this->parsed) {
-            $this->parsed = json_decode(json_encode(Parser::parse($this->source)->toArray(true)));
+            $this->parsed = Parser::parse($this->source);
         }
 
         return $this->parsed;
@@ -206,7 +215,7 @@ class DocumentBuilder
     private function kinds($document, ...$kinds)
     {
         return array_merge([], ...array_map(function ($kind) use ($document) {
-            return array_filter($document->definitions, function ($definition) use ($kind) {
+            return array_filter($this->toArray($document->definitions), function ($definition) use ($kind) {
                 return $definition->kind === $kind;
             });
         }, $kinds));

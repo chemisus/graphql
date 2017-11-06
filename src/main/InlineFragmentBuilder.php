@@ -14,7 +14,7 @@ class InlineFragmentBuilder implements Builder
         $built = new InlineFragment();
         $built->setTypeCondition($builder->buildNode($node->typeCondition));
         $built->setSelectionSet($builder->buildNode($node->selectionSet));
-        $built->setDirectives($node->directives);
+        $built->setDirectives($builder->buildNodes($node->directives));
         return $built;
     }
 }

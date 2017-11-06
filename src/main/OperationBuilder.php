@@ -23,7 +23,7 @@ class OperationBuilder implements Factory, Builder
         $name = $builder->buildNode($node->name) ?? 'Query';
         $operation = $document->operations[$name];
         $operation->setName($name);
-        $operation->setDirectives($node->directives);
+        $operation->setDirectives($builder->buildNodes($node->directives));
         $operation->setOperation($node->operation);
         $operation->setSelectionSet($builder->buildNode($node->selectionSet));
         $node->variableDefinitions;

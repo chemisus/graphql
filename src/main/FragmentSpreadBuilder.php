@@ -13,7 +13,7 @@ class FragmentSpreadBuilder implements Builder
          */
         $built = new FragmentSpread();
         $built->setName($builder->buildNode($node->name));
-        $built->setDirectives($node->directives);
+        $built->setDirectives($builder->buildNodes($node->directives));
         $built->setDocument($document);
         return $built;
     }

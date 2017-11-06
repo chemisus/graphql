@@ -22,7 +22,7 @@ class FragmentBuilder implements Factory, Builder
          */
         $fragment = $document->fragments[$builder->buildNode($node->name)];
         $fragment->setName($builder->buildNode($node->name));
-        $fragment->setDirectives($node->directives);
+        $fragment->setDirectives($builder->buildNodes($node->directives));
         $fragment->setSelectionSet($builder->buildNode($node->selectionSet));
         $fragment->setTypeCondition($builder->buildNode($node->typeCondition));
         return $fragment;
