@@ -18,13 +18,14 @@ class InputObjectTypeBuilder implements Factory, Builder
     {
         /**
          * @var InputObjectTypeDefinitionNode $node
-         * @var InputObjectType $type
+         * @var InputObjectType $built
          */
-        $type = $document->types[$builder->buildNode($node->name)];
-        $type->setName($builder->buildNode($node->name));
-        $type->setDescription($node->description);
-        $type->setDirectives($builder->buildNodes($node->directives));
-        $type->setFields($builder->buildNodes($node->fields));
-        return $type;
+        $name = $builder->buildNode($node->name);
+        $built = $document->types[$name];
+        $built->setName($name);
+        $built->setDescription($node->description);
+        $built->setDirectives($builder->buildNodes($node->directives));
+        $built->setFields($builder->buildNodes($node->fields));
+        return $built;
     }
 }

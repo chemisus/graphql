@@ -2,6 +2,8 @@
 
 namespace Chemisus\GraphQL;
 
+use GraphQL\Language\AST\ScalarTypeDefinitionNode;
+
 class ScalarTypeBuilder implements Factory, Builder
 {
     public function make(DocumentBuilder $builder, Document $document, $node)
@@ -12,12 +14,14 @@ class ScalarTypeBuilder implements Factory, Builder
     public function build(DocumentBuilder $builder, Document $document, $node)
     {
         /**
-         * @var ScalarType $type
+         * @var ScalarTypeDefinitionNode $node
+         * @var ScalarType $built
          */
-        $type = $document->types[$builder->buildNode($node->name)];
-        $type->setName($builder->buildNode($node->name));
-        $type->setDescription($node->description);
-        $type->setDirectives($builder->buildNodes($node->directives));
-        return $type;
+        $name = $builder->buildNode($node->name);
+        $built = $document->types[$name];
+        $built->setName($name);
+        $built->setDescription($node->description);
+        $built->setDirectives($builder->buildNodes($node->directives));
+        return $built;
     }
 }

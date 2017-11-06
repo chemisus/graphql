@@ -18,14 +18,15 @@ class ObjectTypeBuilder implements Factory, Builder
     {
         /**
          * @var ObjectTypeDefinitionNode $node
-         * @var ObjectType $type
+         * @var ObjectType $built
          */
-        $type = $document->types[$builder->buildNode($node->name)];
-        $type->setName($builder->buildNode($node->name));
-        $type->setDescription($node->description);
-        $type->setDirectives($builder->buildNodes($node->directives));
-        $type->setInterfaces($builder->buildNodes($node->interfaces));
-        $type->setFields($builder->buildNodes($node->fields));
-        return $type;
+        $name = $builder->buildNode($node->name);
+        $built = $document->types[$name];
+        $built->setName($name);
+        $built->setDescription($node->description);
+        $built->setDirectives($builder->buildNodes($node->directives));
+        $built->setInterfaces($builder->buildNodes($node->interfaces));
+        $built->setFields($builder->buildNodes($node->fields));
+        return $built;
     }
 }

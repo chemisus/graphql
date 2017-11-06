@@ -18,13 +18,14 @@ class EnumTypeBuilder implements Factory, Builder
     {
         /**
          * @var EnumTypeDefinitionNode $node
-         * @var EnumType $type
+         * @var EnumType $built
          */
-        $type = $document->types[$builder->buildNode($node->name)];
-        $type->setName($builder->buildNode($node->name));
-        $type->setDescription($node->description);
-        $type->setDirectives($builder->buildNodes($node->directives));
-        $type->setValues($builder->buildNodes($node->values));
-        return $type;
+        $name = $builder->buildNode($node->name);
+        $built = $document->types[$name];
+        $built->setName($name);
+        $built->setDescription($node->description);
+        $built->setDirectives($builder->buildNodes($node->directives));
+        $built->setValues($builder->buildNodes($node->values));
+        return $built;
     }
 }

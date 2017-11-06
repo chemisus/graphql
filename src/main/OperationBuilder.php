@@ -18,15 +18,15 @@ class OperationBuilder implements Factory, Builder
     {
         /**
          * @var OperationDefinitionNode $node
-         * @var Operation $operation
+         * @var Operation $built
          */
         $name = $builder->buildNode($node->name) ?? 'Query';
-        $operation = $document->operations[$name];
-        $operation->setName($name);
-        $operation->setDirectives($builder->buildNodes($node->directives));
-        $operation->setOperation($node->operation);
-        $operation->setSelectionSet($builder->buildNode($node->selectionSet));
+        $built = $document->operations[$name];
+        $built->setName($name);
+        $built->setDirectives($builder->buildNodes($node->directives));
+        $built->setOperation($node->operation);
+        $built->setSelectionSet($builder->buildNode($node->selectionSet));
         $node->variableDefinitions;
-        return $operation;
+        return $built;
     }
 }

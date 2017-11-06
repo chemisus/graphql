@@ -18,13 +18,14 @@ class FragmentBuilder implements Factory, Builder
     {
         /**
          * @var FragmentDefinitionNode $node
-         * @var Fragment $fragment
+         * @var Fragment $built
          */
-        $fragment = $document->fragments[$builder->buildNode($node->name)];
-        $fragment->setName($builder->buildNode($node->name));
-        $fragment->setDirectives($builder->buildNodes($node->directives));
-        $fragment->setSelectionSet($builder->buildNode($node->selectionSet));
-        $fragment->setTypeCondition($builder->buildNode($node->typeCondition));
-        return $fragment;
+        $name = $builder->buildNode($node->name);
+        $built = $document->fragments[$name];
+        $built->setName($name);
+        $built->setDirectives($builder->buildNodes($node->directives));
+        $built->setSelectionSet($builder->buildNode($node->selectionSet));
+        $built->setTypeCondition($builder->buildNode($node->typeCondition));
+        return $built;
     }
 }
