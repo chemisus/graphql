@@ -48,7 +48,14 @@ class SchemaTest extends TestCase
             return $document->types[$node->getSelection()->getArguments()['name']];
         }));
 
-        $document->coercer('__Schema', new CallbackCoercer(function (Node $node, $value) {
+        $document->coercer('__Schema', new CallbackCoercer(function (Node $node, Schema $value) {
+            return (object)[
+                'types' => [],
+                'queryType' => $value->getQuery(),
+                'mutationType' => $value->getMutation(),
+                'subscriptionType' => null,
+                'directives' => null,
+            ];
         }));
 
         $document->coercer('__Type', new CallbackCoercer(function (Node $node, Type $value) {
@@ -56,6 +63,18 @@ class SchemaTest extends TestCase
                 'kind' => $value->getKind(),
                 'name' => $value->getName(),
                 'description' => $value->getDescription(),
+                'fields' => $value->getFields(),
+            ];
+        }));
+
+        $document->coercer('__Field', new CallbackCoercer(function (Node $node, Field $value) {
+            return (object)[
+                'name' => $value->getName(),
+                'description' => $value->getDescription(),
+                'type' => $value->getType(),
+                'typeName' => $value->getTypeName(),
+                'arguments' => $value->getArguments(),
+                'directives' => $value->getDirectives(),
             ];
         }));
 

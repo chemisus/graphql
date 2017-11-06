@@ -30,4 +30,6 @@ interface Type
     public function coerce(Node $node, $value);
 
     public function resolve(Node $node, $parent, $value);
+
+    public function getFullName(): string;
 }

@@ -2,5 +2,9 @@
     __type(name:"__Schema") {
         name
         kind
+        description
+        fields {
+            name
+        }
     }
 }

@@ -18,6 +18,14 @@ trait NameTrait
     }
 
     /**
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return $this->getName();
+    }
+
+    /**
      * @param string|null $name
      * @return self
      */

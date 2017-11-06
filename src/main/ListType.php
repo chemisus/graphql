@@ -17,6 +17,11 @@ class ListType implements Type
         return null;
     }
 
+    public function getFullName(): string
+    {
+        return sprintf("[%s]", $this->getType()->getFullName());
+    }
+
     public function getDescription(): ?string
     {
         return null;

@@ -22,4 +22,9 @@ class Field implements Fetcher, Resolver
         $value = $this->resolver ? $this->resolver->resolve($node, $parent, $value) : $value;
         return $this->getType()->resolve($node, $parent, $value);
     }
+
+    public function getTypeName()
+    {
+        return $this->getType()->getFullName();
+    }
 }
