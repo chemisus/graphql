@@ -15,8 +15,9 @@
     __Type:__type(name:"__Type") {
         name:fullName
         kind
-#        fields {
-#            name
-#        }
+        fields {
+            name
+            typeName
+        }
     }
 }

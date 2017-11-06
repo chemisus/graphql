@@ -14,6 +14,48 @@
   },
   "__Type": {
     "name": "__Type",
-    "kind": "OBJECT"
+    "kind": "OBJECT",
+    "fields": {
+      "kind": {
+        "name": "kind",
+        "typeName": "__TypeKind!"
+      },
+      "fullName": {
+        "name": "fullName",
+        "typeName": "String!"
+      },
+      "name": {
+        "name": "name",
+        "typeName": "String"
+      },
+      "description": {
+        "name": "description",
+        "typeName": "String"
+      },
+      "fields": {
+        "name": "fields",
+        "typeName": "[__Field!]"
+      },
+      "interfaces": {
+        "name": "interfaces",
+        "typeName": "[__Type!]"
+      },
+      "possibleTypes": {
+        "name": "possibleTypes",
+        "typeName": "[__Type!]"
+      },
+      "enumValues": {
+        "name": "enumValues",
+        "typeName": "[__EnumValue!]"
+      },
+      "inputFields": {
+        "name": "inputFields",
+        "typeName": "[__InputValue!]"
+      },
+      "ofType": {
+        "name": "ofType",
+        "typeName": "__Type"
+      }
+    }
   }
 }

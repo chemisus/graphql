@@ -33,11 +33,11 @@ class DocumentWirer
         $document->coercer('__Field', new CallbackCoercer(function (Node $node, Field $value) {
             return (object) [
                 'name' => $value->getName(),
-                'description' => $value->getDescription(),
-                'type' => $value->getType(),
+//                'description' => $value->getDescription(),
+//                'type' => $value->getType(),
                 'typeName' => $value->getTypeName(),
-                'arguments' => $value->getArguments(),
-                'directives' => $value->getDirectives(),
+//                'arguments' => $value->getArguments(),
+//                'directives' => $value->getDirectives(),
             ];
         }));
     }
