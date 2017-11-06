@@ -2,68 +2,88 @@
   "allPeople": {
     "people": [
       {
-        "name": "Luke Skywalker"
+        "a": "Luke Skywalker",
+        "b": "Luke Skywalker"
       },
       {
-        "name": "C-3PO"
+        "a": "C-3PO",
+        "b": "C-3PO"
       },
       {
-        "name": "R2-D2"
+        "a": "R2-D2",
+        "b": "R2-D2"
       },
       {
-        "name": "Darth Vader"
+        "a": "Darth Vader",
+        "b": "Darth Vader"
       },
       {
-        "name": "Leia Organa"
+        "a": "Leia Organa",
+        "b": "Leia Organa"
       },
       {
-        "name": "Owen Lars"
+        "a": "Owen Lars",
+        "b": "Owen Lars"
       },
       {
-        "name": "Beru Whitesun lars"
+        "a": "Beru Whitesun lars",
+        "b": "Beru Whitesun lars"
       },
       {
-        "name": "R5-D4"
+        "a": "R5-D4",
+        "b": "R5-D4"
       },
       {
-        "name": "Biggs Darklighter"
+        "a": "Biggs Darklighter",
+        "b": "Biggs Darklighter"
       },
       {
-        "name": "Obi-Wan Kenobi"
+        "a": "Obi-Wan Kenobi",
+        "b": "Obi-Wan Kenobi"
       }
     ]
   },
   "allPlanets": {
     "planets": [
       {
-        "name": "Alderaan"
+        "a": "Alderaan",
+        "b": "Alderaan"
       },
       {
-        "name": "Yavin IV"
+        "a": "Yavin IV",
+        "b": "Yavin IV"
       },
       {
-        "name": "Hoth"
+        "a": "Hoth",
+        "b": "Hoth"
       },
       {
-        "name": "Dagobah"
+        "a": "Dagobah",
+        "b": "Dagobah"
       },
       {
-        "name": "Bespin"
+        "a": "Bespin",
+        "b": "Bespin"
       },
       {
-        "name": "Endor"
+        "a": "Endor",
+        "b": "Endor"
       },
       {
-        "name": "Naboo"
+        "a": "Naboo",
+        "b": "Naboo"
       },
       {
-        "name": "Coruscant"
+        "a": "Coruscant",
+        "b": "Coruscant"
       },
       {
-        "name": "Kamino"
+        "a": "Kamino",
+        "b": "Kamino"
       },
       {
-        "name": "Geonosis"
+        "a": "Geonosis",
+        "b": "Geonosis"
       }
     ]
   }

@@ -2,7 +2,7 @@
     allPeople {
         people {
             ... on Person {
-                id
+                a:name
             }
             ... Person
         }
@@ -10,7 +10,7 @@
     allPlanets {
         planets {
             ... on Planet {
-                id
+                a:name
             }
             ... Planet
         }
@@ -18,9 +18,9 @@
 }
 
 fragment Planet on Planet {
-    name
+    b:name
 }
 
 fragment Person on Person {
-    name
+    b:name
 }
