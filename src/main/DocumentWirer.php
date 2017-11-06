@@ -2,9 +2,6 @@
 
 namespace Chemisus\GraphQL;
 
-use GraphQL\Type\Definition\DirectiveLocation;
-use GraphQL\Type\TypeKind;
-
 class DocumentWirer
 {
     public function wire(Document $document)

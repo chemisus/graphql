@@ -108,6 +108,17 @@ class Document
         return $this;
     }
 
+    public function deprecate(string $type, string $name, string $reason)
+    {
+        $type = $this->getType($type);
+
+        if ($type instanceof Field) {
+            $type->getField($name)->setIsDeprecated(true);
+        } else if ($type instanceof EnumType) {
+            $type->getValue($name)->setDeprecationReason($reason);
+        }
+    }
+
     public function coercer(string $type, Coercer $coercer)
     {
         $this->types[$type]->setCoercer($coercer);

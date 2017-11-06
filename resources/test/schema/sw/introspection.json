@@ -6,32 +6,32 @@
   "__TypeKind": {
     "name": "__TypeKind",
     "kind": "ENUM",
-    "enumValues": [
-      {
+    "enumValues": {
+      "SCALAR": {
         "name": "SCALAR"
       },
-      {
+      "OBJECT": {
         "name": "OBJECT"
       },
-      {
+      "INTERFACE": {
         "name": "INTERFACE"
       },
-      {
+      "UNION": {
         "name": "UNION"
       },
-      {
+      "ENUM": {
         "name": "ENUM"
       },
-      {
+      "INPUT_OBJECT": {
         "name": "INPUT_OBJECT"
       },
-      {
+      "LIST": {
         "name": "LIST"
       },
-      {
+      "NON_NULL": {
         "name": "NON_NULL"
       }
-    ]
+    }
   },
   "String": {
     "name": "String",
