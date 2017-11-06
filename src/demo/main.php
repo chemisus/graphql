@@ -2,35 +2,6 @@
 
 namespace Chemisus\GraphQL;
 
-use Chemisus\GraphQL\Http;
-use Exception;
-use GraphQL\Language\AST\ArgumentNode;
-use GraphQL\Language\AST\EnumTypeDefinitionNode;
-use GraphQL\Language\AST\EnumValueDefinitionNode;
-use GraphQL\Language\AST\FieldDefinitionNode;
-use GraphQL\Language\AST\FieldNode;
-use GraphQL\Language\AST\FragmentDefinitionNode;
-use GraphQL\Language\AST\FragmentSpreadNode;
-use GraphQL\Language\AST\InlineFragmentNode;
-use GraphQL\Language\AST\InputObjectTypeDefinitionNode;
-use GraphQL\Language\AST\InputValueDefinitionNode;
-use GraphQL\Language\AST\InterfaceTypeDefinitionNode;
-use GraphQL\Language\AST\ListTypeNode;
-use GraphQL\Language\AST\ListValueNode;
-use GraphQL\Language\AST\NodeKind;
-use GraphQL\Language\AST\NonNullTypeNode;
-use GraphQL\Language\AST\ObjectTypeDefinitionNode;
-use GraphQL\Language\AST\OperationDefinitionNode;
-use GraphQL\Language\AST\OperationTypeDefinitionNode;
-use GraphQL\Language\AST\SchemaDefinitionNode;
-use GraphQL\Language\AST\SelectionSetNode;
-use GraphQL\Language\AST\UnionTypeDefinitionNode;
-use GraphQL\Language\AST\Variable;
-use GraphQL\Language\Parser;
-use React\EventLoop\LoopInterface;
-use React\Promise\PromiseInterface;
-use function React\Promise\all;
-
 error_reporting(E_ALL);
 
 require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';

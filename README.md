@@ -10,3 +10,10 @@ type __Type {
     fullName: String!
 }
 ```
+
+```
+type __Field {
+    # Returns the full name for the type, including lists and non null modifications
+    typeName: String!
+}
+```

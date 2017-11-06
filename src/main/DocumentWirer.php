@@ -11,7 +11,7 @@ class DocumentWirer
         }));
 
         $document->coercer('__Schema', new CallbackCoercer(function (Node $node, Schema $value) {
-            return (object)[
+            return (object) [
                 'types' => [],
                 'queryType' => $value->getQuery(),
                 'mutationType' => $value->getMutation(),
@@ -21,7 +21,7 @@ class DocumentWirer
         }));
 
         $document->coercer('__Type', new CallbackCoercer(function (Node $node, Type $value) {
-            return (object)[
+            return (object) [
                 'kind' => $value->getKind(),
                 'fullName' => $value->getFullName(),
                 'name' => $value->getName(),
@@ -31,7 +31,7 @@ class DocumentWirer
         }));
 
         $document->coercer('__Field', new CallbackCoercer(function (Node $node, Field $value) {
-            return (object)[
+            return (object) [
                 'name' => $value->getName(),
                 'description' => $value->getDescription(),
                 'type' => $value->getType(),
