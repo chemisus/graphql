@@ -17,8 +17,8 @@ class CallbackFetcher implements Fetcher
         $this->callback = $callback;
     }
 
-    public function fetch(Node $node)
+    public function fetch(Node $node, $parents)
     {
-        return call_user_func($this->callback, $node);
+        return call_user_func_array($this->callback, func_get_args());
     }
 }

@@ -2,172 +2,109 @@
 
 namespace Chemisus\GraphQL;
 
-use Chemisus\GraphQL\Types\Field;
-use Chemisus\GraphQL\Types\Schema;
-use React\Promise\ExtendedPromiseInterface;
-use function React\Promise\all;
-
 class Node
 {
-    /**
-     * @var Field
-     */
-    private $field;
-
-    /**
-     * @var Selection
-     */
-    private $query;
-
-    /**
-     * @var mixed[]
-     */
-    public $items;
-
-    /**
-     * @var Node|null
-     */
-    private $parent;
-
-    /**
-     * @var Node[]
-     */
-    private $children;
-
     /**
      * @var Schema
      */
     private $schema;
 
     /**
-     * @var Type[]
+     * @var Field
      */
-    private $types;
+    private $field;
+
+    /**
+     * @var FieldSelection
+     */
+    private $selection;
+
+    /**
+     * @var Node
+     */
+    private $parent;
+
+    /**
+     * @var Node[]
+     */
+    private $children = [];
 
     /**
      * @param Schema $schema
      * @param Field $field
-     * @param Selection $query
-     * @param Node|null $parent
+     * @param FieldSelection $selection
+     * @param Node $parent
      */
-    public function __construct(Schema $schema, Field $field, Selection $query, Node $parent = null)
+    public function __construct(Schema $schema, Field $field, FieldSelection $selection, Node $parent = null)
     {
-        $this->field = $field;
-        $this->query = $query;
-        $this->parent = $parent;
         $this->schema = $schema;
+        $this->field = $field;
+        $this->selection = $selection;
+        $this->parent = $parent;
     }
 
     /**
      * @return Schema
      */
-    public function schema(): Schema
+    public function getSchema(): Schema
     {
         return $this->schema;
     }
 
     /**
-     * @return string
+     * @return Field
      */
-    public function name(): string
+    public function getField(): Field
     {
-        return $this->query->name();
+        return $this->field;
     }
 
     /**
-     * @return string
+     * @return FieldSelection
      */
-    public function alias(): string
+    public function getSelection(): FieldSelection
     {
-        return $this->query->alias();
+        return $this->selection;
     }
 
     /**
-     * @param string $on
-     * @return Node[]
+     * @return Node
      */
-    public function children(string $on = null): array
-    {
-        if ($this->children === null) {
-            $this->children = array_merge([], ...array_map(function (string $type) {
-                return array_map(function (Selection $query) use ($type) {
-                    return new Node($this->schema, $this->schema()->getType($type)->field($query->name()), $query, $this);
-                }, $this->query->fields($type));
-            }, $this->types()));
-        }
-
-        return $on === null ? $this->children : array_filter((array) $this->children, function (Node $child) use ($on) {
-            return $child->field->ownerType()->name() === $on;
-        });
-    }
-
-    /**
-     * @return mixed[]
-     */
-    public function items(): ?array
-    {
-        return $this->items;
-    }
-
-    /**
-     * @param string $key
-     * @param null $default
-     * @return mixed
-     */
-    public function arg(string $key, $default = null)
-    {
-        return $this->query->arg($key, $default);
-    }
-
-    /**
-     * @return Node|null
-     */
-    public function parent(): ?Node
+    public function getParent(): ?Node
     {
         return $this->parent;
     }
 
-    /**
-     * @return Type[]
-     */
-    public function types(): array
+    public function addChild(Node $child)
     {
-        if ($this->types === null) {
-            $this->types = array_unique(array_values(array_map(function (Type $type) {
-                return $type->name();
-            }, $this->field->returnType()->possibleTypes())));
+        $this->children[] = $child;
+    }
+
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    public function getPath(): string
+    {
+        $parent = $this->getParent();
+        $path = $this->getField()->getName();
+
+        while ($parent) {
+            $path = sprintf('%s.%s', $parent->getField()->getName(), $path);
+            $parent = $parent->getParent();
         }
 
-        return $this->types;
+        return $path;
     }
 
-    /**
-     * @return string
-     */
-    public function path(): string
+    public function fetch($parents)
     {
-        return ($this->parent ? $this->parent->path() . '.' : '') . $this->field->name();
+        return $this->getField()->fetch($this, $parents);
     }
 
-    /**
-     * @return ExtendedPromiseInterface
-     */
-    public function fetch(): ExtendedPromiseInterface
+    public function resolve($parent, $value)
     {
-        return all($this->field->fetch($this))->then(function ($items) {
-            $this->items = $items;
-
-            return $this->children();
-        });
-    }
-
-    /**
-     * @param mixed|null $parent
-     * @param mixed|null $value
-     * @return mixed
-     */
-    public function resolve($parent = null, $value = null)
-    {
-        return $this->field->resolve($this, $parent, $value);
+        return $this->getField()->resolve($this, $parent, $value);
     }
 }

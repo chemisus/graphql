@@ -1,7 +1,13 @@
+scalar ID
 scalar String
 scalar Boolean
 scalar Integer
+scalar Int
 scalar Float
+
+schema {
+    query: Query
+}
 
 type Query {
     allPeople: PeopleConnection
@@ -44,6 +50,30 @@ type Person {
     vehicleConnection: PersonVehiclesConnection
     created: String
     edited: String
+}
+
+type PersonFilmsConnection {
+    id: ID!
+}
+
+type PersonStarshipsConnection {
+    id: ID!
+}
+
+type PersonVehiclesConnection {
+    id: ID!
+}
+
+type Species {
+    id: ID!
+}
+
+type PlanetResidentsConnection {
+    id: ID!
+}
+
+type PlanetFilmsConnection {
+    id: ID!
 }
 
 type PlanetsConnection {

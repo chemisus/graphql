@@ -17,8 +17,8 @@ class CallbackTyper implements Typer
         $this->callback = $callback;
     }
 
-    public function type(Node $node, $value)
+    public function type(Node $node, $value): Type
     {
-        return call_user_func($this->callback, $node, $value);
+        return call_user_func_array($this->callback, func_get_args());
     }
 }

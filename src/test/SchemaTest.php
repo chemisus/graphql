@@ -14,15 +14,13 @@ class SchemaTest extends TestCase
 
         return array_merge([], ...array_map(function ($schemaFile) {
             $schemaSource = file_get_contents($schemaFile);
-            $schema = $this->makeSchema($schemaSource);
+            $schema = $this->make($schemaSource);
             $schemaName = str_replace('.gql', '', basename($schemaFile));
-            $this->wireSchema($schemaName, $schema);
 
             $queryFiles = glob(dirname(dirname(__DIR__)) . '/resources/test/schema/' . $schemaName . '/*.gql');
 
             return array_merge([], ...array_map(function ($queryFile) use ($schemaName, $schemaFile, $schemaSource, $schema) {
                 $querySource = file_get_contents($queryFile);
-                $query = $this->makeQuery($querySource, $schema);
                 $queryName = str_replace('.gql', '', basename($queryFile));
 
                 $resultFile = str_replace('.gql', '.json', $queryFile);
@@ -31,9 +29,7 @@ class SchemaTest extends TestCase
                 return [
                     sprintf("%s::%s", $schemaName, $queryName) => [
                         $schemaSource,
-                        $schema,
                         $querySource,
-                        $query,
                         $result,
                     ]
                 ];
@@ -41,40 +37,38 @@ class SchemaTest extends TestCase
         }, $schemaFiles));
     }
 
-    public function makeSchema($gql)
+    public function make($gql)
     {
-        $queryBuilder = new GraphQLSchemaBuilder();
-        return $queryBuilder->readSchema(json_decode(json_encode(Parser::parse($gql)->toArray(true))))->buildSchema();
+        $queryBuilder = new DocumentBuilder();
+        return $queryBuilder->load($gql)->build();
     }
 
-    public function wireSchema($name, Schema $schema)
+    public function wire($name, Document $document)
     {
         if ($name === 'sw') {
             $graph = [];
 
-            $schema->queryType()
-                ->field('allPeople')
-                ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph) {
+            $document->fetcher('Query', 'allPeople', new CallbackFetcher(function (Node $node) use (&$graph) {
                     return Http::get('https://swapi.co/api/people/')
                         ->then(function ($data) {
                             return json_decode($data)->results;
                         });
-                }))
-                ->setResolver(new CallbackResolver(function (Node $node) {
+                }));
+
+            $document->resolver('Query', 'allPeople', new CallbackResolver(function (Node $node) {
                     return (object) [
                         'people' => $node->items(),
                     ];
                 }));
 
-            $schema->queryType()
-                ->field('allPlanets')
-                ->setFetcher(new CallbackFetcher(function (Node $node) use (&$graph) {
+            $document->fetcher('Query', 'allPeople', new CallbackFetcher(function (Node $node) use (&$graph) {
                     return Http::get('https://swapi.co/api/planets/')
                         ->then(function ($data) {
                             return json_decode($data)->results;
                         });
-                }))
-                ->setResolver(new CallbackResolver(function (Node $node) {
+                }));
+
+            $document->resolver('Query', 'allPeople', new CallbackResolver(function (Node $node) {
                     return (object) [
                         'planets' => $node->items(),
                     ];
@@ -82,40 +76,24 @@ class SchemaTest extends TestCase
         }
     }
 
-    public function makeQuery($gql, $schema)
-    {
-        $queryBuilder = new GQLQueryReader($schema);
-        return $queryBuilder->read($gql);
-    }
-
     /**
      * @dataProvider gqlProvider
-     * @param string $schemaSource
-     * @param Schema $schema
+     * @param string $schema
+     * @param string $query
+     * @param mixed $result
      */
-    public function testSchema(string $schemaSource, Schema $schema, string $querySource, Selection $query, $result)
+    public function testQuery($schema, $query, $result)
     {
-        $expect = implode(PHP_EOL, array_filter(explode(PHP_EOL, trim($schemaSource))));
-        $actual = (string) $schema;
+        $builder = new DocumentBuilder();
+        $wirer = new DocumentWirer();
+        $executor = new DocumentExecutor();
+        $builder->load($query);
+        $builder->load($schema);
+        $document = $builder->build();
+        $wirer->wire($document);
 
-        $this->assertEquals($expect, $actual);
-    }
-
-    public function queryReact(Schema $schema, Selection $query)
-    {
-        $executor = new ReactExecutor();
-        return $executor->execute($schema, $query);
-    }
-
-    /**
-     * @dataProvider gqlProvider
-     * @param string $schemaSource
-     * @param Schema $schema
-     */
-    public function testQuery(string $schemaSource, Schema $schema, string $querySource, Selection $query, string $result)
-    {
         $expect = $result;
-        $actual = json_encode($this->queryReact($schema, $query));
+        $actual = json_encode($executor->execute($document));
 
         $this->assertEquals($expect, $actual);
     }

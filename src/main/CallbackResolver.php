@@ -17,8 +17,8 @@ class CallbackResolver implements Resolver
         $this->callback = $callback;
     }
 
-    public function resolve(Node $node, $owner, $value = null)
+    public function resolve(Node $node, $parent, $value)
     {
-        return call_user_func($this->callback, $node, $owner, $value);
+        return call_user_func_array($this->callback, func_get_args());
     }
 }

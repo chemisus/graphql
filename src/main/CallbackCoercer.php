@@ -9,18 +9,16 @@ class CallbackCoercer implements Coercer
      */
     private $callback;
 
+    /**
+     * @param callable $callback
+     */
     public function __construct(callable $callback)
     {
         $this->callback = $callback;
     }
 
-    /**
-     * @param Node $node
-     * @param $value
-     * @return mixed
-     */
     public function coerce(Node $node, $value)
     {
-        return call_user_func($this->callback, $node, $value);
+        return call_user_func_array($this->callback, func_get_args());
     }
 }
