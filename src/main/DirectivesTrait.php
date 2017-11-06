@@ -5,14 +5,14 @@ namespace Chemisus\GraphQL;
 trait DirectivesTrait
 {
     /**
-     * @var string
+     * @var array
      */
     private $directives;
 
     /**
-     * @return string
+     * @return array
      */
-    public function getDirectives(): string
+    public function getDirectives(): array
     {
         return $this->directives;
     }
