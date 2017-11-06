@@ -44,40 +44,6 @@ class SchemaTest extends TestCase
 
     public function wire($name, Document $document)
     {
-        $document->resolver('Query', '__type', new CallbackResolver(function (Node $node) use ($document) {
-            return $document->types[$node->getSelection()->getArguments()['name']];
-        }));
-
-        $document->coercer('__Schema', new CallbackCoercer(function (Node $node, Schema $value) {
-            return (object)[
-                'types' => [],
-                'queryType' => $value->getQuery(),
-                'mutationType' => $value->getMutation(),
-                'subscriptionType' => null,
-                'directives' => null,
-            ];
-        }));
-
-        $document->coercer('__Type', new CallbackCoercer(function (Node $node, Type $value) {
-            return (object)[
-                'kind' => $value->getKind(),
-                'name' => $value->getName(),
-                'description' => $value->getDescription(),
-                'fields' => $value->getFields(),
-            ];
-        }));
-
-        $document->coercer('__Field', new CallbackCoercer(function (Node $node, Field $value) {
-            return (object)[
-                'name' => $value->getName(),
-                'description' => $value->getDescription(),
-                'type' => $value->getType(),
-                'typeName' => $value->getTypeName(),
-                'arguments' => $value->getArguments(),
-                'directives' => $value->getDirectives(),
-            ];
-        }));
-
         if ($name === 'sw') {
             $graph = [];
 
@@ -148,6 +114,7 @@ class SchemaTest extends TestCase
 
         $builder = new DocumentBuilder();
         $executor = new DocumentExecutor();
+        $wirer = new DocumentWirer();
 
         $instance = microtime(true);
         $builder->load($querySource);
@@ -156,6 +123,7 @@ class SchemaTest extends TestCase
         $loadSchema = microtime(true);
         $document = $builder->build();
         $build = microtime(true);
+        $wirer->wire($document);
         $this->wire($schemaName, $document);
         $wire = microtime(true);
 

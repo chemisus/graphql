@@ -6,31 +6,38 @@ class DocumentWirer
 {
     public function wire(Document $document)
     {
-        $graph = [];
+        $document->resolver('Query', '__type', new CallbackResolver(function (Node $node) use ($document) {
+            return $document->types[$node->getSelection()->getArguments()['name']];
+        }));
 
-//        $document->coercer('Query', new CallbackCoercer(function (Node $node, $value) {
-//            return (object) [];
-//        }));
-//
-//        $document->fetcher('Query', 'human', new CallbackFetcher(function (Node $node) use (&$graph) {
-//            $id = $node->getSelection()->getArguments()['id'];
-//            printf("\nSTART %s %s", $node->getPath(), $id);
-//            return Http::get(sprintf('https://swapi.co/api/people/%s/', $id))
-//                ->then(function ($data) use ($node, $id, &$graph) {
-//                    printf("\nFINISH %s %s", $node->getPath(), $id);
-//                    return [$graph[$id] = json_decode($data)];
-//                });
-//        }));
-//
-//        $document->resolver('Query', 'human', new CallbackResolver(function (Node $node) use (&$graph) {
-//            return $graph[$node->getSelection()->getArguments()['id']];
-//        }));
-//
-//        $document->coercer('Human', new CallbackCoercer(function (Node $node, $value) use (&$graph) {
-//            return (object) [
-//                'appearsIn' => $value->films,
-//                'starships' => $value->starships,
-//            ];
-//        }));
+        $document->coercer('__Schema', new CallbackCoercer(function (Node $node, Schema $value) {
+            return (object)[
+                'types' => [],
+                'queryType' => $value->getQuery(),
+                'mutationType' => $value->getMutation(),
+                'subscriptionType' => null,
+                'directives' => null,
+            ];
+        }));
+
+        $document->coercer('__Type', new CallbackCoercer(function (Node $node, Type $value) {
+            return (object)[
+                'kind' => $value->getKind(),
+                'name' => $value->getName(),
+                'description' => $value->getDescription(),
+                'fields' => $value->getFields(),
+            ];
+        }));
+
+        $document->coercer('__Field', new CallbackCoercer(function (Node $node, Field $value) {
+            return (object)[
+                'name' => $value->getName(),
+                'description' => $value->getDescription(),
+                'type' => $value->getType(),
+                'typeName' => $value->getTypeName(),
+                'arguments' => $value->getArguments(),
+                'directives' => $value->getDirectives(),
+            ];
+        }));
     }
 }
