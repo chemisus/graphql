@@ -3,6 +3,7 @@
 namespace Chemisus\GraphQL;
 
 use PHPUnit\Framework\TestCase;
+use function React\Promise\reduce;
 
 class SchemaTest extends TestCase
 {
@@ -48,23 +49,7 @@ class SchemaTest extends TestCase
             $graph = [];
 
             $document->fetcher('Query', 'allPeople', new CallbackFetcher(function (Node $node) use (&$graph) {
-                $url = 'https://swapi.co/api/people/';
-                $dir = dirname(dirname(__DIR__)) . '/out/cache/';
-                $key = base64_encode($url);
-                $file = $dir . $key;
-
-                if (file_exists($file)) {
-                    return json_decode(file_get_contents($file))->results;
-                }
-
-                return Http::get($url)
-                    ->then(function ($data) use ($dir, $file) {
-                        if (!file_exists($dir)) {
-                            mkdir($dir, 0777, true);
-                        }
-                        file_put_contents($file, $data);
-                        return json_decode($data)->results;
-                    });
+                return $this->fetchURL('https://swapi.co/api/people/');
             }));
 
             $document->resolver('Query', 'allPeople', new CallbackResolver(function (Node $node) {
@@ -74,23 +59,7 @@ class SchemaTest extends TestCase
             }));
 
             $document->fetcher('Query', 'allPlanets', new CallbackFetcher(function (Node $node) use (&$graph) {
-                $url = 'https://swapi.co/api/planets/';
-                $dir = dirname(dirname(__DIR__)) . '/out/cache/';
-                $key = base64_encode($url);
-                $file = $dir . $key;
-
-                if (file_exists($file)) {
-                    return json_decode(file_get_contents($file))->results;
-                }
-
-                return Http::get('https://swapi.co/api/planets/')
-                    ->then(function ($data) use ($dir, $file) {
-                        if (!file_exists($dir)) {
-                            mkdir($dir, 0777, true);
-                        }
-                        file_put_contents($file, $data);
-                        return json_decode($data)->results;
-                    });
+                return $this->fetchURL('https://swapi.co/api/planets/');
             }));
 
             $document->resolver('Query', 'allPlanets', new CallbackResolver(function (Node $node) {
@@ -98,7 +67,41 @@ class SchemaTest extends TestCase
                     'planets' => $node->getItems(),
                 ];
             }));
+
+            $document->fetcher('Query', 'allItems', new CallbackFetcher(function (Node $node) use (&$graph) {
+                echo "FETCHING\n";
+                return reduce([
+                    $this->fetchURL('https://swapi.co/api/people/'),
+                    $this->fetchURL('https://swapi.co/api/planets/'),
+                ], 'array_merge', []);
+            }));
+
+            $document->resolver('Query', 'allItems', new CallbackResolver(function (Node $node) {
+                echo "RESOLVING\n";
+
+                return $node->getItems();
+            }));
         }
+    }
+
+    public function fetchURL(string $url)
+    {
+        $dir = dirname(dirname(__DIR__)) . '/out/cache/';
+        $key = base64_encode($url);
+        $file = $dir . $key;
+
+        if (file_exists($file)) {
+            return json_decode(file_get_contents($file))->results;
+        }
+
+        return Http::get($url)
+            ->then(function ($data) use ($dir, $file) {
+                if (!file_exists($dir)) {
+                    mkdir($dir, 0777, true);
+                }
+                file_put_contents($file, $data);
+                return json_decode($data)->results;
+            });
     }
 
     /**

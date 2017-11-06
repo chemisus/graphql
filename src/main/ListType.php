@@ -17,6 +17,11 @@ class ListType implements Type
         return null;
     }
 
+    public function getBaseName(): string
+    {
+        return $this->getType()->getBaseName();
+    }
+
     public function getFullName(): string
     {
         return sprintf("[%s]", $this->getType()->getFullName());
@@ -56,6 +61,11 @@ class ListType implements Type
     public function getOfType(): ?Type
     {
         return $this->getType();
+    }
+
+    public function types($on = null)
+    {
+        return $this->getType()->types($on);
     }
 
     public function resolve(Node $node, $parent, $value)

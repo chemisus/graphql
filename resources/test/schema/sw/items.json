@@ -1,0 +1,64 @@
+{
+  "items": [
+    {
+      "name": "Luke Skywalker"
+    },
+    {
+      "name": "C-3PO"
+    },
+    {
+      "name": "R2-D2"
+    },
+    {
+      "name": "Darth Vader"
+    },
+    {
+      "name": "Leia Organa"
+    },
+    {
+      "name": "Owen Lars"
+    },
+    {
+      "name": "Beru Whitesun lars"
+    },
+    {
+      "name": "R5-D4"
+    },
+    {
+      "name": "Biggs Darklighter"
+    },
+    {
+      "name": "Obi-Wan Kenobi"
+    },
+    {
+      "name": "Alderaan"
+    },
+    {
+      "name": "Yavin IV"
+    },
+    {
+      "name": "Hoth"
+    },
+    {
+      "name": "Dagobah"
+    },
+    {
+      "name": "Bespin"
+    },
+    {
+      "name": "Endor"
+    },
+    {
+      "name": "Naboo"
+    },
+    {
+      "name": "Coruscant"
+    },
+    {
+      "name": "Kamino"
+    },
+    {
+      "name": "Geonosis"
+    }
+  ]
+}

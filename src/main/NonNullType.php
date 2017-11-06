@@ -19,6 +19,11 @@ class NonNullType implements Type
         return null;
     }
 
+    public function getBaseName(): string
+    {
+        return $this->getType()->getBaseName();
+    }
+
     public function getFullName(): string
     {
         return sprintf("%s!", $this->getType()->getFullName());
@@ -41,27 +46,28 @@ class NonNullType implements Type
 
     public function setTyper(Typer $typer)
     {
-        // TODO: Implement setTyper() method.
     }
 
     public function getInterfaces()
     {
-        // TODO: Implement getInterfaces() method.
     }
 
     public function getPossibleTypes()
     {
-        // TODO: Implement getPossibleTypes() method.
     }
 
     public function getEnumValues()
     {
-        // TODO: Implement getEnumValues() method.
     }
 
     public function getOfType(): ?Type
     {
         return $this->getType();
+    }
+
+    public function types($on = null)
+    {
+        return (array)$this->getType()->types($on);
     }
 
     public function resolve(Node $node, $parent, $value)

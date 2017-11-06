@@ -17,10 +17,6 @@ class InterfaceType implements Type
         return Type::KIND_INTERFACE;
     }
 
-    public function getField(string $name): Field
-    {
-    }
-
     public function getInterfaces()
     {
     }
@@ -36,6 +32,15 @@ class InterfaceType implements Type
     public function getOfType(): ?Type
     {
         return null;
+    }
+
+    public function fields()
+    {
+    }
+
+    public function types($on = null)
+    {
+        return (array)$this->getTypes();
     }
 
     public function resolve(Node $node, $parent, $value)

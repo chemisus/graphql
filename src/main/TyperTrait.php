@@ -2,6 +2,8 @@
 
 namespace Chemisus\GraphQL;
 
+use Exception;
+
 trait TyperTrait
 {
     /**
@@ -16,6 +18,10 @@ trait TyperTrait
 
     public function type(Node $node, $value): Type
     {
+        if (!$this->typer) {
+            throw new Exception(sprintf("%s needs as typer.", $this->getName()));
+        }
+
         return $this->typer->type($node, $value);
     }
 }

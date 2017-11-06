@@ -23,6 +23,7 @@ class UnionType implements Type
 
     public function getPossibleTypes()
     {
+        return $this->getTypes();
     }
 
     public function getEnumValues()
@@ -32,6 +33,13 @@ class UnionType implements Type
     public function getOfType(): ?Type
     {
         return null;
+    }
+
+    public function types($on = null)
+    {
+        return array_merge([], ...array_map(function (Type $type) use ($on) {
+            return $type->types($on);
+        }, $this->getTypes()));
     }
 
     public function resolve(Node $node, $parent, $value)

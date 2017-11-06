@@ -20,6 +20,14 @@ trait NameTrait
     /**
      * @return string
      */
+    public function getBaseName(): string
+    {
+        return $this->getName();
+    }
+
+    /**
+     * @return string
+     */
     public function getFullName(): string
     {
         return $this->getName();

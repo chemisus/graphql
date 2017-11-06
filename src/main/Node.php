@@ -32,17 +32,24 @@ class Node
     private $items = false;
 
     /**
+     * @var Type
+     */
+    private $type;
+
+    /**
      * @param Schema $schema
+     * @param Type $type
      * @param Field $field
      * @param FieldSelection $selection
      * @param Node $parent
      */
-    public function __construct(Schema $schema, Field $field, FieldSelection $selection, Node $parent = null)
+    public function __construct(Schema $schema, Type $type, Field $field, FieldSelection $selection, Node $parent = null)
     {
         $this->schema = $schema;
         $this->field = $field;
         $this->selection = $selection;
         $this->parent = $parent;
+        $this->type = $type;
     }
 
     public function getItems()
@@ -62,6 +69,14 @@ class Node
     public function getSchema(): Schema
     {
         return $this->schema;
+    }
+
+    /**
+     * @return Type
+     */
+    public function getType(): Type
+    {
+        return $this->type;
     }
 
     /**

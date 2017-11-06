@@ -2,7 +2,9 @@
 
 namespace Chemisus\GraphQL;
 
+use Exception;
 use React\EventLoop\LoopInterface;
+use React\Promise\ExtendedPromiseInterface;
 use React\Promise\PromiseInterface;
 use function React\Promise\all;
 
@@ -22,14 +24,23 @@ class DocumentExecutor
         $roots = $this->makeRootNodes($document, $document->getOperation($operation), $document->getSchema()->getOperation($document->getOperation($operation)->getOperation()));
 
         $value = [];
+        $error = null;
 
-        $this->fetch($document, $roots)->then(function () use (&$value, $roots) {
-            foreach ($roots as $root) {
-                $value[$root->getSelection()->getAlias()] = $root->resolve(null, null);
-            }
-        });
+        $this->fetch($document, $roots)
+            ->then(function () use (&$value, $roots) {
+                foreach ($roots as $root) {
+                    $value[$root->getSelection()->getAlias()] = $root->resolve(null, null);
+                }
+            })
+            ->otherwise(function ($e) use (&$error) {
+                $error = $e;
+            });
 
         $this->loop->run();
+
+        if ($error instanceof Exception) {
+            throw $error;
+        }
 
         return (object) $value;
     }
@@ -43,26 +54,26 @@ class DocumentExecutor
     public function makeRootNodes(Document $document, Operation $operation, Type $type)
     {
         return array_map(function (FieldSelection $field) use ($document, $operation, $type) {
-            return $this->makeRootNode($document, $type->getField($field->getName()), $field);
+            return $this->makeRootNode($document, $type, $type->getField($field->getName()), $field);
         }, $operation->getSelectionSet()->flatten());
     }
 
-    public function makeRootNode(Document $document, Field $field, FieldSelection $selection)
+    public function makeRootNode(Document $document, Type $type, Field $field, FieldSelection $selection)
     {
-        return new Node($document->getSchema(), $field, $selection);
+        return new Node($document->getSchema(), $type, $field, $selection);
     }
 
-    public function makeChildNode(Document $document, FieldSelection $field, Node $parent)
+    public function makeChildNode(Document $document, Type $type, FieldSelection $field, Node $parent)
     {
-        return new Node($document->getSchema(), $parent->getField()->getType()->getField($field->getName()), $field, $parent);
+        return new Node($document->getSchema(), $type, $parent->getField()->getType()->getField($field->getName()), $field, $parent);
     }
 
     /**
      * @param Document $document
      * @param Node[] $roots
-     * @return PromiseInterface
+     * @return ExtendedPromiseInterface
      */
-    public function fetch(Document $document, $roots)
+    public function fetch(Document $document, $roots): ExtendedPromiseInterface
     {
         $queue = [];
 
@@ -92,13 +103,19 @@ class DocumentExecutor
 
     public function makeChildren(Document $document, Node $root)
     {
+        /**
+         * @var Node[] $queue
+         */
         $queue = [$root];
         while (!empty($queue)) {
             $node = array_shift($queue);
             foreach ($node->getSelection()->fields() as $field) {
-                $child = $this->makeChildNode($document, $field, $node);
-                $node->addChild($child);
-                $queue[] = $child;
+                $types = $document->getType($node->getField()->getType()->getBaseName())->types();
+                foreach ($types as $type) {
+                    $child = $this->makeChildNode($document, $type, $field, $node);
+                    $node->addChild($child);
+                    $queue[] = $child;
+                }
             }
         }
     }

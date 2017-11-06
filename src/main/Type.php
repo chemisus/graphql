@@ -36,11 +36,19 @@ interface Type
 
     public function setTyper(Typer $typer);
 
+    /**
+     * @param null $on
+     * @return Type[]
+     */
+    public function types($on = null);
+
     public function coerce(Node $node, $value);
 
     public function resolve(Node $node, $parent, $value);
 
     public function getFullName(): string;
+
+    public function getBaseName(): string;
 
     public function getInterfaces();
 

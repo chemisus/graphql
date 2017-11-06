@@ -33,6 +33,11 @@ class ObjectType implements Type
         return null;
     }
 
+    public function types($on = null)
+    {
+        return [$this];
+    }
+
     public function resolve(Node $node, $parent, $value)
     {
         if ($value === null) {
