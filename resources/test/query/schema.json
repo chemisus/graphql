@@ -1,8 +1,0 @@
-{
-  "__schema": {
-    "queryType": {
-      "kind": "OBJECT",
-      "name": "Query"
-    }
-  }
-}

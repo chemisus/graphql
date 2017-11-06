@@ -29,6 +29,8 @@ class Node
      */
     private $children = [];
 
+    private $items = false;
+
     /**
      * @param Schema $schema
      * @param Field $field
@@ -41,6 +43,17 @@ class Node
         $this->field = $field;
         $this->selection = $selection;
         $this->parent = $parent;
+    }
+
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    public function setItems($items): self
+    {
+        $this->items = $items;
+        return $this;
     }
 
     /**

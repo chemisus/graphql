@@ -3,8 +3,8 @@
 namespace Chemisus\GraphQL;
 
 use React\EventLoop\LoopInterface;
-use function React\Promise\all;
 use React\Promise\PromiseInterface;
+use function React\Promise\all;
 
 class DocumentExecutor
 {
@@ -69,9 +69,14 @@ class DocumentExecutor
         $queue = [];
 
         $fetcher = function (Node $node, $parents = []) use (&$queue, &$fetcher) {
-            $promise = all($parents)->then(function ($parents) use ($node) {
-                return $node->fetch($parents);
-            });
+            $promise = all($parents)
+                ->then(function ($parents) use ($node) {
+                    $items = $node->fetch($parents);
+                    all($items)->then(function ($items) use ($node) {
+                        $node->setItems($items);
+                    });
+                    return $items;
+                });
             $queue[] = $promise;
             foreach ($node->getChildren() as $child) {
                 $fetcher($child, $promise);

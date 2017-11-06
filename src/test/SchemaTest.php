@@ -3,7 +3,6 @@
 namespace Chemisus\GraphQL;
 
 use Chemisus\GraphQL\Types\Schema;
-use GraphQL\Language\Parser;
 use PHPUnit\Framework\TestCase;
 
 class SchemaTest extends TestCase
@@ -28,6 +27,7 @@ class SchemaTest extends TestCase
 
                 return [
                     sprintf("%s::%s", $schemaName, $queryName) => [
+                        $schemaName,
                         $schemaSource,
                         $querySource,
                         $result,
@@ -57,20 +57,20 @@ class SchemaTest extends TestCase
 
             $document->resolver('Query', 'allPeople', new CallbackResolver(function (Node $node) {
                     return (object) [
-                        'people' => $node->items(),
+                        'people' => $node->getItems(),
                     ];
                 }));
 
-            $document->fetcher('Query', 'allPeople', new CallbackFetcher(function (Node $node) use (&$graph) {
+            $document->fetcher('Query', 'allPlanets', new CallbackFetcher(function (Node $node) use (&$graph) {
                     return Http::get('https://swapi.co/api/planets/')
                         ->then(function ($data) {
                             return json_decode($data)->results;
                         });
                 }));
 
-            $document->resolver('Query', 'allPeople', new CallbackResolver(function (Node $node) {
+            $document->resolver('Query', 'allPlanets', new CallbackResolver(function (Node $node) {
                     return (object) [
-                        'planets' => $node->items(),
+                        'planets' => $node->getItems(),
                     ];
                 }));
         }
@@ -78,19 +78,21 @@ class SchemaTest extends TestCase
 
     /**
      * @dataProvider gqlProvider
-     * @param string $schema
-     * @param string $query
-     * @param mixed $result
+     * @param string $schemaName
+     * @param string $schemaSource
+     * @param string $querySource
+     * @param $result
      */
-    public function testQuery($schema, $query, $result)
+    public function testQuery(string $schemaName, string $schemaSource, string $querySource, $result)
     {
+        error_reporting(E_ALL);
+
         $builder = new DocumentBuilder();
-        $wirer = new DocumentWirer();
         $executor = new DocumentExecutor();
-        $builder->load($query);
-        $builder->load($schema);
+        $builder->load($querySource);
+        $builder->load($schemaSource);
         $document = $builder->build();
-        $wirer->wire($document);
+        $this->wire($schemaName, $document);
 
         $expect = $result;
         $actual = json_encode($executor->execute($document));
