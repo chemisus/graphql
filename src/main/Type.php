@@ -34,11 +34,19 @@ interface Type
 
     public function setCoercer(Coercer $coercer);
 
-//    public function setTyper(Typer $typer);
+    public function setTyper(Typer $typer);
 
     public function coerce(Node $node, $value);
 
     public function resolve(Node $node, $parent, $value);
 
     public function getFullName(): string;
+
+    public function getInterfaces();
+
+    public function getPossibleTypes();
+
+    public function getEnumValues();
+
+    public function getOfType(): ?Type;
 }

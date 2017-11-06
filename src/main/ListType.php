@@ -37,6 +37,27 @@ class ListType implements Type
         return $this->getType()->getFields();
     }
 
+    public function setTyper(Typer $typer)
+    {
+    }
+
+    public function getInterfaces()
+    {
+    }
+
+    public function getPossibleTypes()
+    {
+    }
+
+    public function getEnumValues()
+    {
+    }
+
+    public function getOfType(): ?Type
+    {
+        return $this->getType();
+    }
+
     public function resolve(Node $node, $parent, $value)
     {
         return $value === null ? null : array_map(function ($value) use ($node, $parent) {

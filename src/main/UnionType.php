@@ -17,6 +17,22 @@ class UnionType implements Type
         return 'UNION';
     }
 
+    public function getInterfaces()
+    {
+    }
+
+    public function getPossibleTypes()
+    {
+    }
+
+    public function getEnumValues()
+    {
+    }
+
+    public function getOfType(): ?Type
+    {
+    }
+
     public function resolve(Node $node, $parent, $value)
     {
         return $this->type($node, $value)->resolve($node, $parent, $value);

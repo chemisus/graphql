@@ -16,6 +16,22 @@ class ObjectType implements Type
         return Type::KIND_OBJECT;
     }
 
+    public function setTyper(Typer $typer)
+    {
+    }
+
+    public function getPossibleTypes()
+    {
+    }
+
+    public function getEnumValues()
+    {
+    }
+
+    public function getOfType(): ?Type
+    {
+    }
+
     public function resolve(Node $node, $parent, $value)
     {
         if ($value === null) {

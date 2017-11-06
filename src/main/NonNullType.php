@@ -39,6 +39,31 @@ class NonNullType implements Type
         return $this->getType()->getFields();
     }
 
+    public function setTyper(Typer $typer)
+    {
+        // TODO: Implement setTyper() method.
+    }
+
+    public function getInterfaces()
+    {
+        // TODO: Implement getInterfaces() method.
+    }
+
+    public function getPossibleTypes()
+    {
+        // TODO: Implement getPossibleTypes() method.
+    }
+
+    public function getEnumValues()
+    {
+        // TODO: Implement getEnumValues() method.
+    }
+
+    public function getOfType(): ?Type
+    {
+        return $this->getType();
+    }
+
     public function resolve(Node $node, $parent, $value)
     {
         $value = $this->getType()->resolve($node, $parent, $value);
