@@ -83,5 +83,40 @@
         "typeName": "__Type"
       }
     }
+  },
+  "PersonPlanetInterface": {
+    "name": "PersonPlanetInterface",
+    "kind": "INTERFACE",
+    "fields": {
+      "id": {
+        "name": "id",
+        "typeName": "ID!"
+      },
+      "name": {
+        "name": "name",
+        "typeName": "String"
+      }
+    },
+    "possibleTypes": {
+      "Person": {
+        "fullName": "Person"
+      },
+      "Planet": {
+        "fullName": "Planet"
+      }
+    }
+  },
+  "PersonPlanetUnion": {
+    "name": "PersonPlanetUnion",
+    "kind": "UNION",
+    "fields": null,
+    "possibleTypes": [
+      {
+        "fullName": "Person"
+      },
+      {
+        "fullName": "Planet"
+      }
+    ]
   }
 }

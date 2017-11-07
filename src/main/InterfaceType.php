@@ -23,6 +23,7 @@ class InterfaceType implements Type
 
     public function getPossibleTypes()
     {
+        return $this->getTypes();
     }
 
     public function getEnumValues()

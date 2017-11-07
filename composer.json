@@ -1,4 +1,9 @@
 {
+  "name": "chemisus/graphql",
+  "author": {
+    "name": "Terrence Howard",
+    "email": "chemisus@gmail.com"
+  },
   "autoload": {
     "psr-4": {
       "Chemisus\\GraphQL\\": "src/main/"

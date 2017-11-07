@@ -23,4 +23,26 @@
             typeName
         }
     }
+    PersonPlanetInterface:__type(name:"PersonPlanetInterface") {
+        name:fullName
+        kind
+        fields {
+            name
+            typeName
+        }
+        possibleTypes {
+            fullName
+        }
+    }
+    PersonPlanetUnion:__type(name:"PersonPlanetUnion") {
+        name:fullName
+        kind
+        fields {
+            name
+            typeName
+        }
+        possibleTypes {
+            fullName
+        }
+    }
 }

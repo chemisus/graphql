@@ -18,9 +18,6 @@ class StarwarsDocumentWirer
             return $document->getType($value->type);
         }));
 
-        $document->coercer('Person', new CallbackCoercer(function (Node $node, $value) {
-        }));
-
         $document->fetcher('Query', 'allPeople', new CallbackFetcher(function (Node $node)  {
             return $this->fetchPeople();
         }));
