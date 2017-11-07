@@ -3,6 +3,8 @@
 namespace Chemisus\GraphQL;
 
 use PHPUnit\Framework\TestCase;
+use function React\Promise\all;
+use React\Promise\FulfilledPromise;
 use function React\Promise\reduce;
 
 class SchemaTest extends TestCase
@@ -48,8 +50,15 @@ class SchemaTest extends TestCase
         if ($name === 'sw') {
             $graph = [];
 
+            $document->typer('Item', new CallbackTyper(function (Node $node, $value) {
+                return $node->getSchema()->getTypes()['Person'];
+            }));
+
             $document->fetcher('Query', 'allPeople', new CallbackFetcher(function (Node $node) use (&$graph) {
-                return $this->fetchURL('https://swapi.co/api/people/');
+                return $this->fetchURL('https://swapi.co/api/people/')
+                    ->then(function ($response) {
+                        return $response->results;
+                    });
             }));
 
             $document->resolver('Query', 'allPeople', new CallbackResolver(function (Node $node) {
@@ -59,7 +68,10 @@ class SchemaTest extends TestCase
             }));
 
             $document->fetcher('Query', 'allPlanets', new CallbackFetcher(function (Node $node) use (&$graph) {
-                return $this->fetchURL('https://swapi.co/api/planets/');
+                return $this->fetchURL('https://swapi.co/api/planets/')
+                    ->then(function ($response) {
+                        return $response->results;
+                    });
             }));
 
             $document->resolver('Query', 'allPlanets', new CallbackResolver(function (Node $node) {
@@ -70,6 +82,24 @@ class SchemaTest extends TestCase
 
             $document->fetcher('Query', 'allItems', new CallbackFetcher(function (Node $node) use (&$graph) {
                 echo "FETCHING\n";
+                return $this->fetchURL('https://swapi.co/api/people/')
+                    ->then(function ($response) {
+                        return $response->results;
+                    });
+
+                return reduce([
+                    $this->fetchURL('https://swapi.co/api/people/'),
+                    $this->fetchURL('https://swapi.co/api/planets/'),
+                ], 'array_merge', []);
+            }));
+
+            $document->fetcher('Query', 'item', new CallbackFetcher(function (Node $node) use (&$graph) {
+                echo "FETCHING\n";
+                return $this->fetchURL('https://swapi.co/api/people/')
+                    ->then(function ($response) {
+                        return [$response->results[0]];
+                    });
+
                 return reduce([
                     $this->fetchURL('https://swapi.co/api/people/'),
                     $this->fetchURL('https://swapi.co/api/planets/'),
@@ -81,6 +111,12 @@ class SchemaTest extends TestCase
 
                 return $node->getItems();
             }));
+
+            $document->resolver('Query', 'item', new CallbackResolver(function (Node $node) {
+                echo "RESOLVING\n";
+
+                return $node->getItems()[0];
+            }));
         }
     }
 
@@ -91,7 +127,7 @@ class SchemaTest extends TestCase
         $file = $dir . $key;
 
         if (file_exists($file)) {
-            return json_decode(file_get_contents($file))->results;
+            return new FulfilledPromise(json_decode(file_get_contents($file)));
         }
 
         return Http::get($url)

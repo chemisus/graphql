@@ -34,10 +34,6 @@ class InterfaceType implements Type
         return null;
     }
 
-    public function fields()
-    {
-    }
-
     public function types($on = null)
     {
         return (array)$this->getTypes();
