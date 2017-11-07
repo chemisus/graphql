@@ -14,9 +14,6 @@ class NonNullBuilder implements Builder
          */
         $built = new NonNullType();
         $type = $builder->buildNode($node->type);
-        if ($type === null) {
-            var_dump($node->type);
-        }
         $built->setType($type);
         return $built;
     }

@@ -70,8 +70,6 @@ class ListType implements Type
 
     public function resolve(Node $node, $parent, $value)
     {
-        printf("RESOLVING %s: %s\n", $this->getKind(), $node->getPath());
-
         return $value === null ? null : array_map(function ($value) use ($node, $parent) {
             return $this->getType()->resolve($node, $parent, $value);
         }, $value);

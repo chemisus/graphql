@@ -163,8 +163,6 @@ class SchemaTest extends TestCase
         $key = base64_encode($url);
         $file = $dir . $key;
 
-        printf("FETCH URL %s\n", $url);
-
         if (file_exists($file)) {
             return new FulfilledPromise(json_decode(file_get_contents($file)));
         }

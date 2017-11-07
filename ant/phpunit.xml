@@ -24,7 +24,7 @@
             <exec executable="vendor/bin/phpunit">
                 <arg value="-c"/>
                 <arg file="build/phpunit.xml"/>
-                <arg line="--filter sw::items"/>
+                <!--<arg line="&#45;&#45;filter sw::items"/>-->
             </exec>
         </container>
     </target>

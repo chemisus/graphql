@@ -43,8 +43,6 @@ class ScalarType implements Type
 
     public function resolve(Node $node, $parent, $value)
     {
-        printf("RESOLVING %s: %s\n", $this->getKind(), $node->getPath());
-
         return $this->coerce($node, $value);
     }
 }

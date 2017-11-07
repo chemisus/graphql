@@ -25,30 +25,28 @@ class DocumentExecutor
         $roots = $this->makeRootNodes($document, $document->getOperation($operation), $document->getSchema()->getOperation($document->getOperation($operation)->getOperation()));
 
         $value = [];
-        $error = null;
+        $errors = [];
 
         $this->fetch($document, $roots)
-            ->then(function () use (&$value, $roots) {
+            ->then(function () use (&$value, $roots, &$errors) {
                 foreach ($roots as $root) {
-                    try {
+//                    try {
                         $value[$root->getSelection()->getAlias()] = $root->resolve(null, null);
-                    } catch (Error $e) {
-                        printf("ERROR %s\n", $e->getMessage());
-                        throw $e;
-                    } catch (Exception  $e) {
-                        printf("ERROR %s\n", $e->getMessage());
-                        throw $e;
-                    }
+//                    } catch (Error $e) {
+//                        throw $e;
+//                    } catch (Exception  $e) {
+//                        throw $e;
+//                    }
                 }
             })
             ->otherwise(function ($e) use (&$error) {
-                $error = $e;
+                $errors[] = $e;
             });
 
         $this->loop->run();
 
-        if ($error instanceof Exception) {
-            throw $error;
+        if ($errors) {
+            throw $errors[0];
         }
 
         return (object) $value;
@@ -89,20 +87,20 @@ class DocumentExecutor
         $fetcher = function (Node $node, $parents = []) use (&$queue, &$fetcher) {
             $promise = all($parents)
                 ->then(function ($parents) use ($node) {
-                    try {
+//                    try {
                         $items = $node->fetch($parents);
 
                         all($items)->then(function ($items) use ($node) {
                             $node->setItems($items);
                         });
                         return $items;
-                    } catch (Error $e) {
-                        printf("ERROR %s\n", $e->getMessage());
-                        throw $e;
-                    } catch (Exception  $e) {
-                        printf("ERROR %s\n", $e->getMessage());
-                        throw $e;
-                    }
+//                    } catch (Error $e) {
+//                        printf("ERROR %s\n", $e->getMessage());
+//                        throw $e;
+//                    } catch (Exception  $e) {
+//                        printf("ERROR %s\n", $e->getMessage());
+//                        throw $e;
+//                    }
                 });
             $queue[] = $promise;
             foreach ($node->getChildren() as $child) {
@@ -129,17 +127,12 @@ class DocumentExecutor
             $node = array_shift($queue);
             $types = $document->getType($node->getField()->getType()->getBaseName())->types();
 
-            printf("NODE %s\n", $node->getType()->getBaseName());
             foreach ($types as $type) {
-                printf("CHILDREN START %s\n", $type->getFullName());
                 foreach ($node->getSelection()->fields($type) as $field) {
-                    printf("CHILD START %s.%s\n", $type->getFullName(), $field->getName());
                     $child = $this->makeChildNode($document, $type, $field, $node);
                     $node->addChild($child);
                     $queue[] = $child;
-                    printf("CHILD DONE %s.%s\n", $type->getFullName(), $field->getName());
                 }
-                printf("CHILDREN DONE %s\n", $type->getFullName());
             }
         }
     }
