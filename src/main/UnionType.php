@@ -37,9 +37,7 @@ class UnionType implements Type
 
     public function types($on = null)
     {
-        return array_merge([], ...array_map(function (Type $type) use ($on) {
-            return $type->types($on);
-        }, $this->getTypes()));
+        return $this->getPossibleTypes();
     }
 
     public function resolve(Node $node, $parent, $value)

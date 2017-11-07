@@ -18,7 +18,7 @@ trait TyperTrait
 
     public function type(Node $node, $value): Type
     {
-        if (!$this->typer) {
+        if ($this->typer === null) {
             throw new Exception(sprintf("%s needs as typer.", $this->getName()));
         }
 

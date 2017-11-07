@@ -54,6 +54,10 @@ class SchemaTest extends TestCase
                 return $document->getType($value->type);
             }));
 
+            $document->typer('PersonPlanetUnion', new CallbackTyper(function (Node $node, $value) use ($document) {
+                return $document->getType($value->type);
+            }));
+
             $document->coercer('Person', new CallbackCoercer(function (Node $node, $value) {
             }));
 
@@ -99,6 +103,18 @@ class SchemaTest extends TestCase
             }));
 
             $document->resolver('Query', 'interface', new CallbackResolver(function (Node $node) {
+                return $node->getItems()[0];
+            }));
+
+            $document->fetcher('Query', 'union', new CallbackFetcher(function (Node $node) use (&$graph) {
+                $id = $node->getSelection()->getArguments()['id'];
+                return $this->fetchItem($id)
+                    ->then(function ($item) {
+                        return [$item];
+                    });
+            }));
+
+            $document->resolver('Query', 'union', new CallbackResolver(function (Node $node) {
                 return $node->getItems()[0];
             }));
         }

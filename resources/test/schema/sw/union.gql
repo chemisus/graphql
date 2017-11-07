@@ -1,0 +1,21 @@
+{
+    person:union(id:"people/1") {
+        name
+        ... on Person {
+            gender
+        }
+        ... on Planet {
+            diameter
+        }
+    }
+    planet:union(id:"planets/5") {
+        name
+        ... on Person {
+            gender
+        }
+        ... on Planet {
+            diameter
+        }
+    }
+}
+

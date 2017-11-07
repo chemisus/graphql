@@ -30,13 +30,15 @@ class DocumentExecutor
         $this->fetch($document, $roots)
             ->then(function () use (&$value, $roots, &$errors) {
                 foreach ($roots as $root) {
-//                    try {
+                    try {
                         $value[$root->getSelection()->getAlias()] = $root->resolve(null, null);
-//                    } catch (Error $e) {
-//                        throw $e;
-//                    } catch (Exception  $e) {
-//                        throw $e;
-//                    }
+                    } catch (Error $e) {
+                        $errors[] = $e;
+                        throw $e;
+                    } catch (Exception  $e) {
+                        $errors[] = $e;
+                        throw $e;
+                    }
                 }
             })
             ->otherwise(function ($e) use (&$error) {
@@ -78,29 +80,30 @@ class DocumentExecutor
     /**
      * @param Document $document
      * @param Node[] $roots
+     * @param array $errors
      * @return ExtendedPromiseInterface
      */
-    public function fetch(Document $document, $roots): ExtendedPromiseInterface
+    public function fetch(Document $document, $roots, &$errors=[]): ExtendedPromiseInterface
     {
         $queue = [];
 
-        $fetcher = function (Node $node, $parents = []) use (&$queue, &$fetcher) {
+        $fetcher = function (Node $node, $parents = []) use (&$queue, &$fetcher, &$errors) {
             $promise = all($parents)
-                ->then(function ($parents) use ($node) {
-//                    try {
+                ->then(function ($parents) use ($node, &$errors) {
+                    try {
                         $items = $node->fetch($parents);
 
                         all($items)->then(function ($items) use ($node) {
                             $node->setItems($items);
                         });
                         return $items;
-//                    } catch (Error $e) {
-//                        printf("ERROR %s\n", $e->getMessage());
-//                        throw $e;
-//                    } catch (Exception  $e) {
-//                        printf("ERROR %s\n", $e->getMessage());
-//                        throw $e;
-//                    }
+                    } catch (Error $e) {
+                        $errors[] = $e;
+                        throw $e;
+                    } catch (Exception  $e) {
+                        $errors[] = $e;
+                        throw $e;
+                    }
                 });
             $queue[] = $promise;
             foreach ($node->getChildren() as $child) {
