@@ -37,19 +37,24 @@ class Node
     private $type;
 
     /**
-     * @param Schema $schema
+     * @param Document $document
      * @param Type $type
      * @param Field $field
      * @param FieldSelection $selection
      * @param Node $parent
      */
-    public function __construct(Schema $schema, Type $type, Field $field, FieldSelection $selection, Node $parent = null)
+    public function __construct(Document $document, Type $type, Field $field, FieldSelection $selection, Node $parent = null)
     {
-        $this->schema = $schema;
+        $this->document = $document;
         $this->field = $field;
         $this->selection = $selection;
         $this->parent = $parent;
         $this->type = $type;
+    }
+
+    public function getDocument(): Document
+    {
+        return $this->document;
     }
 
     public function getItems()
@@ -68,7 +73,7 @@ class Node
      */
     public function getSchema(): Schema
     {
-        return $this->schema;
+        return $this->getDocument()->getSchema();
     }
 
     /**
@@ -135,9 +140,6 @@ class Node
 
     public function resolve($parent, $value)
     {
-//        var_dump($this->getField()->getTypeName());
-        var_dump($parent);
-
         return $this->getField()->resolve($this, $parent, $value);
     }
 }

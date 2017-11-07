@@ -1,64 +1,84 @@
 {
-  "items": [
+  "allItems": [
     {
-      "name": "Luke Skywalker"
+      "name": "Luke Skywalker",
+      "gender": "male"
     },
     {
-      "name": "C-3PO"
+      "name": "C-3PO",
+      "gender": "n\/a"
     },
     {
-      "name": "R2-D2"
+      "name": "R2-D2",
+      "gender": "n\/a"
     },
     {
-      "name": "Darth Vader"
+      "name": "Darth Vader",
+      "gender": "male"
     },
     {
-      "name": "Leia Organa"
+      "name": "Leia Organa",
+      "gender": "female"
     },
     {
-      "name": "Owen Lars"
+      "name": "Owen Lars",
+      "gender": "male"
     },
     {
-      "name": "Beru Whitesun lars"
+      "name": "Beru Whitesun lars",
+      "gender": "female"
     },
     {
-      "name": "R5-D4"
+      "name": "R5-D4",
+      "gender": "n\/a"
     },
     {
-      "name": "Biggs Darklighter"
+      "name": "Biggs Darklighter",
+      "gender": "male"
     },
     {
-      "name": "Obi-Wan Kenobi"
+      "name": "Obi-Wan Kenobi",
+      "gender": "male"
     },
     {
-      "name": "Alderaan"
+      "name": "Alderaan",
+      "diameter": "12500"
     },
     {
-      "name": "Yavin IV"
+      "name": "Yavin IV",
+      "diameter": "10200"
     },
     {
-      "name": "Hoth"
+      "name": "Hoth",
+      "diameter": "7200"
     },
     {
-      "name": "Dagobah"
+      "name": "Dagobah",
+      "diameter": "8900"
     },
     {
-      "name": "Bespin"
+      "name": "Bespin",
+      "diameter": "118000"
     },
     {
-      "name": "Endor"
+      "name": "Endor",
+      "diameter": "4900"
     },
     {
-      "name": "Naboo"
+      "name": "Naboo",
+      "diameter": "12120"
     },
     {
-      "name": "Coruscant"
+      "name": "Coruscant",
+      "diameter": "12240"
     },
     {
-      "name": "Kamino"
+      "name": "Kamino",
+      "diameter": "19720"
     },
     {
-      "name": "Geonosis"
+      "name": "Geonosis",
+      "diameter": "11370"
     }
   ]
 }

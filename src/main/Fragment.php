@@ -11,6 +11,6 @@ class Fragment implements Selection
 
     public function flatten(?Type $on = null)
     {
-        return $this->getSelectionSet()->flatten($on);
+        return $on === null || $on === $this->getTypeCondition() ? $this->getSelectionSet()->flatten($on) : [];
     }
 }

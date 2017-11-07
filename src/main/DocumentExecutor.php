@@ -69,12 +69,12 @@ class DocumentExecutor
 
     public function makeRootNode(Document $document, Type $type, Field $field, FieldSelection $selection)
     {
-        return new Node($document->getSchema(), $type, $field, $selection);
+        return new Node($document, $type, $field, $selection);
     }
 
     public function makeChildNode(Document $document, Type $type, FieldSelection $field, Node $parent)
     {
-        return new Node($document->getSchema(), $type, $parent->getField()->getType()->getField($field->getName()), $field, $parent);
+        return new Node($document, $type, $type->getField($field->getName()), $field, $parent);
     }
 
     /**
@@ -127,15 +127,19 @@ class DocumentExecutor
         $queue = [$root];
         while (!empty($queue)) {
             $node = array_shift($queue);
-            foreach ($node->getSelection()->fields() as $field) {
-                $types = $document->getType($node->getField()->getType()->getBaseName())->types();
+            $types = $document->getType($node->getField()->getType()->getBaseName())->types();
 
-                foreach ($types as $type) {
-                    printf("CHILD %s.%s\n", $type->getBaseName(), $field->getName());
+            printf("NODE %s\n", $node->getType()->getBaseName());
+            foreach ($types as $type) {
+                printf("CHILDREN START %s\n", $type->getFullName());
+                foreach ($node->getSelection()->fields($type) as $field) {
+                    printf("CHILD START %s.%s\n", $type->getFullName(), $field->getName());
                     $child = $this->makeChildNode($document, $type, $field, $node);
                     $node->addChild($child);
                     $queue[] = $child;
+                    printf("CHILD DONE %s.%s\n", $type->getFullName(), $field->getName());
                 }
+                printf("CHILDREN DONE %s\n", $type->getFullName());
             }
         }
     }

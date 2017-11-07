@@ -51,8 +51,6 @@ class SchemaTest extends TestCase
             $graph = [];
 
             $document->typer('Item', new CallbackTyper(function (Node $node, $value) use ($document) {
-                var_dump($value);
-
                 return $document->getType($value->type);
             }));
 
