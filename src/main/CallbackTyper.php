@@ -2,6 +2,9 @@
 
 namespace Chemisus\GraphQL;
 
+use Error;
+use Exception;
+
 class CallbackTyper implements Typer
 {
     /**

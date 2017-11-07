@@ -2,8 +2,8 @@
 
 namespace Chemisus\GraphQL;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
-use function React\Promise\all;
 use React\Promise\FulfilledPromise;
 use function React\Promise\reduce;
 
@@ -50,15 +50,17 @@ class SchemaTest extends TestCase
         if ($name === 'sw') {
             $graph = [];
 
-            $document->typer('Item', new CallbackTyper(function (Node $node, $value) {
-                return $node->getSchema()->getTypes()['Person'];
+            $document->typer('Item', new CallbackTyper(function (Node $node, $value) use ($document) {
+                var_dump($value);
+
+                return $document->getType($value->type);
+            }));
+
+            $document->coercer('Person', new CallbackCoercer(function (Node $node, $value) {
             }));
 
             $document->fetcher('Query', 'allPeople', new CallbackFetcher(function (Node $node) use (&$graph) {
-                return $this->fetchURL('https://swapi.co/api/people/')
-                    ->then(function ($response) {
-                        return $response->results;
-                    });
+                return $this->fetchPeople();
             }));
 
             $document->resolver('Query', 'allPeople', new CallbackResolver(function (Node $node) {
@@ -68,10 +70,7 @@ class SchemaTest extends TestCase
             }));
 
             $document->fetcher('Query', 'allPlanets', new CallbackFetcher(function (Node $node) use (&$graph) {
-                return $this->fetchURL('https://swapi.co/api/planets/')
-                    ->then(function ($response) {
-                        return $response->results;
-                    });
+                return $this->fetchPlanets();
             }));
 
             $document->resolver('Query', 'allPlanets', new CallbackResolver(function (Node $node) {
@@ -81,43 +80,83 @@ class SchemaTest extends TestCase
             }));
 
             $document->fetcher('Query', 'allItems', new CallbackFetcher(function (Node $node) use (&$graph) {
-                echo "FETCHING\n";
-                return $this->fetchURL('https://swapi.co/api/people/')
-                    ->then(function ($response) {
-                        return $response->results;
-                    });
-
                 return reduce([
-                    $this->fetchURL('https://swapi.co/api/people/'),
-                    $this->fetchURL('https://swapi.co/api/planets/'),
-                ], 'array_merge', []);
-            }));
-
-            $document->fetcher('Query', 'item', new CallbackFetcher(function (Node $node) use (&$graph) {
-                echo "FETCHING\n";
-                return $this->fetchURL('https://swapi.co/api/people/')
-                    ->then(function ($response) {
-                        return [$response->results[0]];
-                    });
-
-                return reduce([
-                    $this->fetchURL('https://swapi.co/api/people/'),
-                    $this->fetchURL('https://swapi.co/api/planets/'),
-                ], 'array_merge', []);
+                    $this->fetchPeople(),
+                    $this->fetchPlanets(),
+                ], function ($a, $b) {
+                    return array_merge($a, $b);
+                }, []);
             }));
 
             $document->resolver('Query', 'allItems', new CallbackResolver(function (Node $node) {
-                echo "RESOLVING\n";
-
                 return $node->getItems();
             }));
 
-            $document->resolver('Query', 'item', new CallbackResolver(function (Node $node) {
-                echo "RESOLVING\n";
+            $document->fetcher('Query', 'item', new CallbackFetcher(function (Node $node) use (&$graph) {
+                $id = $node->getSelection()->getArguments()['id'];
+                return $this->fetchItem($id)
+                    ->then(function ($item) {
+                        return [$item];
+                    });
+            }));
 
+            $document->resolver('Query', 'item', new CallbackResolver(function (Node $node) {
                 return $node->getItems()[0];
             }));
         }
+    }
+
+    public function fetchItem($ref)
+    {
+        list($type, $id) = explode('/', $ref);
+        switch ($type) {
+            case 'people':
+                return $this->fetchPerson($id);
+            case 'planets':
+                return $this->fetchPlanet($id);
+            default:
+                throw new Exception(sprintf("%s is not a valid reference", $ref));
+        }
+    }
+
+    public function fetchPerson($id)
+    {
+        return $this->fetchURL('https://swapi.co/api/people/' . $id . '/')
+            ->then(function ($person) {
+                $person->type = 'Person';
+                return $person;
+            });
+    }
+
+    public function fetchPlanet($id)
+    {
+        return $this->fetchURL('https://swapi.co/api/planets/' . $id . '/')
+            ->then(function ($planet) {
+                $planet->type = 'Planet';
+                return $planet;
+            });
+    }
+
+    public function fetchPeople()
+    {
+        return $this->fetchURL('https://swapi.co/api/people/')
+            ->then(function ($response) {
+                return array_map(function ($person) {
+                    $person->type = 'Person';
+                    return $person;
+                }, $response->results);
+            });
+    }
+
+    public function fetchPlanets()
+    {
+        return $this->fetchURL('https://swapi.co/api/planets/')
+            ->then(function ($response) {
+                return array_map(function ($planet) {
+                    $planet->type = 'Planet';
+                    return $planet;
+                }, $response->results);
+            });
     }
 
     public function fetchURL(string $url)
@@ -125,6 +164,8 @@ class SchemaTest extends TestCase
         $dir = dirname(dirname(__DIR__)) . '/out/cache/';
         $key = base64_encode($url);
         $file = $dir . $key;
+
+        printf("FETCH URL %s\n", $url);
 
         if (file_exists($file)) {
             return new FulfilledPromise(json_decode(file_get_contents($file)));
@@ -136,7 +177,7 @@ class SchemaTest extends TestCase
                     mkdir($dir, 0777, true);
                 }
                 file_put_contents($file, $data);
-                return json_decode($data)->results;
+                return json_decode($data);
             });
     }
 

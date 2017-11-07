@@ -2,6 +2,7 @@
 
 namespace Chemisus\GraphQL;
 
+use Error;
 use Exception;
 use React\EventLoop\LoopInterface;
 use React\Promise\ExtendedPromiseInterface;
@@ -29,7 +30,15 @@ class DocumentExecutor
         $this->fetch($document, $roots)
             ->then(function () use (&$value, $roots) {
                 foreach ($roots as $root) {
-                    $value[$root->getSelection()->getAlias()] = $root->resolve(null, null);
+                    try {
+                        $value[$root->getSelection()->getAlias()] = $root->resolve(null, null);
+                    } catch (Error $e) {
+                        printf("ERROR %s\n", $e->getMessage());
+                        throw $e;
+                    } catch (Exception  $e) {
+                        printf("ERROR %s\n", $e->getMessage());
+                        throw $e;
+                    }
                 }
             })
             ->otherwise(function ($e) use (&$error) {
@@ -80,11 +89,20 @@ class DocumentExecutor
         $fetcher = function (Node $node, $parents = []) use (&$queue, &$fetcher) {
             $promise = all($parents)
                 ->then(function ($parents) use ($node) {
-                    $items = $node->fetch($parents);
-                    all($items)->then(function ($items) use ($node) {
-                        $node->setItems($items);
-                    });
-                    return $items;
+                    try {
+                        $items = $node->fetch($parents);
+
+                        all($items)->then(function ($items) use ($node) {
+                            $node->setItems($items);
+                        });
+                        return $items;
+                    } catch (Error $e) {
+                        printf("ERROR %s\n", $e->getMessage());
+                        throw $e;
+                    } catch (Exception  $e) {
+                        printf("ERROR %s\n", $e->getMessage());
+                        throw $e;
+                    }
                 });
             $queue[] = $promise;
             foreach ($node->getChildren() as $child) {

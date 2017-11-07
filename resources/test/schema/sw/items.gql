@@ -1,5 +1,11 @@
 {
     allItems {
         name
+        ... on Person {
+            gender
+        }
+        ... on Planet {
+            diameter
+        }
     }
 }

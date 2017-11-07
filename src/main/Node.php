@@ -135,6 +135,9 @@ class Node
 
     public function resolve($parent, $value)
     {
+//        var_dump($this->getField()->getTypeName());
+        var_dump($parent);
+
         return $this->getField()->resolve($this, $parent, $value);
     }
 }
