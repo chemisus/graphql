@@ -26,4 +26,14 @@ trait TypesTrait
         $this->types = $types;
         return $this;
     }
+
+    public function addType(Type $type): self
+    {
+        if ($this->types === null) {
+            $this->types = [];
+        }
+
+        $this->types[$type->getName()] = $type;
+        return $this;
+    }
 }

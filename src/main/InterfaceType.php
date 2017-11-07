@@ -36,7 +36,7 @@ class InterfaceType implements Type
 
     public function types($on = null)
     {
-        return (array)$this->getTypes();
+        return $this->getTypes();
     }
 
     public function resolve(Node $node, $parent, $value)

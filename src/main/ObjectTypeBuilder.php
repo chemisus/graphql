@@ -26,6 +26,9 @@ class ObjectTypeBuilder implements Factory, Builder
         $built->setDescription($node->description);
         $built->setDirectives($builder->buildNodes($node->directives));
         $built->setInterfaces($builder->buildNodes($node->interfaces));
+        foreach($built->getInterfaces() as $interface) {
+            $interface->addType($built);
+        }
         $built->setFields($builder->buildNodes($node->fields));
         return $built;
     }
