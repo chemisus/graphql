@@ -48,7 +48,7 @@ class ObjectType implements Type
 
         $object = (object) [];
 
-        foreach ($node->getChildren() as $child) {
+        foreach ($node->getChildren($this) as $child) {
             $name = $child->getField()->getName();
             $field = isset($coerced->{$name}) ? $coerced->{$name} : (isset($value->{$name}) ? $value->{$name} : null);
             $object->{$child->getSelection()->getAlias()} = $child->resolve($value, $field);

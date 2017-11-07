@@ -111,8 +111,9 @@ class DocumentExecutor
             $node = array_shift($queue);
             foreach ($node->getSelection()->fields() as $field) {
                 $types = $document->getType($node->getField()->getType()->getBaseName())->types();
+
                 foreach ($types as $type) {
-                    printf("CHILD %s.%s\n", $node->getType()->getBaseName(), $node->getField()->getName());
+                    printf("CHILD %s.%s\n", $type->getBaseName(), $field->getName());
                     $child = $this->makeChildNode($document, $type, $field, $node);
                     $node->addChild($child);
                     $queue[] = $child;

@@ -108,9 +108,11 @@ class Node
         $this->children[] = $child;
     }
 
-    public function getChildren()
+    public function getChildren(Type $on = null)
     {
-        return $this->children;
+        return $on === null ? $this->children : array_filter($this->children, function (Node $child) use ($on) {
+            return $child->getType() === $on;
+        });
     }
 
     public function getPath(): string
