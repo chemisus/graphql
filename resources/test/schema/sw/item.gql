@@ -1,8 +1,21 @@
 {
     person:item(id:"people/1") {
         name
+        ... on Person {
+            gender
+        }
+        ... on Planet {
+            diameter
+        }
     }
     planet:item(id:"planets/5") {
         name
+        ... on Person {
+            gender
+        }
+        ... on Planet {
+            diameter
+        }
     }
 }
+

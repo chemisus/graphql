@@ -1,8 +1,10 @@
 {
   "person": {
-    "name": "Luke Skywalker"
+    "name": "Luke Skywalker",
+    "gender": "male"
   },
   "planet": {
-    "name": "Dagobah"
+    "name": "Dagobah",
+    "diameter": "8900"
   }
 }
