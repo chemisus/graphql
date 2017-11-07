@@ -1,5 +1,5 @@
 {
-    allItems {
+    interfaces {
         name
         ... on Person {
             gender

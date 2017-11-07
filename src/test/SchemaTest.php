@@ -50,7 +50,7 @@ class SchemaTest extends TestCase
         if ($name === 'sw') {
             $graph = [];
 
-            $document->typer('Item', new CallbackTyper(function (Node $node, $value) use ($document) {
+            $document->typer('PersonPlanetInterface', new CallbackTyper(function (Node $node, $value) use ($document) {
                 return $document->getType($value->type);
             }));
 
@@ -77,7 +77,7 @@ class SchemaTest extends TestCase
                 ];
             }));
 
-            $document->fetcher('Query', 'allItems', new CallbackFetcher(function (Node $node) use (&$graph) {
+            $document->fetcher('Query', 'interfaces', new CallbackFetcher(function (Node $node) use (&$graph) {
                 return reduce([
                     $this->fetchPeople(),
                     $this->fetchPlanets(),
@@ -86,11 +86,11 @@ class SchemaTest extends TestCase
                 }, []);
             }));
 
-            $document->resolver('Query', 'allItems', new CallbackResolver(function (Node $node) {
+            $document->resolver('Query', 'interfaces', new CallbackResolver(function (Node $node) {
                 return $node->getItems();
             }));
 
-            $document->fetcher('Query', 'item', new CallbackFetcher(function (Node $node) use (&$graph) {
+            $document->fetcher('Query', 'interface', new CallbackFetcher(function (Node $node) use (&$graph) {
                 $id = $node->getSelection()->getArguments()['id'];
                 return $this->fetchItem($id)
                     ->then(function ($item) {
@@ -98,7 +98,7 @@ class SchemaTest extends TestCase
                     });
             }));
 
-            $document->resolver('Query', 'item', new CallbackResolver(function (Node $node) {
+            $document->resolver('Query', 'interface', new CallbackResolver(function (Node $node) {
                 return $node->getItems()[0];
             }));
         }

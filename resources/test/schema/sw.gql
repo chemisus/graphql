@@ -97,8 +97,10 @@ type Query {
     __type(name: String!): __Type
     allPeople: PeopleConnection
     allPlanets: PlanetsConnection
-    allItems: [Item!]
-    item: Item
+    interfaces: [PersonPlanetInterface!]
+    interface: PersonPlanetInterface
+    unions: [PersonPlanetUnion!]
+    union: PersonPlanetUnion
 }
 
 type PageInfo {
@@ -120,7 +122,7 @@ type PeopleEdge {
     cursor: String!
 }
 
-type Person implements Item {
+type Person implements PersonPlanetInterface {
     id: ID!
     name: String
     birthYear: String
@@ -175,7 +177,7 @@ type PlanetsEdge {
     cursor: String!
 }
 
-type Planet implements Item {
+type Planet implements PersonPlanetInterface {
     name: String
     diameter: Int
     rotationPeriod: Int
@@ -192,7 +194,9 @@ type Planet implements Item {
     id: ID!
 }
 
-interface Item {
+union PersonPlanetUnion = Person | Planet
+
+interface PersonPlanetInterface {
     id: ID!
     name: String
 }
