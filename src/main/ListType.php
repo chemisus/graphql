@@ -70,9 +70,9 @@ class ListType implements Type
 
     public function resolve(Node $node, $parent, $value)
     {
-        return $value === null ? null : array_map(function ($value) use ($node, $parent) {
+        return $value === null ? null : array_values(array_map(function ($value) use ($node, $parent) {
             return $this->getType()->resolve($node, $parent, $value);
-        }, $value);
+        }, $value));
     }
 
     public function isList(): bool

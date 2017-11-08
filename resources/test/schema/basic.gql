@@ -12,4 +12,12 @@ type Query {
     boolean(value:String): Boolean
     float(value:String): Float
     nonNull(value:String): String!
+
+    testEnum(value:TestEnum): [TestEnum]
+}
+
+enum TestEnum {
+    A
+    B
+    C
 }

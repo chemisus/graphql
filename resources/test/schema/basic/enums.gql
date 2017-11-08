@@ -1,0 +1,4 @@
+{
+    B:testEnum(value:"B")
+    c:testEnum(value:"C")
+}

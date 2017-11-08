@@ -6,32 +6,32 @@
   "__TypeKind": {
     "name": "__TypeKind",
     "kind": "ENUM",
-    "enumValues": {
-      "SCALAR": {
+    "enumValues": [
+      {
         "name": "SCALAR"
       },
-      "OBJECT": {
+      {
         "name": "OBJECT"
       },
-      "INTERFACE": {
+      {
         "name": "INTERFACE"
       },
-      "UNION": {
+      {
         "name": "UNION"
       },
-      "ENUM": {
+      {
         "name": "ENUM"
       },
-      "INPUT_OBJECT": {
+      {
         "name": "INPUT_OBJECT"
       },
-      "LIST": {
+      {
         "name": "LIST"
       },
-      "NON_NULL": {
+      {
         "name": "NON_NULL"
       }
-    }
+    ]
   },
   "String": {
     "name": "String",
@@ -41,70 +41,70 @@
   "__Type": {
     "name": "__Type",
     "kind": "OBJECT",
-    "fields": {
-      "kind": {
+    "fields": [
+      {
         "name": "kind",
         "typeName": "__TypeKind!"
       },
-      "fullName": {
+      {
         "name": "fullName",
         "typeName": "String!"
       },
-      "name": {
+      {
         "name": "name",
         "typeName": "String"
       },
-      "description": {
+      {
         "name": "description",
         "typeName": "String"
       },
-      "fields": {
+      {
         "name": "fields",
         "typeName": "[__Field!]"
       },
-      "interfaces": {
+      {
         "name": "interfaces",
         "typeName": "[__Type!]"
       },
-      "possibleTypes": {
+      {
         "name": "possibleTypes",
         "typeName": "[__Type!]"
       },
-      "enumValues": {
+      {
         "name": "enumValues",
         "typeName": "[__EnumValue!]"
       },
-      "inputFields": {
+      {
         "name": "inputFields",
         "typeName": "[__InputValue!]"
       },
-      "ofType": {
+      {
         "name": "ofType",
         "typeName": "__Type"
       }
-    }
+    ]
   },
   "PersonPlanetInterface": {
     "name": "PersonPlanetInterface",
     "kind": "INTERFACE",
-    "fields": {
-      "id": {
+    "fields": [
+      {
         "name": "id",
         "typeName": "ID!"
       },
-      "name": {
+      {
         "name": "name",
         "typeName": "String"
       }
-    },
-    "possibleTypes": {
-      "Person": {
+    ],
+    "possibleTypes": [
+      {
         "fullName": "Person"
       },
-      "Planet": {
+      {
         "fullName": "Planet"
       }
-    }
+    ]
   },
   "PersonPlanetUnion": {
     "name": "PersonPlanetUnion",

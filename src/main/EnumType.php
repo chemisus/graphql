@@ -45,7 +45,11 @@ class EnumType implements Type
 
     public function resolve(Node $node, $parent, $value)
     {
-        return $this->coerce($node, $value);
+        $values = array_keys($this->getValues());
+        $keys = array_map('strtoupper', $values);
+        $enums = array_combine($keys, $values);
+
+        return $this->coerce($node, $enums[strtoupper($value)]);
     }
 
     public function isList(): bool

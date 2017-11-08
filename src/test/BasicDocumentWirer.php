@@ -34,6 +34,11 @@ class BasicDocumentWirer
         $document->resolver('Query', 'boolean', $value);
         $document->resolver('Query', 'float', $value);
         $document->resolver('Query', 'nonNull', $value);
+
+        $document->resolver('Query', 'testEnum', new CallbackResolver(function (Node $node) {
+            $values = ['A', 'B', 'C'];
+            return array_map('strtolower', array_diff($values, [$node->getSelection()->getArguments()['value']]));
+        }));
     }
 
 
