@@ -1,0 +1,8 @@
+query Query ($a: String) {
+    a:string(value:$a)
+    b:int(value:$b)
+    c:int(value:$c)
+    d:boolean(value:$d)
+    e:boolean(value:$e)
+    f:boolean(value:$f)
+}

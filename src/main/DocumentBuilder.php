@@ -15,6 +15,8 @@ class DocumentBuilder
 
     private $parsed;
 
+    private $variables = [];
+
     private $source = <<< SOURCE
 scalar ID
 scalar String
@@ -247,6 +249,15 @@ SOURCE;
     public function document()
     {
         return $this->document;
+    }
+
+    public function loadVariables($variables)
+    {
+        foreach ($variables as $key => $value) {
+            $this->document->setVariable($key, $value);
+        }
+
+        return $this;
     }
 
     public function parse()

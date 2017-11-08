@@ -11,6 +11,6 @@ class VariableBuilder implements Builder
         /**
          * @var Variable $node
          */
-        return $builder->buildNode($node->name);
+        return $document->getVariable($builder->buildNode($node->name));
     }
 }

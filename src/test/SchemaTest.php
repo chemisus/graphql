@@ -78,6 +78,17 @@ class SchemaTest extends TestCase
                 }
             });
 
+            $this->benchmark('load variables', function () use (&$builder) {
+                $builder->loadVariables((object)[
+                    'a' => 'A',
+                    'b' => 1,
+                    'c' => 0,
+                    'd' => true,
+                    'e' => false,
+                    'f' => null,
+                ]);
+            });
+
             $this->benchmark('load query', function () use (&$builder, $querySource) {
                 $builder->load($querySource);
             });

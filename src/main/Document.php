@@ -26,6 +26,8 @@ class Document
      */
     private $fragments = [];
 
+    private $variables = [];
+
     public function __construct()
     {
         $this->schema = new Schema();
@@ -57,6 +59,30 @@ class Document
         }
 
         $this->types[$name] = $type;
+        return $this;
+    }
+
+    public function hasVariable(string $name): bool
+    {
+        return array_key_exists($name, $this->variables);
+    }
+
+    public function getVariable(string $name)
+    {
+        if (!$this->hasVariable($name)) {
+            throw new Exception(sprintf("variable %s is undefined", $name));
+        }
+
+        return $this->variables[$name];
+    }
+
+    public function setVariable(string $name, $value): self
+    {
+        if ($this->hasVariable($name)) {
+            throw new Exception(sprintf("variable %s is already defined", $name));
+        }
+
+        $this->variables[$name] = $value;
         return $this;
     }
 
