@@ -16,13 +16,32 @@ class DocumentExecutor
      */
     private $loop;
 
-    public function execute(Document $document, string $operation = 'Query')
+    public function getOperation(Document $document, ?string $operationName = null): ?Operation
     {
+        if ($operationName !== null) {
+            return $document->getOperation($operationName);
+        }
+
+        if ($document->hasOperation('Query')) {
+            return $document->getOperation('Query');
+        }
+
+        return $document->getFirstOperation();
+    }
+
+    public function execute(Document $document, ?string $operationName = null)
+    {
+        $operation = $this->getOperation($document, $operationName);
+
+        if ($operation === null) {
+            return null;
+        }
+
         /**
          * @var Node[] $roots
          * @var PromiseInterface[] $fetchers
          */
-        $roots = $this->makeRootNodes($document, $document->getOperation($operation), $document->getSchema()->getOperation($document->getOperation($operation)->getOperation()));
+        $roots = $this->makeRootNodes($document, $operation, $document->getSchema()->getOperation($operation->getOperation()));
 
         $value = [];
         $errors = [];

@@ -124,6 +124,12 @@ class Document
         return $this->operations[$name];
     }
 
+    public function getFirstOperation(): ?Operation
+    {
+        $operations = array_values($this->operations);
+        return array_shift($operations);
+    }
+
     public function setOperation(?string $name = 'Query', Operation $operation): self
     {
         if ($this->hasOperation($name)) {

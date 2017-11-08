@@ -1,4 +1,4 @@
-query Query ($a: String) {
+query Variables ($a: String) {
     a:string(value:$a)
     b:int(value:$b)
     c:int(value:$c)
