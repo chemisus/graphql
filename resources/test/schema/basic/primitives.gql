@@ -1,0 +1,51 @@
+{
+    isListTrue
+    isListFalse
+    isNotListTrue
+    isNotListFalse
+
+    sE:string(value:"")
+    sA:string(value:"A")
+    sB:string(value:"B")
+    s0:string(value:0)
+    s1:string(value:1)
+    s5:string(value:5)
+    sT:string(value:true)
+    sF:string(value:false)
+    sN:string(value:null)
+    sX:string
+
+    iE:int(value:"")
+    iA:int(value:"A")
+    iB:int(value:"B")
+    i0:int(value:0)
+    i1:int(value:1)
+    i5:int(value:5)
+    iT:int(value:true)
+    iF:int(value:false)
+    iN:int(value:null)
+    iX:int
+
+    fE:float(value:"")
+    fA:float(value:"A")
+    fB:float(value:"B")
+    f0:float(value:0)
+    f1:float(value:1)
+    f5:float(value:5)
+    fT:float(value:true)
+    fF:float(value:false)
+    fN:float(value:null)
+    fX:float
+
+    bE:boolean(value:"")
+    bA:boolean(value:"A")
+    bB:boolean(value:"B")
+    b0:boolean(value:0)
+    b1:boolean(value:1)
+    b5:boolean(value:5)
+    bT:boolean(value:true)
+    bF:boolean(value:false)
+    bN:boolean(value:null)
+    bX:boolean
+
+}
