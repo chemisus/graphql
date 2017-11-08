@@ -10,6 +10,9 @@ use React\Promise\FulfilledPromise;
 
 class Http
 {
+    const CONTENT_TYPE_JSON = 'application/json';
+    const CONTENT_TYPE_URLENCODED = 'application/x-www-form-urlencoded';
+
     /**
      * @var Client
      */
@@ -20,14 +23,14 @@ class Http
         self::$client = new Client($loop);
     }
 
-    public static function get($url, callable $config = null)
+    public static function get($url, $headers = [], callable $config = null)
     {
         if (!self::$client) {
             return new FulfilledPromise(file_get_contents($url));
         }
 
         $deferred = new Deferred();
-        $request = self::$client->request('GET', $url);
+        $request = self::$client->request('GET', $url, $headers);
         $request->on('response', function (Response $response) use ($deferred) {
             $deferred->notify($response->getHeaders());
 
@@ -56,10 +59,13 @@ class Http
         return $deferred->promise();
     }
 
-    public static function post($url, $data, callable $config = null)
+    public static function post($url, $data, $type = self::CONTENT_TYPE_URLENCODED, $headers = [], callable $config = null)
     {
+        $headers['Content-Length'] = strlen($data);
+        $headers['Content-Type'] = $type;
+
         $deferred = new Deferred();
-        $request = self::$client->request('POST', $url);
+        $request = self::$client->request('POST', $url, $headers);
         $request->on('response', function (Response $response) use ($deferred) {
             $deferred->notify($response->getHeaders());
 
