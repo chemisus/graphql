@@ -26,8 +26,7 @@ class BasicDocumentWirer
         }));
 
         $value = new CallbackResolver(function (Node $node) {
-            $args = $node->getSelection()->getArguments();
-            return array_key_exists('value', $args) ? $args['value'] : null;
+            return $node->arg('value');
         });
 
         $document->resolver('Query', 'string', $value);

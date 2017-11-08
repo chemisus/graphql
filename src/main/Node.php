@@ -133,6 +133,17 @@ class Node
         return $path;
     }
 
+    public function args()
+    {
+        return $this->getSelection()->getArguments();
+    }
+
+    public function arg(string $name, $default = null)
+    {
+        $args = $this->args();
+        return array_key_exists($name, $args) ? $args[$name] : $default;
+    }
+
     public function fetch($parents)
     {
         return $this->getField()->fetch($this, $parents);
