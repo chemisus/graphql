@@ -57,4 +57,6 @@ interface Type
     public function getEnumValues();
 
     public function getOfType(): ?Type;
+
+    public function isList(): bool;
 }

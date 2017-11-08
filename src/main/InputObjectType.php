@@ -48,4 +48,9 @@ class InputObjectType implements Type
     public function resolve(Node $node, $parent, $value)
     {
     }
+
+    public function isList(): bool
+    {
+        return false;
+    }
 }

@@ -45,4 +45,9 @@ class ScalarType implements Type
     {
         return $this->coerce($node, $value);
     }
+
+    public function isList(): bool
+    {
+        return false;
+    }
 }

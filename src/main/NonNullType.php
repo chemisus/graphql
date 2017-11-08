@@ -80,4 +80,9 @@ class NonNullType implements Type
 
         return $value;
     }
+
+    public function isList(): bool
+    {
+        return $this->getType()->isList();
+    }
 }

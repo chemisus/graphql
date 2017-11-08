@@ -1,0 +1,9 @@
+type Query {
+    __schema: __Schema!
+    __type(name: String!): __Type
+
+    isListTrue: [Boolean]
+    isListFalse: Boolean
+    isNotListTrue: [Boolean]
+    isNotListFalse: Boolean
+}

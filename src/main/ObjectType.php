@@ -56,4 +56,9 @@ class ObjectType implements Type
 
         return $object;
     }
+
+    public function isList(): bool
+    {
+        return false;
+    }
 }

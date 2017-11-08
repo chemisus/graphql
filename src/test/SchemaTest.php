@@ -69,8 +69,13 @@ class SchemaTest extends TestCase
                 return new DocumentWirer();
             });
 
-            $starwarsWirer = $this->benchmark('init starwars wirer', function () {
-                return new StarwarsDocumentWirer();
+            $testWirer = $this->benchmark('init test wirer', function () use ($schemaName) {
+                switch ($schemaName) {
+                    case 'basic':
+                        return new BasicDocumentWirer();
+                    case 'sw':
+                        return new StarwarsDocumentWirer();
+                }
             });
 
             $this->benchmark('load query', function () use (&$builder, $querySource) {
@@ -102,8 +107,8 @@ class SchemaTest extends TestCase
                 $schemaWirer->wire($document);
             });
 
-            $this->benchmark('wire starwars', function () use (&$schemaName, &$document, &$starwarsWirer) {
-                $starwarsWirer->wire($document);
+            $this->benchmark('wire starwars', function () use (&$schemaName, &$document, &$testWirer) {
+                $testWirer->wire($document);
             });
 
             return $this->benchmark('execute', function () use (&$executor, &$document) {

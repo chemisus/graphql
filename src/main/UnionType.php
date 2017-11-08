@@ -44,4 +44,9 @@ class UnionType implements Type
     {
         return $this->type($node, $value)->resolve($node, $parent, $value);
     }
+
+    public function isList(): bool
+    {
+        return false;
+    }
 }

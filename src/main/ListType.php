@@ -74,4 +74,9 @@ class ListType implements Type
             return $this->getType()->resolve($node, $parent, $value);
         }, $value);
     }
+
+    public function isList(): bool
+    {
+        return true;
+    }
 }
