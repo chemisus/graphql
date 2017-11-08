@@ -75,7 +75,7 @@ class NonNullType implements Type
         $value = $this->getType()->resolve($node, $parent, $value);
 
         if ($value === null) {
-            throw new Exception("%s can not be null", $node->getPath());
+            throw new Exception(sprintf("%s can not be null", $node->getPath()));
         }
 
         return $value;

@@ -102,10 +102,6 @@ class Document
 
     public function setFragment(string $name, Fragment $fragment): self
     {
-        if ($this->hasFragment($name)) {
-            throw new Exception(sprintf("fragment %s is already defined", $name));
-        }
-
         $this->fragments[$name] = $fragment;
         return $this;
     }
