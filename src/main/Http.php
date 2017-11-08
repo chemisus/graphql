@@ -29,13 +29,26 @@ class Http
         $deferred = new Deferred();
         $request = self::$client->request('GET', $url);
         $request->on('response', function (Response $response) use ($deferred) {
-            $response->on('data', function ($chunk) use (&$data) {
+            $deferred->notify($response->getHeaders());
+
+            $response->on('data', function ($chunk) use (&$data, $deferred) {
                 $data .= $chunk;
+                $deferred->notify($chunk);
             });
+
             $response->on('end', function () use (&$data, $deferred) {
                 $deferred->resolve($data);
             });
+
+            $response->on('error', function ($error) use (&$data, $deferred) {
+                $deferred->reject($error);
+            });
         });
+
+        $request->on('error', function ($error) use ($deferred) {
+            $deferred->reject($error);
+        });
+
         if (is_callable($config)) {
             call_user_func($config, $request);
         }
