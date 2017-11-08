@@ -29,6 +29,9 @@ class Node
      */
     private $children = [];
 
+    /**
+     * @var bool|array
+     */
     private $items = false;
 
     /**
