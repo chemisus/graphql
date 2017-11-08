@@ -24,6 +24,16 @@ class BasicDocumentWirer
         $document->resolver('Query', 'isNotListFalse', new CallbackResolver(function (Node $node) {
             return !$node->getField()->getType()->isList();
         }));
+
+        $value = new CallbackResolver(function (Node $node) {
+            return $node->getSelection()->getArguments()['value'];
+        });
+
+        $document->resolver('Query', 'string', $value);
+        $document->resolver('Query', 'int', $value);
+        $document->resolver('Query', 'boolean', $value);
+        $document->resolver('Query', 'float', $value);
+        $document->resolver('Query', 'nonNull', $value);
     }
 
 

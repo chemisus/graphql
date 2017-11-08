@@ -6,4 +6,10 @@ type Query {
     isListFalse: Boolean
     isNotListTrue: [Boolean]
     isNotListFalse: Boolean
+
+    string(value:String): String
+    int(value:String): Int
+    boolean(value:String): Boolean
+    float(value:String): Float
+    nonNull(value:String): String!
 }

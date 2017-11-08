@@ -3,4 +3,9 @@
     isListFalse
     isNotListTrue
     isNotListFalse
+    sA:string(value:"A")
+    sB:string(value:"B")
+    s5:string(value:5)
+    sN:string(value:null)
+    sX:string
 }

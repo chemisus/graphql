@@ -2,5 +2,10 @@
   "isListTrue": [true],
   "isListFalse": false,
   "isNotListTrue": [false],
-  "isNotListFalse": true
+  "isNotListFalse": true,
+  "sA": "A",
+  "sB": "B",
+  "s5": "5",
+  "sN": null,
+  "sX": null
 }

@@ -6,6 +6,22 @@ class DocumentWirer
 {
     public function wire(Document $document)
     {
+        $document->coercer('String', new CallbackCoercer(function (Node $node, $value) {
+            return $value !== null ? (string) $value : null;
+        }));
+
+        $document->coercer('Int', new CallbackCoercer(function (Node $node, $value) {
+            return $value !== null ? (int) $value : null;
+        }));
+
+        $document->coercer('Boolean', new CallbackCoercer(function (Node $node, $value) {
+            return $value !== null ? (bool) $value : null;
+        }));
+
+        $document->coercer('Float', new CallbackCoercer(function (Node $node, $value) {
+            return $value !== null ? (float) $value : null;
+        }));
+
         $document->resolver('Query', '__schema', new CallbackResolver(function (Node $node) use ($document) {
             return $document->getSchema();
         }));

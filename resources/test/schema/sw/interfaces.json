@@ -42,43 +42,43 @@
     },
     {
       "name": "Alderaan",
-      "diameter": "12500"
+      "diameter": 12500
     },
     {
       "name": "Yavin IV",
-      "diameter": "10200"
+      "diameter": 10200
     },
     {
       "name": "Hoth",
-      "diameter": "7200"
+      "diameter": 7200
     },
     {
       "name": "Dagobah",
-      "diameter": "8900"
+      "diameter": 8900
     },
     {
       "name": "Bespin",
-      "diameter": "118000"
+      "diameter": 118000
     },
     {
       "name": "Endor",
-      "diameter": "4900"
+      "diameter": 4900
     },
     {
       "name": "Naboo",
-      "diameter": "12120"
+      "diameter": 12120
     },
     {
       "name": "Coruscant",
-      "diameter": "12240"
+      "diameter": 12240
     },
     {
       "name": "Kamino",
-      "diameter": "19720"
+      "diameter": 19720
     },
     {
       "name": "Geonosis",
-      "diameter": "11370"
+      "diameter": 11370
     }
   ]
 }
