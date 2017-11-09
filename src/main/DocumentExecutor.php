@@ -60,7 +60,7 @@ class DocumentExecutor
                     }
                 }
             })
-            ->otherwise(function ($e) use (&$error) {
+            ->otherwise(function ($e) use (&$errors) {
                 $errors[] = $e;
             });
 
