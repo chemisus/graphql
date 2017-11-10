@@ -79,4 +79,9 @@ class ListType implements Type
     {
         return true;
     }
+
+    public function isNonNull(): bool
+    {
+        return false;
+    }
 }

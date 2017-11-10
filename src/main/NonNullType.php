@@ -85,4 +85,9 @@ class NonNullType implements Type
     {
         return $this->getType()->isList();
     }
+
+    public function isNonNull(): bool
+    {
+        return true;
+    }
 }

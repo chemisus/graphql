@@ -38,7 +38,6 @@ type __Schema {
 
 type __Type {
     kind: __TypeKind!
-    fullName: String!
     name: String
     description: String
 
@@ -66,7 +65,6 @@ type __Field {
     description: String
     args: [__InputValue!]!
     type: __Type!
-    typeName: String!
     isDeprecated: Boolean!
     deprecationReason: String
 }
@@ -110,6 +108,14 @@ enum __DirectiveLocation {
     FRAGMENT_DEFINITION
     FRAGMENT_SPREAD
     INLINE_FRAGMENT
+}
+
+extend type __Type {
+    fullName: String!
+}
+
+extend type __Field {
+    typeName: String!
 }
 
 SOURCE;

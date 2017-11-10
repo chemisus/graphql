@@ -56,4 +56,9 @@ class EnumType implements Type
     {
         return false;
     }
+
+    public function isNonNull(): bool
+    {
+        return false;
+    }
 }

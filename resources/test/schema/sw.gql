@@ -1,12 +1,18 @@
-type Query {
+extend type Query {
     __schema: __Schema!
-    __type(name: String!): __Type
+}
+
+type Query {
     allPeople: PeopleConnection
     allPlanets: PlanetsConnection
     interfaces: [PersonPlanetInterface!]
     interface: PersonPlanetInterface
     unions: [PersonPlanetUnion!]
     union: PersonPlanetUnion
+}
+
+extend type Query {
+    __type(name: String!): __Type
 }
 
 type PageInfo {

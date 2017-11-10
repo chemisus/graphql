@@ -59,4 +59,6 @@ interface Type
     public function getOfType(): ?Type;
 
     public function isList(): bool;
+
+    public function isNonNull(): bool;
 }

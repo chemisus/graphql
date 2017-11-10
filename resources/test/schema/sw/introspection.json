@@ -47,10 +47,6 @@
         "typeName": "__TypeKind!"
       },
       {
-        "name": "fullName",
-        "typeName": "String!"
-      },
-      {
         "name": "name",
         "typeName": "String"
       },
@@ -81,6 +77,10 @@
       {
         "name": "ofType",
         "typeName": "__Type"
+      },
+      {
+        "name": "fullName",
+        "typeName": "String!"
       }
     ]
   },
