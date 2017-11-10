@@ -230,13 +230,13 @@ SOURCE;
         return array_map([$this, 'buildNode'], $this->toArray($nodes));
     }
 
-    public function load($source)
+    public function loadSource(string $source)
     {
         $this->source .= PHP_EOL . $source;
         return $this;
     }
 
-    public function build()
+    public function buildDocument()
     {
         $this->parse();
         $this->buildSchema();

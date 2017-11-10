@@ -2,7 +2,7 @@
 
 namespace Chemisus\GraphQL;
 
-class DocumentWirer
+class IntrospectionDocumentWirer implements Wirer
 {
     public function wire(Document $document)
     {

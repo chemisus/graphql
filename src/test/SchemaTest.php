@@ -42,7 +42,7 @@ class SchemaTest extends TestCase
     public function make($gql)
     {
         $queryBuilder = new DocumentBuilder();
-        return $queryBuilder->load($gql)->build();
+        return $queryBuilder->loadSource($gql)->buildDocument();
     }
 
     /**
@@ -57,6 +57,9 @@ class SchemaTest extends TestCase
         echo PHP_EOL;
 
         $actual = $this->benchmark('total', function () use ($schemaName, $schemaSource, $querySource) {
+            /**
+             * @var DocumentBuilder $builder
+             */
             $builder = $this->benchmark('init builder', function () {
                 return new DocumentBuilder();
             });
@@ -66,7 +69,7 @@ class SchemaTest extends TestCase
             });
 
             $schemaWirer = $this->benchmark('init schema wirer', function () {
-                return new DocumentWirer();
+                return new IntrospectionDocumentWirer();
             });
 
             $testWirer = $this->benchmark('init test wirer', function () use ($schemaName) {
@@ -90,11 +93,11 @@ class SchemaTest extends TestCase
             });
 
             $this->benchmark('load query', function () use (&$builder, $querySource) {
-                $builder->load($querySource);
+                $builder->loadSource($querySource);
             });
 
             $this->benchmark('load schema', function () use (&$builder, $schemaSource) {
-                $builder->load($schemaSource);
+                $builder->loadSource($schemaSource);
             });
 
             $this->benchmark('parse', function () use (&$builder) {

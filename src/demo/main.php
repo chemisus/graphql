@@ -394,9 +394,9 @@ type Starship {
 SOURCE;
 
     $builder = new DocumentBuilder();
-    $builder->load($source);
-    $document = $builder->build();
-    $wirer = new DocumentWirer();
+    $builder->loadSource($source);
+    $document = $builder->buildDocument();
+    $wirer = new IntrospectionDocumentWirer();
     $wirer->wire($document);
 
     $executor = new DocumentExecutor();

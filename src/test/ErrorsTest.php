@@ -10,15 +10,12 @@ class ErrorsTest extends TestCase
     public function document($schema, $query, $variables = [])
     {
         $builder = new DocumentBuilder();
-        $schemaWirer = new DocumentWirer();
-        $builder->load($query);
-        $builder->load($schema);
+        $schemaWirer = new IntrospectionDocumentWirer();
+        $builder->loadSource($query);
+        $builder->loadSource($schema);
 
         $builder->loadVariables($variables);
-        $builder->parse();
-        $builder->buildSchema();
-        $builder->buildOperations();
-        $document = $builder->document();
+        $document = $builder->buildDocument();
         $schemaWirer->wire($document);
         return $document;
     }
