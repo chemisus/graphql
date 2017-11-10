@@ -44,43 +44,91 @@
     "fields": [
       {
         "name": "kind",
-        "typeName": "__TypeKind!"
+        "typeName": "__TypeKind!",
+        "type": {
+          "fullName": "__TypeKind!",
+          "baseName": "__TypeKind"
+        }
       },
       {
         "name": "name",
-        "typeName": "String"
+        "typeName": "String",
+        "type": {
+          "fullName": "String",
+          "baseName": "String"
+        }
       },
       {
         "name": "description",
-        "typeName": "String"
+        "typeName": "String",
+        "type": {
+          "fullName": "String",
+          "baseName": "String"
+        }
       },
       {
         "name": "fields",
-        "typeName": "[__Field!]"
+        "typeName": "[__Field!]",
+        "type": {
+          "fullName": "[__Field!]",
+          "baseName": "__Field"
+        }
       },
       {
         "name": "interfaces",
-        "typeName": "[__Type!]"
+        "typeName": "[__Type!]",
+        "type": {
+          "fullName": "[__Type!]",
+          "baseName": "__Type"
+        }
       },
       {
         "name": "possibleTypes",
-        "typeName": "[__Type!]"
+        "typeName": "[__Type!]",
+        "type": {
+          "fullName": "[__Type!]",
+          "baseName": "__Type"
+        }
       },
       {
         "name": "enumValues",
-        "typeName": "[__EnumValue!]"
+        "typeName": "[__EnumValue!]",
+        "type": {
+          "fullName": "[__EnumValue!]",
+          "baseName": "__EnumValue"
+        }
       },
       {
         "name": "inputFields",
-        "typeName": "[__InputValue!]"
+        "typeName": "[__InputValue!]",
+        "type": {
+          "fullName": "[__InputValue!]",
+          "baseName": "__InputValue"
+        }
       },
       {
         "name": "ofType",
-        "typeName": "__Type"
+        "typeName": "__Type",
+        "type": {
+          "fullName": "__Type",
+          "baseName": "__Type"
+        }
       },
       {
         "name": "fullName",
-        "typeName": "String!"
+        "typeName": "String!",
+        "type": {
+          "fullName": "String!",
+          "baseName": "String"
+        }
+      },
+      {
+        "name": "baseName",
+        "typeName": "String!",
+        "type": {
+          "fullName": "String!",
+          "baseName": "String"
+        }
       }
     ]
   },
@@ -90,19 +138,29 @@
     "fields": [
       {
         "name": "id",
-        "typeName": "ID!"
+        "typeName": "ID!",
+        "type": {
+          "fullName": "ID!",
+          "baseName": "ID"
+        }
       },
       {
         "name": "name",
-        "typeName": "String"
+        "typeName": "String",
+        "type": {
+          "fullName": "String",
+          "baseName": "String"
+        }
       }
     ],
     "possibleTypes": [
       {
-        "fullName": "Person"
+        "fullName": "Person",
+        "baseName": "Person"
       },
       {
-        "fullName": "Planet"
+        "fullName": "Planet",
+        "baseName": "Planet"
       }
     ]
   },
@@ -112,10 +170,12 @@
     "fields": null,
     "possibleTypes": [
       {
-        "fullName": "Person"
+        "fullName": "Person",
+        "baseName": "Person"
       },
       {
-        "fullName": "Planet"
+        "fullName": "Planet",
+        "baseName": "Planet"
       }
     ]
   }

@@ -21,6 +21,10 @@
         fields {
             name
             typeName
+            type {
+                fullName
+                baseName
+            }
         }
     }
     PersonPlanetInterface:__type(name:"PersonPlanetInterface") {
@@ -29,9 +33,14 @@
         fields {
             name
             typeName
+            type {
+                fullName
+                baseName
+            }
         }
         possibleTypes {
             fullName
+            baseName
         }
     }
     PersonPlanetUnion:__type(name:"PersonPlanetUnion") {
@@ -40,9 +49,14 @@
         fields {
             name
             typeName
+            type {
+                fullName
+                baseName
+            }
         }
         possibleTypes {
             fullName
+            baseName
         }
     }
 }

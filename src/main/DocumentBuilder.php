@@ -98,6 +98,7 @@ enum __DirectiveLocation {
 
 extend type __Type {
     fullName: String!
+    baseName: String!
 }
 
 extend type __Field {

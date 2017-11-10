@@ -44,6 +44,7 @@ class DocumentWirer
             return (object) [
                 'kind' => $value->getKind(),
                 'fullName' => $value->getFullName(),
+                'baseName' => $value->getBaseName(),
                 'name' => $value->getName(),
                 'description' => $value->getDescription(),
                 'fields' => $value->getFields(),

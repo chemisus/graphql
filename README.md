@@ -5,15 +5,12 @@
 ## Schema
 
 ```
-type __Type {
-    # Returns the full name for the type, including lists and non null modifications
+extend type __Type {
     fullName: String!
+    baseName: String!
 }
-```
 
-```
-type __Field {
-    # Returns the full name for the type, including lists and non null modifications
+extend type __Field {
     typeName: String!
 }
 ```
