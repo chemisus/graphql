@@ -189,6 +189,11 @@ SOURCE;
             NodeKind::ARGUMENT => new ArgumentBuilder(),
             NodeKind::FRAGMENT_SPREAD => new FragmentSpreadBuilder(),
             NodeKind::INLINE_FRAGMENT => new InlineFragmentBuilder(),
+
+            //=========================================================================================================
+
+            NodeKind::TYPE_EXTENSION_DEFINITION => new ExtendTypeBuilder(),
+
         ];
     }
 
@@ -314,6 +319,7 @@ SOURCE;
         }
 
         $kinds = [
+            NodeKind::TYPE_EXTENSION_DEFINITION,
             NodeKind::SCHEMA_DEFINITION,
         ];
 

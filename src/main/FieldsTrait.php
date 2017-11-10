@@ -35,6 +35,16 @@ trait FieldsTrait
     public function setFields(?array $fields): self
     {
         $this->fields = [];
+        $this->putFields($fields);
+        return $this;
+    }
+
+    /**
+     * @param array|null $fields
+     * @return self
+     */
+    public function putFields(?array $fields): self
+    {
         foreach ($fields as $field) {
             $this->fields[$field->getName()] = $field;
         }

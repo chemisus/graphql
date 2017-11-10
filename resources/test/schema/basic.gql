@@ -1,7 +1,10 @@
-type Query {
-    __schema: __Schema!
-    __type(name: String!): __Type
+enum TestEnum {
+    A
+    B
+    C
+}
 
+type Query {
     isListTrue: [Boolean]
     isListFalse: Boolean
     isNotListTrue: [Boolean]
@@ -16,8 +19,7 @@ type Query {
     testEnum(value:TestEnum): [TestEnum]
 }
 
-enum TestEnum {
-    A
-    B
-    C
+extend type Query {
+    __schema: __Schema!
+    __type(name: String!): __Type
 }
