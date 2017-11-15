@@ -47,6 +47,13 @@ While resolving does not currently
 support promises or callbacks being returned, 
 [issue #5](https://github.com/chemisus/graphql/issues/5) is tracking the progress.
 
+## Wiring
+
+* Document::coercer(Coercer $coercer)
+* Document::typer(Typer $typer)
+* Document::fetcher(Fetcher $fetcher)
+* Document::resolver(Resolver $resolver)
+
 ## Document Stages
 
 The following are the four main stages and their substages that will get you from 
