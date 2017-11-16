@@ -6,7 +6,7 @@
 
 If you're looking for a reactive, two phase, BFS, graphql library, then you've found it!
 
-> ***What do you mean by two phases?***
+> ***What do you mean by "two phases"?***
 
 The execution of a query consists of two phases: fetch and resolve. 
 
