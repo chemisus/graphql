@@ -47,103 +47,208 @@ While resolving does not currently
 support promises or callbacks being returned, 
 [issue #5](https://github.com/chemisus/graphql/issues/5) is tracking the progress.
 
-## Wiring
+## Document Wiring
 
-* Document::coercer(Coercer $coercer)
-* Document::typer(Typer $typer)
-* Document::fetcher(Fetcher $fetcher)
-* Document::resolver(Resolver $resolver)
+So now we know why the need for fetch and resolve phases, but we still need to
+specify what they actually do for an application. This is where wirings come in.
 
-## Document Stages
+There are two categories of wirings: nodes and edges.
 
-The following are the four main stages and their substages that will get you from 
-start to finish:
-
-1. load document
-    1. source
-    2. variables
-2. build document
-    1. parse source
-    2. build schema
-    3. build query
-3. wire document
-    1. introspection
-    2. application
-4. execute document
-    1. fetch phase
-    2. resolve phase
-
-##### Example (version: 1.1)
+#### Node Wirings
 
 ```php
-function generateGraphData(
-    string $schemaSource,
-    string $querySource,
-    array $queryVariables,
-    \Chemisus\GraphQL\Wirer $applicationWirer
-) {
-    // 1. load
-    $documentBuilder = new \Chemisus\GraphQL\DocumentBuilder();
-    $documentBuilder->loadVariables($queryVariables)
-    $documentBuilder->loadSource($schemaSource);
-    $documentBuilder->loadSource($querySource);
-    
-    // 2. build
-    $document = $documentBuilder->buildDocument();
+Typer::type(Node $node, $value);
+Document::typer(Typer $typer);
+```
 
-    // 3. wire
-    $introspectionWirer = new \Chemisus\GraphQL\IntrospectionWirer();
-    $introspectionWirer->wire($document);
+```php
+Coercer::coerce(Node $node, $value);
+Document::coercer(Coercer $coercer);
+```
 
-    $applicationWirer->wire($document);
+#### Edge Wirings
 
-    // 4. execute    
-    $documentExecutor = new \Chemisus\GraphQL\DocumentExecutor();
-    $data = $documentExecutor->execute($document);
-    
-    return $data;
+```php
+Fetcher::fetch(Node $node);
+Document::fetcher(Fetcher $fetcher);
+```
+
+```php
+Resolver::resolve(Node $node, $parent, $value);
+Document::resolver(Resolver $resolver);
+```
+
+### Wiring Example
+
+```
+type Query {
+    book(id:String!): Book!
+    books(ids:[String!]!): [Book!]!
+}
+
+type Book {
+    id: String!
+    title: String!
+    authorId: String!
+    author: Person!
+}
+
+type Person {
+    id: String!
+    name: String!
 }
 ```
 
-### Load Stage
+###### Node: BookWirer
 
 ```php
-    $documentBuilder = new \Chemisus\GraphQL\DocumentBuilder();
-    $documentBuilder->loadVariables($queryVariables)
-    $documentBuilder->loadSource($schemaSource);
-    $documentBuilder->loadSource($querySource);
+class BookWirer implements Wirer {
+    function wire(Document $document) {
+        $document->coerce('Book', new CallbackCoercer(function (Node $node, Book $value) {
+            return (object)[
+                'id' => $book->getId(),
+                'title' => $book->getTitle(),
+                'authorId' => $book->getAuthorId(),
+            ];
+        });
+    }
+}
 ```
 
-### Build Stage
+###### Node: PersonWirer
 
 ```php
-    $document = $builder->buildDocument();
+class PersonWirer implements Wirer {
+    function wire(Document $document) {
+        $document->coerce('Person', new CallbackCoercer(function (Node $node, Person $value) {
+            return (object)[
+                'id' => $person->getId(),
+                'name' => $person->getName(),
+            ];
+        });
+    }
+}
+```
+
+###### Edge: QueryBookWirer
+
+```php
+class QueryBookWirer implements Wirer {
+    function wire(Document $document) {
+        $document->fetcher('Query', 'book', new CallbackFetcher(function (Node $node) {
+            $ids = $node->arg('id');
+            return [BookRepository::getBook($id)];
+        });
+
+        $document->resolve('Query', 'book', new CallbackResolver(function (Node $node, $parent, $value) {
+            $books = $node->getItems();
+            return array_shift($books);
+        });
+    }
+}
+```
+
+###### Edge: QueryBooksWirer
+
+```php
+class QueryBooksWirer implements Wirer {
+    function wire(Document $document) {
+        $document->fetcher('Query', 'books', new CallbackFetcher(function (Node $node) {
+            $ids = $node->arg('ids', []);
+            return count($ids) ? BookRepository::getBooks($ids) : [];
+        });
+
+        $document->resolve('Query', 'books', new CallbackResolver(function (Node $node, $parent, $value) {
+            return $node->getItems();
+        });
+    }
+}
+```
+
+###### Edge: BookAuthorWirer
+
+```php
+class BookAuthorWirer implements Wirer {
+    function wire(Document $document) {
+        $document->fetch('Book', 'author', new CallbackFetcher(function (Node $node) {
+            $mapBookToAuthorId = function (Book $book) {
+                return $book->getAuthorId();
+            };
+            $ids = array_map($mapBookToAuthorId, $node->getParent()->getItems());
+            return count($ids) ? PersonRepository::getPersons($ids) : [];
+        });
+
+        $document->resolve('Book', 'author', new CallbackResolver(function (Node $node, Book $book, $value) {
+            $filterAuthorById = function ($authorId) {
+                return function (Person $person) use ($authorId) {
+                    return $person->id === $authorId;
+                };
+            };
+            $authors = array_filter($node->getParent()->getItems(), $filterAuthorById($book->getAuthorId())
+            return $node->getItems();
+        });
+    }
+}
+```
+
+## Document Execution
+
+```php
+class GraphQLRunner {
+    /**
+     * @param string $source
+     * @param array $variables
+     * @param Wirer[] $wirers
+     */
+    public function run (
+        string $source,
+        array $queryVariables,
+        $wirers
+    ) {
+        // 1. load
+        $documentBuilder = new DocumentBuilder();
+        $documentBuilder->loadSource($source);
+        $documentBuilder->loadVariables($queryVariables)
+        
+        // 2. build
+        $document = $documentBuilder->buildDocument();
+    
+        // 3. wire
+        $introspectionWirer = new IntrospectionWirer();
+        $introspectionWirer->wire($document);
+    
+        foreach($wirers as $wirer) {
+            $wirer->wire($document);
+        }    
+    
+        // 4. execute    
+        $documentExecutor = new DocumentExecutor();
+        $data = $documentExecutor->execute($document);
+        
+        return $data;
+    }
+}
 ```
 
 ```php
-    $documentBuilder->parse();
-    $documentBuilder->buildSchema();
-    $documentBuilder->buildOperations();
-    $document = $documentBuilder->document();
+$schemaSource = "type Query { ... }";
+$querySource = "query Query { ... }";
+$source = implode(PHP_EOL, [$schemaSource, $querySource]);
+
+$variables = ['param1' => 'value1'];
+$wirers = [
+    new BookWirer(),
+    new PersonWirer(),
+    new QueryBookWirer(),
+    new QueryBooksWirer(),
+    new BookAuthorWirer(),
+];
+
+$graphql = new GraphQLRunner();
+$data = $graphql->run($source, $variables, $wirers)
 ```
 
-### Wire Stage
-
-```php
-    $introspectionWirer = new \Chemisus\GraphQL\IntrospectionWirer();
-    $introspectionWirer->wire($document);
-
-    $applicationWirer->wire($document);
-```
-
-### Execute Stage
-
-```php
-    $documentExecutor = new \Chemisus\GraphQL\DocumentExecutor();
-    $data = $documentExecutor->execute($document);
-```
-
-## Introspection Extensions
+## Extensions
 
 ```
 extend type __Type {
