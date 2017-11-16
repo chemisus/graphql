@@ -1,0 +1,5 @@
+{
+    first(fetched:["a", "b", "c"])
+    last(fetched:["a", "b", "c"])
+    all(fetched:["a", "b", "c"])
+}

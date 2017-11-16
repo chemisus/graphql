@@ -2,6 +2,9 @@
 
 namespace Chemisus\GraphQL;
 
+use Chemisus\GraphQL\Resolvers\AllFetchedItemsResolver;
+use Chemisus\GraphQL\Resolvers\FirstFetchedItemResolver;
+use Chemisus\GraphQL\Resolvers\LastFetchedItemResolver;
 use Exception;
 use React\Promise\FulfilledPromise;
 
@@ -39,6 +42,22 @@ class BasicDocumentWirer
             $values = ['A', 'B', 'C'];
             return array_map('strtolower', array_diff($values, [$node->getSelection()->getArguments()['value']]));
         }));
+
+        $document->fetcher('Query', 'first', new CallbackFetcher(function (Node $node) {
+            return $node->arg('fetched', []);
+        }));
+
+        $document->fetcher('Query', 'last', new CallbackFetcher(function (Node $node) {
+            return $node->arg('fetched', []);
+        }));
+
+        $document->fetcher('Query', 'all', new CallbackFetcher(function (Node $node) {
+            return $node->arg('fetched', []);
+        }));
+
+        $document->resolver('Query', 'first', new FirstFetchedItemResolver());
+        $document->resolver('Query', 'last', new LastFetchedItemResolver());
+        $document->resolver('Query', 'all', new AllFetchedItemsResolver());
     }
 
 

@@ -17,6 +17,10 @@ type Query {
     nonNull(value:String): String!
 
     testEnum(value:TestEnum): [TestEnum]
+
+    first(fetched:[String!]!): String!
+    last(fetched:[String!]!): String!
+    all(fetched:[String!]!): [String!]!
 }
 
 extend type Query {
