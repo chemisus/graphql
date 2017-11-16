@@ -4,7 +4,7 @@
 
 # GraphQL
 
-If you're looking for a reactive, two phase, BFS, graphql library, then you've found it!
+If you're looking for a reactive, two phase, BFS, graphql library<sup>†</sup>, then you've found it!
 
 > ***What do you mean by "two phases"?***
 
@@ -39,7 +39,7 @@ was made to look into it.
 #### Resolve Phase
 
 Once the fetch phase is complete, the resolve phase will then assemble the result by 
-allowing each node to generate, or select its value(s) from the fetched data.
+allowing each node to generate, or select its value(s) for the final result.
 
 The resolve phase is executed in a DFS manner. 
 
@@ -52,31 +52,45 @@ support promises or callbacks being returned,
 So now we know why the need for fetch and resolve phases, but we still need to
 specify what they actually do for an application. This is where wirings come in.
 
-There are two categories of wirings: nodes and edges.
+A document has four wire operations, each of which can be placed into one of the
+two following categories: nodes and edges.
 
-#### Node Wirings
+#### Fetcher
 
-```php
-Typer::type(Node $node, $value);
-Document::typer(Typer $typer);
-```
+`Document::fetch(Fetcher $fetcher)` adds a fetcher to the document. A fetcher is
+an edge operation, and as previously discussed, will allow fetching data in bulk. 
+The value returned by a fetcher should be an array, even if the node type itself 
+is not a list. The items returned by the fetcher will be available in that node's 
+`Node::getItems()`. During execution, for each time an edge is specified in
+a query, the edge's fetcher will be called once. Each time the fetcher is 
+called, the node provided could have different items, arguments, or children. 
 
-```php
-Coercer::coerce(Node $node, $value);
-Document::coercer(Coercer $coercer);
-```
+#### Resolver
 
-#### Edge Wirings
+`Document::resolve(Resolver $resolver)` adds a resolver to the document. A 
+resolver is an edge operation, and as previously discussed, will determine the 
+final result for an edge.
 
-```php
-Fetcher::fetch(Node $node);
-Document::fetcher(Fetcher $fetcher);
-```
+#### Coercer
 
-```php
-Resolver::resolve(Node $node, $parent, $value);
-Document::resolver(Resolver $resolver);
-```
+`Document::coerce(Coercer $coercer)` adds a coercer to the document. A coercer is 
+a node operation that will translate a node's value into a json value. The value 
+returned by `Coercer::coerce(Node $node, $value)` should be a mixed value that 
+follows the schema's definition for that node. 
+
+If the node is an object, then it helps to think of the coercer as a great way to
+specify multiple resolvers. The value returned by the coercer should be an object 
+containing at a minimum the fields that do not have resolvers defined for them. 
+The values for the object themselves do not need to be coerced, as they will be 
+coerced later if they were specified in the query.
+
+#### Typer
+
+`Document::type(Typer $typer)` adds a typer to the document. A typer is a node
+operation that will determine the concrete type of a value, if the node's type
+is an interface or union. The value returned by `Typer::type(Node $node, $value)`
+should be an instance of a Type, which can be obtained by 
+`$node->getDocument()->getType($name)`;
 
 ### Wiring Example
 
@@ -268,3 +282,7 @@ extend type __Field {
 ## Requirements
 
 - php 7.1
+
+```
+†: in php, of course
+```
