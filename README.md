@@ -47,6 +47,17 @@ While resolving does not currently
 support promises or callbacks being returned, 
 [issue #5](https://github.com/chemisus/graphql/issues/5) is tracking the progress.
 
+## Nodes
+
+A `Node` will contain combined information that is useful when wiring a document.
+
+* `Node::getDocument()` gets the document itself
+* `Node::arg(string $key, $default=null)` gets an argument if it was specified, $default otherwise.
+* `Node::args()` gets all arguments that were specified.
+* `Node::getSelection()` gets all fields specified
+* `Node::getParent()` gets the parent node
+* `Node::getItems()` gets items that were fetched for the node
+
 ## Document Wiring
 
 So now we know why the need for fetch and resolve phases, but we still need to
