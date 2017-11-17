@@ -275,6 +275,9 @@ $data = $graphql->run($source, $variables, $wirers)
 
 ## Extensions
 
+These extensions are provided by default, however, might be moved to their own plugin
+package at a later date.
+
 ```
 extend type __Type {
     # returns type name with modifications (e.g. "[ID!]!" -> "[ID!]!")
@@ -300,13 +303,40 @@ extend type __Field {
 
 ## Development & Testing
 
-resources/test/schema
-resources/test/schema/<schema>.gql
-resources/test/schema/<schema>/<query>.gql
-resources/test/schema/<schema>/<expect>.json
+This package can setup a [docker](https://docker.com) container 
+using [docker-compose](https://docs.docker.com/compose/) for its 
+testing environment.
 
-src/test/Wirers/<schema>DocumentWirer.php
+##### Docker Environment
 
+`ant` will do everything needed to run tests, including setting up
+the docker container.
 
+##### Host Environment
 
-`SchemaTest`
+`ant -Dcontained=true` will do the same, but on the host instead.
+
+#### Testing
+
+There are two main test runners: `SchemaTest` and `ErrorsTest`.
+
+##### SchemaTest
+
+`SchemaTest` will load a schema, run queries against it, then compare
+the actual result to expected results.
+
+To add a schema, create a file at 
+`./resources/test/schema/<schemaName>.gql`.
+
+To add a query for a schema, create the files
+`./resources/test/schema/<schemaName>/<queryName>.gql` for the query, and
+`./resources/test/schema/<schemaName>/<queryName>.json` for the results.
+
+To add a wirer for a schema, create a Wirer class at
+`./src/test/Wirers/<schemaName>DocumentWirer.php`
+
+`SchemaTest` will detect the files once created, and load them automatically.
+
+##### ErrorsTest
+
+`ErrorsTest` is to test the various errors that graphql specifies.
