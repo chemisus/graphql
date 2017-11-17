@@ -24,7 +24,7 @@
             <exec executable="vendor/bin/phpunit">
                 <arg value="-c"/>
                 <arg file="build/phpunit.xml"/>
-                <!--<arg line="&#45;&#45;filter sw::union"/>-->
+                <!--<arg line="&#45;&#45;filter StarWars::union"/>-->
             </exec>
         </container>
     </target>

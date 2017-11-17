@@ -300,3 +300,13 @@ extend type __Field {
 
 ## Development & Testing
 
+resources/test/schema
+resources/test/schema/<schema>.gql
+resources/test/schema/<schema>/<query>.gql
+resources/test/schema/<schema>/<expect>.json
+
+src/test/Wirers/<schema>DocumentWirer.php
+
+
+
+`SchemaTest`

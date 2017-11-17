@@ -6,6 +6,7 @@ use Chemisus\GraphQL\CallbackFetcher;
 use Chemisus\GraphQL\CallbackResolver;
 use Chemisus\GraphQL\CallbackTyper;
 use Chemisus\GraphQL\Document;
+use Chemisus\GraphQL\FileCachedHttp;
 use Chemisus\GraphQL\Http;
 use Chemisus\GraphQL\Node;
 use Exception;
@@ -138,21 +139,6 @@ class StarWarsDocumentWirer
 
     public function fetchURL(string $url)
     {
-        $dir = dirname(dirname(dirname(__DIR__))) . '/out/cache/';
-        $key = base64_encode($url);
-        $file = $dir . $key;
-
-        if (file_exists($file)) {
-            return new FulfilledPromise(json_decode(file_get_contents($file)));
-        }
-
-        return Http::get($url)
-            ->then(function ($data) use ($dir, $file) {
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
-                }
-                file_put_contents($file, $data);
-                return json_decode($data);
-            });
+        return FileCachedHttp::get($url);
     }
 }

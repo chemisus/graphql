@@ -2,13 +2,17 @@
 
 namespace Chemisus\GraphQL;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
-use React\Promise\FulfilledPromise;
-use function React\Promise\reduce;
 
 class SchemaTest extends TestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        FileCachedHttp::$root = dirname(dirname(__DIR__)) . '/out/cache/';
+    }
+
     public function documentProvider()
     {
         $schemaFiles = glob(dirname(dirname(__DIR__)) . '/resources/test/schema/*.gql');
@@ -54,6 +58,8 @@ class SchemaTest extends TestCase
      */
     public function testQuery(string $schemaName, string $schemaSource, string $querySource, $result)
     {
+        FileCachedHttp::$directory = $schemaName;
+
         echo PHP_EOL;
 
         $actual = $this->benchmark('total', function () use ($schemaName, $schemaSource, $querySource) {
