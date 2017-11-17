@@ -1,7 +1,12 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Wirers;
 
+use Chemisus\GraphQL\CallbackFetcher;
+use Chemisus\GraphQL\CallbackResolver;
+use Chemisus\GraphQL\Document;
+use Chemisus\GraphQL\Http;
+use Chemisus\GraphQL\Node;
 use Chemisus\GraphQL\Resolvers\AllFetchedItemsResolver;
 use Chemisus\GraphQL\Resolvers\FirstFetchedItemResolver;
 use Chemisus\GraphQL\Resolvers\LastFetchedItemResolver;

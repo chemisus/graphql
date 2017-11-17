@@ -1,12 +1,18 @@
 <?php
 
-namespace Chemisus\GraphQL;
+namespace Chemisus\GraphQL\Wirers;
 
+use Chemisus\GraphQL\CallbackFetcher;
+use Chemisus\GraphQL\CallbackResolver;
+use Chemisus\GraphQL\CallbackTyper;
+use Chemisus\GraphQL\Document;
+use Chemisus\GraphQL\Http;
+use Chemisus\GraphQL\Node;
 use Exception;
 use React\Promise\FulfilledPromise;
 use function React\Promise\reduce;
 
-class StarwarsDocumentWirer
+class StarWarsDocumentWirer
 {
     public function wire(Document $document)
     {
@@ -132,7 +138,7 @@ class StarwarsDocumentWirer
 
     public function fetchURL(string $url)
     {
-        $dir = dirname(dirname(__DIR__)) . '/out/cache/';
+        $dir = dirname(dirname(dirname(__DIR__))) . '/out/cache/';
         $key = base64_encode($url);
         $file = $dir . $key;
 

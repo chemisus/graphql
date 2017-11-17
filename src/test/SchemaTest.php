@@ -73,11 +73,10 @@ class SchemaTest extends TestCase
             });
 
             $testWirer = $this->benchmark('init test wirer', function () use ($schemaName) {
-                switch ($schemaName) {
-                    case 'basic':
-                        return new BasicDocumentWirer();
-                    case 'sw':
-                        return new StarwarsDocumentWirer();
+                $class = sprintf('%s\Wirers\%sDocumentWirer', __NAMESPACE__, $schemaName);
+
+                if (class_exists($class)) {
+                    return new $class();
                 }
             });
 
