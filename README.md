@@ -297,10 +297,6 @@ extend type __Field {
 
 - php 7.1
 
-```
-†: in php, of course
-```
-
 ## Development & Testing
 
 This package can setup a [docker](https://docker.com) container 
@@ -340,3 +336,7 @@ To add a wirer for a schema, create a Wirer class at
 ##### ErrorsTest
 
 `ErrorsTest` is to test the various errors that graphql specifies.
+
+```
+†: in php, of course
+```
