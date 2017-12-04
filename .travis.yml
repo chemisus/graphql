@@ -11,3 +11,7 @@ install:
 
 script:
   - vendor/bin/phpunit -c build
+
+after_script:
+  - composer require php-coveralls/php-coveralls
+  - php vendor/bin/coveralls -v
