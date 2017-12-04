@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/chemisus/graphql.svg?branch=master)](https://travis-ci.org/chemisus/graphql)
-[![Coverage Status](https://coveralls.io/repos/chemisus/graphql/badge.svg?branch=master&service=github)](https://coveralls.io/github/chemisus/graphql?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/chemisus/graphql/badge.svg?branch=master)](https://coveralls.io/github/chemisus/graphql?branch=master)
 
 `composer require chemisus/graphql`
 
