@@ -192,13 +192,7 @@ SOURCE;
 
     public function make($node)
     {
-        $maker = $this->factories[$node->kind];
-
-        if ($maker instanceof Factory) {
-            return $maker->make($this, $this->document, $node);
-        }
-
-        return call_user_func($maker, $node);
+        return $this->factories[$node->kind]->make($this, $this->document, $node);
     }
 
     public function buildNode($node)
@@ -207,13 +201,7 @@ SOURCE;
             return null;
         }
 
-        $builder = $this->builders[$node->kind];
-
-        if ($builder instanceof Builder) {
-            return $builder->build($this, $this->document, $node);
-        }
-
-        return call_user_func($builder, $node);
+        return $this->builders[$node->kind]->build($this, $this->document, $node);
     }
 
     public function toArray($nodes)
