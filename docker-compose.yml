@@ -1,16 +1,8 @@
 version: '3'
 
 services:
-#  php:
-#    build: .
-#    hostname: php
-#    working_dir: /usr/src/app
-#    volumes:
-#      - .:/usr/src/app:z
-#    command: [ "php", "/usr/src/app/src/GraphQL.php" ]
-
   ant:
-    build: .
+    build: docker
     hostname: php
     working_dir: /usr/src/app
     volumes:
