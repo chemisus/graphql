@@ -9,6 +9,8 @@ use Throwable;
 error_reporting(E_ALL);
 
 require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
+require_once 'factories.php';
+require_once 'readers.php';
 
 class OptionArray implements Countable
 {
@@ -435,103 +437,6 @@ class Tokenizer
     }
 }
 
-interface GraphQLAbstractFactory
-{
-    public function makeDirective();
-
-    public function makeDirectiveDefinition();
-
-    public function makeArgument();
-
-    public function makeArgumentDefinition();
-
-    public function makeField();
-
-    public function makeFieldDefinition();
-
-    public function makeType();
-
-    public function makeTypeDefinition();
-
-    public function makeScalarDefinition();
-
-    public function makeInterfaceDefinition();
-
-    public function makeUnionDefinition();
-
-    public function makeEnumDefinition();
-
-    public function makeEnumValue();
-}
-
-class ChemisusGraphQLAbstractFactory implements GraphQLAbstractFactory
-{
-    public function makeDirective()
-    {
-        // TODO: Implement makeDirective() method.
-    }
-
-    public function makeDirectiveDefinition()
-    {
-        // TODO: Implement makeDirectiveDefinition() method.
-    }
-
-    public function makeArgument()
-    {
-        // TODO: Implement makeArgument() method.
-    }
-
-    public function makeArgumentDefinition()
-    {
-        // TODO: Implement makeArgumentDefinition() method.
-    }
-
-    public function makeField()
-    {
-        // TODO: Implement makeField() method.
-    }
-
-    public function makeFieldDefinition()
-    {
-        // TODO: Implement makeFieldDefinition() method.
-    }
-
-    public function makeType()
-    {
-        // TODO: Implement makeType() method.
-    }
-
-    public function makeTypeDefinition()
-    {
-        // TODO: Implement makeTypeDefinition() method.
-    }
-
-    public function makeScalarDefinition()
-    {
-        // TODO: Implement makeScalarDefinition() method.
-    }
-
-    public function makeInterfaceDefinition()
-    {
-        // TODO: Implement makeInterfaceDefinition() method.
-    }
-
-    public function makeUnionDefinition()
-    {
-        // TODO: Implement makeUnionDefinition() method.
-    }
-
-    public function makeEnumDefinition()
-    {
-        // TODO: Implement makeEnumDefinition() method.
-    }
-
-    public function makeEnumValue()
-    {
-        // TODO: Implement makeEnumValue() method.
-    }
-}
-
 class UnexpectedTokenException extends Exception
 {
     public function __construct(Token $token, $expectedType, $expectedValue = null, $code = 0, Throwable $previous = null)
@@ -545,10 +450,10 @@ class UnexpectedTokenException extends Exception
 
 interface TokenReader
 {
-    public function read(Tokenizer $tokenizer, Document $docu);
+    public function read(Tokenizer $tokenizer, Document $document);
 }
 
-class DocumentReader
+class TokenStream
 {
     /**
      * @var Tokenizer
@@ -560,71 +465,9 @@ class DocumentReader
      */
     private $current;
 
-    /**
-     * @var Document
-     */
-    private $document;
-
-    /**
-     * @var
-     */
-    private $directives = [];
-
-    /**
-     * @var GraphQLAbstractFactory
-     */
-    private $factory;
-
-    /**
-     * @var TokenReader[]
-     */
-    private $readers;
-
-    public function __construct(Tokenizer $tokenizer, Document $document)
+    public function __construct(Tokenizer $tokenizer)
     {
         $this->tokenizer = $tokenizer;
-        $this->document = $document;
-    }
-
-    public function read()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $this->next();
-        while ($this->current()) {
-            echo "NEXT  " . __FUNCTION__ . PHP_EOL;
-
-            if ($this->readPunctuator('@')) {
-                $this->directives = $this->readDirectiveList();
-            } elseif ($this->readPunctuator('{')) {
-                $this->document->addType($this->readQuery());
-            } elseif ($this->readName('query')) {
-                $this->document->addType($this->readQuery());
-            } elseif ($this->readName('scalar')) {
-                $this->document->addType($this->readScalarDefinition());
-            } elseif ($this->readName('type')) {
-                $this->document->addType($this->readTypeDefinition());
-            } elseif ($this->readName('interface')) {
-                $this->document->addType($this->readInterfaceDefinition());
-            } elseif ($this->readName('union')) {
-                $this->document->addType($this->readUnionDefinition());
-            } elseif ($this->readName('schema')) {
-                $this->document->addType($this->readSchemaDefinition());
-            } elseif ($this->readName('mutable')) {
-            } elseif ($this->readName('fragment')) {
-            } elseif ($this->readName('directive')) {
-                $this->document->addType($this->readDirectiveDefinition());
-            } else {
-                throw new Exception('invalid');
-            }
-        }
-    }
-
-    public function flushDirectives()
-    {
-        $directives = $this->directives;
-        $this->directives = [];
-        return $directives;
     }
 
     /**
@@ -662,7 +505,7 @@ class DocumentReader
         return $this->current()->value();
     }
 
-    public function readPunctuator(...$values)
+    public function peekPunctuator(...$values)
     {
         return $this->current() && $this->current()->isPunctuator(...$values) ? $this->current()->value() : null;
     }
@@ -676,7 +519,7 @@ class DocumentReader
         return $this->current()->value();
     }
 
-    public function readName(...$values)
+    public function peekName(...$values)
     {
         return $this->current()->isName(...$values) ? $this->current()->value() : null;
     }
@@ -694,530 +537,7 @@ class DocumentReader
     {
         return $this->expectType(Token::TYPE_NAME, Token::TYPE_STRING, Token::TYPE_INTEGER, Token::TYPE_FLOAT);
     }
-
-    public function readQuery()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $this->expectName('query');
-        $this->next();
-
-        $name = $this->expectName();
-        $this->next();
-
-        $args = $this->readArgumentList();
-        $this->next();
-
-        $fields = $this->readFieldList();
-        $this->next();
-
-        $this->next();
-    }
-
-    public function readArgument()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $name = $this->expectName();
-        $this->next();
-        $this->expectPunctuator(':');
-        $this->next();
-        $value = $this->expectValue();
-
-        return [$name, $value];
-    }
-
-    public function readArgumentList()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $args = [];
-
-        if ($this->readPunctuator('(')) {
-            $this->next();
-            do {
-                $args[] = $this->readArgument();
-                $this->next();
-            } while (!$this->current()->isPunctuator(')'));
-        }
-
-        return $args;
-    }
-
-    public function readDirective()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $this->expectPunctuator('@');
-        $this->next();
-
-        $name = $this->expectName();
-        $this->next();
-
-        $args = $this->readArgumentList();
-
-        return new Directive($name, $args);
-    }
-
-    public function readDirectiveList()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $directives = [];
-
-        if ($this->readPunctuator('@')) {
-            do {
-                $directives[] = $this->readDirective();
-                $this->next();
-            } while ($this->current()->isPunctuator('@'));
-        }
-
-        return $directives;
-    }
-
-    public function readScalarDefinition()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $this->expectName('scalar');
-
-        $this->next();
-        $name = $this->expectName();
-
-        $this->next();
-
-        return new ScalarDefinition($name, $this->flushDirectives());
-    }
-
-    public function readTypeDefinition()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $this->expectName('type');
-        $this->next();
-
-        $name = $this->expectName();
-        $this->next();
-
-        $this->expectPunctuator('{');
-        $this->next();
-
-        $fields = $this->readFieldDefinitionList();
-        $this->next();
-
-        return new TypeDefinition($name, $fields, $this->flushDirectives());
-    }
-
-    public function readSchemaDefinition()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $this->expectName('schema');
-        $this->next();
-
-        $name = $this->expectName();
-        $this->next();
-
-        $this->expectPunctuator('{');
-        $this->next();
-
-        $fields = $this->readFieldDefinitionList();
-        $this->next();
-
-        return new SchemaDefinition($name, $fields, $this->flushDirectives());
-    }
-
-    public function readInterfaceDefinition()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $this->expectName('interface');
-        $this->next();
-
-        $name = $this->expectName();
-        $this->next();
-
-        $this->expectPunctuator('{');
-        $this->next();
-
-        $fields = $this->readFieldDefinitionList();
-        $this->next();
-
-        return new InterfaceDefinition($name, $fields, $this->flushDirectives());
-    }
-
-    public function readDirectiveDefinition()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $this->expectName('directive');
-        $this->next();
-
-        $this->expectPunctuator('@');
-        $this->next();
-
-        $name = $this->expectName();
-        $this->next();
-
-        if ($args = $this->readArgumentDefinitionList()) {
-            $this->next();
-        }
-
-        $this->expectName('on');
-        $this->next();
-
-        $locations = [];
-
-        $locations[] = $this->expectName();
-        $this->next();
-
-        while ($this->readPunctuator('|')) {
-            $this->next();
-            $locations[] = $this->expectName();
-            $this->next();
-        }
-
-        return new DirectiveDefinition($name, $args, $locations);
-    }
-
-    public function readUnionDefinition()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $this->expectName('union');
-        $this->next();
-
-        $name = $this->expectName();
-        $this->next();
-
-        $this->expectPunctuator('=');
-        $this->next();
-
-        $types = [];
-
-        $types[] = $this->expectName();
-        $this->next();
-
-        while ($this->readPunctuator('|')) {
-            $this->next();
-            $types[] = $this->expectName();
-            $this->next();
-        }
-
-        return new UnionDefinition($name, $types, $this->flushDirectives());
-    }
-
-    public function readType()
-    {
-        return $this->expectName();
-    }
-
-    public function readFieldDefinitionList()
-    {
-        $fields = [];
-
-        do {
-            $fields[] = $this->readFieldDefinition();
-            $this->next();
-        } while (!$this->current()->isPunctuator('}'));
-
-        return $fields;
-    }
-
-    public function readFieldDefinition()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $name = $this->expectName();
-        $this->next();
-
-        if ($args = $this->readArgumentDefinitionList()) {
-            $this->next();
-        }
-
-        $this->expectPunctuator(':');
-        $this->next();
-
-        $type = $this->readType();
-        $this->next();
-
-        return new FieldDefinition($name, $type, $args, $this->flushDirectives());
-    }
-
-    public function readFieldList()
-    {
-        $fields = [];
-
-        if ($this->readPunctuator('{')) {
-            $this->next();
-            do {
-                $fields[] = $this->readField();
-                $this->next();
-            } while (!$this->current()->isPunctuator('}'));
-        }
-
-        return $fields;
-    }
-
-    public function readField()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $alias = null;
-        $name = $this->expectName();
-        $this->next();
-
-        if ($this->readPunctuator(':')) {
-            $alias = $name;
-            $this->next();
-            $name = $this->expectName();
-            $this->next();
-        }
-
-        if ($args = $this->readArgumentList()) {
-            $this->next();
-        }
-
-        if ($fields = $this->readFieldList()) {
-            $this->next();
-        }
-
-        return new Field($name, $alias, $args, $fields, $this->flushDirectives());
-    }
-
-    public function readArgumentDefinition()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $name = $this->expectName();
-        $this->next();
-        $this->expectPunctuator(':');
-        $this->next();
-        $type = $this->readType();
-        $this->next();
-
-        $defaultValue = null;
-
-        if ($this->current()->isPunctuator('=')) {
-            $this->next();
-            $defaultValue = $this->expectValue();
-            $this->next();
-        }
-
-        return new ArgumentDefinition($name, $type, $defaultValue);
-    }
-
-    public function readArgumentDefinitionList()
-    {
-        echo "START " . __FUNCTION__ . PHP_EOL;
-
-        $args = [];
-
-        if ($this->readPunctuator('(')) {
-            $this->next();
-            do {
-                $args[] = $this->readArgumentDefinition();
-            } while (!$this->current()->isPunctuator(')'));
-        }
-
-        return $args;
-    }
 }
-
-class Directive
-{
-    private $name;
-    private $args;
-
-    /**
-     * Directive constructor.
-     * @param $name
-     * @param $args
-     */
-    public function __construct($name, $args)
-    {
-        $this->name = $name;
-        $this->args = $args;
-    }
-}
-
-class DirectiveDefinition
-{
-    private $name;
-    private $args;
-    private $locations;
-
-    /**
-     * Directive constructor.
-     * @param $name
-     * @param $args
-     * @param $locations
-     */
-    public function __construct($name, $args, $locations)
-    {
-        $this->name = $name;
-        $this->args = $args;
-        $this->locations = $locations;
-    }
-}
-
-class ArgumentDefinition
-{
-    private $name;
-    private $type;
-    private $defaultValue;
-
-    /**
-     * Directive constructor.
-     * @param $name
-     * @param $type
-     * @param $defaultValue
-     */
-    public function __construct($name, $type, $defaultValue)
-    {
-        $this->name = $name;
-        $this->type = $type;
-        $this->defaultValue = $defaultValue;
-    }
-}
-
-class FieldDefinition
-{
-    private $name;
-    private $type;
-    private $args;
-    private $directives;
-
-    public function __construct($name, $type, $args, $directives)
-    {
-        $this->name = $name;
-        $this->type = $type;
-        $this->args = $args;
-        $this->directives = $directives;
-    }
-}
-
-class Field
-{
-    private $name;
-    private $alias;
-    private $args;
-    private $directives;
-    private $fields;
-
-    public function __construct($name, $alias, $args, $fields, $directives)
-    {
-        $this->name = $name;
-        $this->alias = $alias;
-        $this->args = $args;
-        $this->directives = $directives;
-        $this->fields = $fields;
-    }
-}
-
-class ScalarDefinition
-{
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var array
-     */
-    private $directives;
-
-    public function __construct(string $name, $directives = [])
-    {
-        $this->name = $name;
-        $this->directives = $directives;
-    }
-}
-
-class UnionDefinition
-{
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var array
-     */
-    private $directives;
-    private $types;
-
-    public function __construct(string $name, $types, $directives = [])
-    {
-        $this->name = $name;
-        $this->directives = $directives;
-        $this->types = $types;
-    }
-}
-
-class TypeDefinition
-{
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var array
-     */
-    private $directives;
-
-    private $fields;
-
-    public function __construct(string $name, $fields, $directives = [])
-    {
-        $this->name = $name;
-        $this->directives = $directives;
-        $this->fields = $fields;
-    }
-}
-
-class SchemaDefinition
-{
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var array
-     */
-    private $directives;
-
-    private $fields;
-
-    public function __construct(string $name, $fields, $directives = [])
-    {
-        $this->name = $name;
-        $this->directives = $directives;
-        $this->fields = $fields;
-    }
-}
-
-class InterfaceDefinition
-{
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var array
-     */
-    private $directives;
-
-    private $fields;
-
-    public function __construct(string $name, $fields, $directives = [])
-    {
-        $this->name = $name;
-        $this->directives = $directives;
-        $this->fields = $fields;
-    }
-}
-
 
 class Document
 {
@@ -1227,19 +547,12 @@ class Document
 }
 
 call_user_func(function () {
-    $source = <<< SQL
+    $source = <<< SCHEMA
 #asdfasdf sadf asdf asdf
 #asdfasdfasf
 #sdfasld flaksdj flaksjdf
 @asdf(anno:"asdf") 
 scalar String
-
-query A {
-  b
-  c {
-    d
-  }
-}
 
 @asdf(anno:"asdf") 
 @asdf(anno:"asdf") 
@@ -1262,11 +575,42 @@ directive @asdf(value:String) on A | B | C
 union A = B
 union A = B | C
 
-SQL;
+query A {
+  b
+  c {
+    d
+  }
+  e:f {
+    g
+  }
+  h:i
+  h:i(e:"E")
+  h:i(e:"E") {
+    b
+    c {
+      d
+    }
+    e:f {
+      g
+    }
+    h:i
+    h:i(e:"E")
+    h:i(e:"E") {
+      a:b
+    }
+  }
+}
+SCHEMA;
+
+    $a = <<< SCHEMA
+
+SCHEMA;
 
     $document = new Document();
     $tokenizer = new Tokenizer($source);
-    $reader = new DocumentReader($tokenizer, $document);
+    $factory = new ChemisusAbstractFactory();
+    $stream = new TokenStream($tokenizer);
+    $reader = new DocumentReader($stream, $document, $factory);
     $reader->read();
 
 
